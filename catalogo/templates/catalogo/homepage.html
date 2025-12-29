@@ -1,0 +1,173 @@
+{% extends 'catalogo/master.html' %}
+
+{% block title %}
+Pagina Principale - Catalogo Film
+{⅜ endblock %}
+
+{% block content %}
+<div class="split-screen-container">
+    {% if views.movies %}
+    <div class="half-section section-top">
+        <div class="header-section">
+            <div class="header-row">
+                <h2>🎬 I miei Film</h2>
+                <input type="text" id="cercaFilm" onkeyup="filtraLista('cercaFilm', 'lista-film')" placeholder="Cerca film..." class="search-bar">
+            </div>
+        </div>
+        <div class="scroll-area" id="lista-film">
+            {% for film in films %}
+            <div class="item-card">
+                <div class="card-info" style="overflow: hidden;">
+                    <div style="display: flex; align-items: center; gap: 8px; overflow-x: auto; scrollbar-width: none; white-space: nowrap;">
+                        <strong style="white-space: nowrap;">{{ film.titolo }}</strong> 
+                        {% if film.anno_uscita %}
+                            <span style="opacity:0.7; white-space: nowrap;">({{ film.anno_uscita }})</span>
+                        {% endif %}
+                    </div>
+                    <small style="display: block; margin-top: 4px;">Posizione: {{ film.posizione_fisica }} {% if film.media %}
+                        <span class="badge-voto {% if film.media >= 9 %} voto-ottimo
+                            {% elif film.media >= 7 %} voto-buono
+                            {% elif film.media == 6 %} voto-medio
+                            {% elif film.media >= 4 %} voto-scarso
+                            {% else %} voto-pessimo
+                            {% endif %}" style="flex-shrink: 0;">
+                            ★ {{ film.media|floatformat:1 }}
+                        </span>
+                        {% endif %}</small>
+                </div>
+                
+                <div style="display: flex; gap: 10px; padding-left: 8px;">
+                    {% if user.is_authenticated %}
+                    <button class="modal-button" 
+                        onclick="apriModalVoto('{{ film.id }}', '{{ film.titolo|escapejs }}', 'film')">
+                        ★ Vota
+                    </button>
+                    {% endif %}
+                
+                    {% if film.poster and film.trama %}
+                    <button class="modal-button" 
+                            onclick="apriModal(this)" 
+                            data-titolo="{{ film.titolo }}" 
+                            data-trama="{{ film.trama }}" 
+                            data-poster="{{ film.poster }}"
+                            data-anno="{{ film.anno_uscita }}">
+                        Info
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+            {% empty %}
+                <div style="padding:20px;">Nessun film inserito.</div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    {% if views.music %}
+    <div class="half-section section-bottom">
+        <div class="header-section">
+            <div class="header-row">
+                <h2>🎵 I miei Dischi</h2>
+                <input type="text" id="cercaMusica" onkeyup="filtraLista('cercaMusica', 'lista-musica')" placeholder="Cerca artista o album..." class="search-bar">
+            </div>
+        </div>
+
+        <div class="scroll-area" id="lista-musica">
+            {% for disco in album %}
+            <div class="item-card">
+                <div class="card-info" style="overflow: hidden;">
+                    <div style="display: flex; align-items: center; gap: 8px; overflow-x: auto; scrollbar-width: none; white-space: nowrap;">
+                        <strong style="white-space: nowrap;">{{ disco.titolo }}</strong>
+                        
+                        {% if disco.anno_uscita %} 
+                            <span style="opacity: 0.7; white-space: nowrap;">({{ disco.anno_uscita }})</span> 
+                        {% endif %}
+                        
+                        <span style="white-space: nowrap;">- {{ disco.artista }}</span>
+                    </div>
+                    <small style="display: block; margin-top: 4px;">Posizione: {{ disco.posizione_fisica }} {% if disco.media %}
+                        <span class="badge-voto {% if disco.media >= 9 %} voto-ottimo
+                            {% elif disco.media >= 7 %} voto-buono
+                            {% elif disco.media == 6 %} voto-medio
+                            {% elif disco.media >= 4 %} voto-scarso
+                            {% else %} voto-pessimo
+                            {% endif %}" style="flex-shrink: 0;">
+                            ★ {{ disco.media|floatformat:1 }}
+                        </span>
+                        {% endif %}</small>
+                </div>
+            
+                <div style="display: flex; gap: 10px; padding-left: 8px;">
+                    {% if user.is_authenticated %}
+                    <button class="modal-button" 
+                        onclick="apriModalVoto('{{ disco.id }}', '{{ disco.titolo|escapejs }}', 'musica')">
+                        ★ Vota
+                    </button>
+                    {% endif %}
+                
+                    {% if disco.copertina or disco.descrizione %}
+                    <button class="modal-button" 
+                            onclick="apriModal(this)" 
+                            data-titolo="{{ disco.titolo }} - {{ disco.artista }}" 
+                            data-trama="{{ disco.descrizione|default:'Nessuna descrizione.' }}" 
+                            data-poster="{{ disco.copertina }}"
+                            data-anno="{{ disco.anno_uscita }}">
+                        Info
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+            {% empty %}
+                <div style="padding:20px;">Nessun disco inserito.</div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<div id="modal-overlay" class="modal-overlay">
+    <div class="modal-box">
+        <span class="close-btn" onclick="chiudiModal()">&times;</span>
+        <h2><span id="modal-titolo"></span> <span id="modal-anno" style="opacity:0.7"></span></h2>
+        <div class="modal-content-split">
+            <div class="modal-left">
+                <img id="modal-poster" src="" alt="Locandina"> 
+            </div>
+            <div class="modal-right">
+                <p id="modal-trama"></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modal-voto" class="modal-overlay">
+    <div class="modal-box" style="max-width: 400px; text-align: center;">
+        <span class="close-btn" onclick="chiudiModalVoto()">&times;</span>
+        
+        <h2>Dai un voto</h2>
+        <p id="voto-titolo" style="color: var(--8); margin-bottom: 20px;"></p>
+
+        <form method="POST" action="{% url 'salva_voto' %}">
+            {% csrf_token %}
+            <input type="hidden" name="id_oggetto" id="input-voto-id">
+            <input type="hidden" name="tipo" id="input-voto-tipo">
+            
+            <select name="valore" style="width: 100%; padding: 10px; margin-bottom: 20px; background-color: var(--1); color: var(--10); border: 1px solid var(--7);">
+                <option value="" disabled selected>Scegli un voto...</option>
+                <option value="10">10 - Capolavoro</option>
+                <option value="9">9 - Eccellente</option>
+                <option value="8">8 - Ottimo</option>
+                <option value="7">7 - Buono</option>
+                <option value="6">6 - Sufficiente</option>
+                <option value="5">5 - Mediocre</option>
+                <option value="4">4 - Scarso</option>
+                <option value="3">3 - Pessimo</option>
+                <option value="2">2 - Orribile</option>
+                <option value="1">1 - Inguardabile</option>
+            </select>
+
+            <button type="submit" class="btn">Conferma Voto</button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
