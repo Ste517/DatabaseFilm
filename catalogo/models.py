@@ -5,6 +5,7 @@ import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 from django.conf import settings
 import os
+import secrets
 
 class Film(models.Model):
     titolo = models.CharField(max_length=200, blank=True)
@@ -126,3 +127,23 @@ class Voto(models.Model):
 
     def __str__(self):
         return f"{self.utente.username} -> {self.valore}"
+
+class ApiKeys(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='api_keys')
+    key = models.CharField(max_length=100, unique=True, blank=True, help_text="Lascia vuoto per generare automaticamente")
+    utilizzi = models.PositiveIntegerField(default=0, verbose_name="Numero Utilizzi")
+    nome = models.CharField(max_length=50, help_text="Nome identificativo (es. 'Script Python', 'App Mobile')", default="Default")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "API Key"
+        verbose_name_plural = "API Keys"
+
+    def save(self, *args, **kwargs):
+        # Se la chiave non esiste, ne generiamo una casuale sicura url-safe a 32 byte
+        if not self.key:
+            self.key = secrets.token_urlsafe(32)
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.nome} ({self.user.username})"

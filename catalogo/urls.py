@@ -8,4 +8,5 @@ urlpatterns = [
     path('salva_voto/', views.salva_voto, name='salva_voto'),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('login/', LoginView.as_view(template_name='catalogo/login.html'), name='login'),
+    path('api/aggiungi/', views.aggiungi_elemento_api, name='api_aggiungi'),
 ]
