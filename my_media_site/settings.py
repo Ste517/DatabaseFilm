@@ -29,11 +29,6 @@ def get_local_ip():
 
 LOCAL_IP_ADDRESS = get_local_ip()
 
-VIEWS = {
-    "music": True,
-    "movies": True,
-}
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 

@@ -11,7 +11,20 @@ Pagina Principale - Catalogo Film
         <div class="header-section">
             <div class="header-row">
                 <h2>🎬 I miei Film</h2>
-                <input type="text" id="cercaFilm" onkeyup="filtraLista('cercaFilm', 'lista-film')" placeholder="Cerca film..." class="search-bar">
+                
+                <div class="header-row">
+                    <select onchange="updateSort('sort_film', this.value)" style="padding: 6px; border-radius: 4px; border: 1px solid var(--7); background-color: var(--2); color: var(--10);">
+                        <option value="-id" {% if current_sort_film == '-id' %}selected{% endif %}>📅 Aggiunti di recente</option>
+                        <option value="id" {% if current_sort_film == 'id' %}selected{% endif %}>📅 Aggiunti (meno recenti)</option>
+                        <option value="titolo" {% if current_sort_film == 'titolo' %}selected{% endif %}>🔤 Alfabetico (A-Z)</option>
+                        <option value="-titolo" {% if current_sort_film == '-titolo' %}selected{% endif %}>🔤 Artista (Z-A)</option>
+                        <option value="-media" {% if current_sort_film == '-media' %}selected{% endif %}>⭐ Voto (Migliori)</option>
+                        <option value="media" {% if current_sort_film == 'media' %}selected{% endif %}>⭐ Voto (Peggiori)</option>
+                        <option value="media_type" {% if current_sort_film == 'media_type' %}selected{% endif %}>💽 Formato</option>
+                    </select>
+            
+                    <input type="text" id="cercaFilm" onkeyup="filtraLista('cercaFilm', 'lista-film')" placeholder="Cerca film..." class="search-bar">
+                </div>
             </div>
         </div>
         <div class="scroll-area" id="lista-film">
@@ -24,7 +37,11 @@ Pagina Principale - Catalogo Film
                             <span style="opacity:0.7; white-space: nowrap;">({{ film.anno_uscita }})</span>
                         {% endif %}
                     </div>
-                    <small style="display: block; margin-top: 4px;">Posizione: {{ film.posizione_fisica }} {% if film.media %}
+                    <small style="display: block; margin-top: 4px;">Posizione: {{ film.posizione_fisica }} 
+                        {% if film.media_type != "unknown" %}
+                            <span style="opacity:0.7; white-space: nowrap;">({{ film.get_media_type_display }})</span>
+                        {% endif %}
+                        {% if film.media %}
                         <span class="badge-voto {% if film.media >= 9 %} voto-ottimo
                             {% elif film.media >= 7 %} voto-buono
                             {% elif film.media == 6 %} voto-medio
@@ -67,7 +84,20 @@ Pagina Principale - Catalogo Film
         <div class="header-section">
             <div class="header-row">
                 <h2>🎵 I miei Dischi</h2>
-                <input type="text" id="cercaMusica" onkeyup="filtraLista('cercaMusica', 'lista-musica')" placeholder="Cerca artista o album..." class="search-bar">
+                
+                <div class="header-row">
+                    <select onchange="updateSort('sort_musica', this.value)" style="padding: 6px; border-radius: 4px; border: 1px solid var(--7); background-color: var(--2); color: var(--10);">
+                        <option value="-id" {% if current_sort_musica == '-id' %}selected{% endif %}>📅 Aggiunti di recente</option>
+                        <option value="id" {% if current_sort_musica == 'id' %}selected{% endif %}>📅 Aggiunti (meno recenti)</option>
+                        <option value="titolo" {% if current_sort_musica == 'titolo' %}selected{% endif %}>🔤 Artista (A-Z)</option>
+                        <option value="-titolo" {% if current_sort_musica == '-titolo' %}selected{% endif %}>🔤 Artista (Z-A)</option>
+                        <option value="-media" {% if current_sort_musica == '-media' %}selected{% endif %}>⭐ Voto (Migliori)</option>
+                        <option value="media" {% if current_sort_musica == 'media' %}selected{% endif %}>⭐ Voto (Peggiori)</option>
+                        <option value="media_type" {% if current_sort_musica == 'media_type' %}selected{% endif %}>💽 Formato</option>
+                    </select>
+                
+                    <input type="text" id="cercaMusica" onkeyup="filtraLista('cercaMusica', 'lista-musica')" placeholder="Cerca artista o album..." class="search-bar">
+                </div>
             </div>
         </div>
 
@@ -76,15 +106,16 @@ Pagina Principale - Catalogo Film
             <div class="item-card">
                 <div class="card-info" style="overflow: hidden;">
                     <div style="display: flex; align-items: center; gap: 8px; overflow-x: auto; scrollbar-width: none; white-space: nowrap;">
-                        <strong style="white-space: nowrap;">{{ disco.titolo }}</strong>
-                        
+                        <span style="white-space: nowrap;"><strong style="white-space: nowrap;">{{ disco.titolo }}</strong> - {{ disco.artista }}</span>
                         {% if disco.anno_uscita %} 
                             <span style="opacity: 0.7; white-space: nowrap;">({{ disco.anno_uscita }})</span> 
                         {% endif %}
-                        
-                        <span style="white-space: nowrap;">- {{ disco.artista }}</span>
                     </div>
-                    <small style="display: block; margin-top: 4px;">Posizione: {{ disco.posizione_fisica }} {% if disco.media %}
+                    <small style="display: block; margin-top: 4px;">Posizione: {{ disco.posizione_fisica }} 
+                        {% if disco.media_type != "unknown" %}
+                            <span style="opacity:0.7; white-space: nowrap;">({{ disco.get_media_type_display }})</span>
+                        {% endif %}
+                        {% if disco.media %}
                         <span class="badge-voto {% if disco.media >= 9 %} voto-ottimo
                             {% elif disco.media >= 7 %} voto-buono
                             {% elif disco.media == 6 %} voto-medio

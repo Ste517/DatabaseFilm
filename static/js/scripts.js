@@ -161,3 +161,9 @@ function apriModalVoto(id, titolo, tipo) {
 function chiudiModalVoto() {
     document.getElementById('modal-voto').style.display = 'none';
 }
+
+function updateSort(param, value) {
+    var url = new URL(window.location.href);
+    url.searchParams.set(param, value);
+    window.location.href = url.toString();
+}

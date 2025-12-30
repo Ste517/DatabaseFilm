@@ -1,0 +1,29 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+<form action="" method="post">
+    {% csrf_token %}
+    
+    <h1>Modifica elementi in massa</h1>
+    <p>Seleziona i nuovi valori per gli elementi scelti. <strong>Lascia vuoti i campi che NON vuoi modificare.</strong></p>
+    
+    <ul>
+        {% for item in items %}
+            <li>{{ item }}</li>
+        {% endfor %}
+    </ul>
+
+    <fieldset class="module aligned">
+        <div class="form-row">
+            {{ form.as_p }}
+        </div>
+    </fieldset>
+
+    <input type="hidden" name="action" value="modifica_in_massa" />
+    
+    <div class="submit-row">
+        <input type="submit" name="apply" value="Applica Modifiche" class="default" />
+        <a href="#" onclick="window.history.back(); return false;" class="button cancel-link">Annulla</a>
+    </div>
+</form>
+{% endblock %}

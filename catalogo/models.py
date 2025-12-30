@@ -7,6 +7,27 @@ from django.conf import settings
 import os
 import secrets
 
+MEDIA_CHOICES = [
+
+    ('Audio', [
+
+        ('vinyl', 'Vinile'),
+        ('cass', 'Cassetta'),
+        ('cd', 'CD'),
+        ('unknown', 'Unknown'),
+
+    ]),
+
+    ('Video', [
+
+        ('vhs', 'VHS'),
+        ('bray', 'Blu-ray'),
+        ('dvd', 'DVD'),
+        ('unknown', 'Unknown'),
+
+    ]),
+]
+
 class Film(models.Model):
     titolo = models.CharField(max_length=200, blank=True)
     anno_uscita = models.IntegerField(null=True, blank=True)
@@ -15,6 +36,12 @@ class Film(models.Model):
     
     trama = models.TextField(blank=True, null=True)
     poster = models.URLField(blank=True, null=True, verbose_name="URL Poster")
+
+    media_type = models.CharField(
+        max_length=10,
+        choices=MEDIA_CHOICES[1][1],
+        default='unknown'
+    )
 
     def __str__(self):
         return self.titolo
@@ -52,6 +79,12 @@ class Musica(models.Model):
     
     copertina = models.URLField(blank=True, null=True)
     descrizione = models.TextField(blank=True, null=True)
+    
+    media_type = models.CharField(
+        max_length=10,
+        choices=MEDIA_CHOICES[0][1],
+        default='unknown'
+    )
 
     def __str__(self):
         return f"{self.titolo} - {self.artista}"

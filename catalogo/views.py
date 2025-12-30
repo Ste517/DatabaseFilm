@@ -3,7 +3,6 @@ from django.shortcuts import redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Film, Musica, Voto, ApiKeys
 from django.db.models import Avg
-from my_media_site.settings import VIEWS
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 import json
@@ -47,20 +46,49 @@ def profilo(request):
     }
     return render(request, 'catalogo/profile.html', context)
 
-def homepage(request):
-    # Recuperiamo tutti i film e la musica dal database
-    films = Film.objects.annotate(media=Avg('voti__valore')).order_by('-id')
-    album = Musica.objects.annotate(media=Avg('voti__valore')).order_by('-id')
+def homepage(request, view):
+    if view == 'music':
+        views = {"music": True,"movies": False,}
+    else:
+        views = {"music": False,"movies": True,}
+
+    sort_film = request.GET.get('sort_film')
+    if not sort_film:
+        sort_film = request.COOKIES.get('saved_sort_film', '-id')
+
+    sort_musica = request.GET.get('sort_musica')
+    if not sort_musica:
+        sort_musica = request.COOKIES.get('saved_sort_musica', '-id')
     
-    # Impacchettiamo i dati in un "contesto" da inviare alla pagina
+    if sort_film == 'media_type':
+        films = Film.objects.annotate(media=Avg('voti__valore')).order_by('media_type','titolo')
+    else:
+        films = Film.objects.annotate(media=Avg('voti__valore')).order_by(sort_film)
+    
+    if sort_musica == 'titolo':
+        album = Musica.objects.annotate(media=Avg('voti__valore')).order_by('artista', 'titolo')
+    elif sort_musica == '-titolo':
+        album = Musica.objects.annotate(media=Avg('voti__valore')).order_by('-artista', '-titolo')
+    elif sort_musica == 'media_type':
+        album = Musica.objects.annotate(media=Avg('voti__valore')).order_by('media_type', 'artista', 'titolo')
+    else:
+        album = Musica.objects.annotate(media=Avg('voti__valore')).order_by(sort_musica)
+    
     context = {
-        'views': VIEWS,
+        'views': views,
         'films': films,
-        'album': album
+        'album': album,
+        'current_sort_film': sort_film,
+        'current_sort_musica': sort_musica
     }
     
-    # Restituiamo la pagina HTML renderizzata (la creeremo al prossimo step)
-    return render(request, 'catalogo/homepage.html', context)
+    response = render(request, 'catalogo/homepage.html', context)
+
+    # Salvo il sort per un giorno
+    response.set_cookie('saved_sort_film', sort_film, max_age=86400)
+    response.set_cookie('saved_sort_musica', sort_musica, max_age=86400)
+    
+    return response
 
 @csrf_exempt
 def aggiungi_elemento_api(request):
