@@ -13,8 +13,8 @@ Pagina Principale - Catalogo Film
             <div class="header-row">
                 <h2>🎬 I miei Film</h2>
                 
-                <div class="header-row">
-                    <select onchange="updateSort('sort_film', this.value)" style="padding: 6px; border-radius: 4px; border: 1px solid var(--7); background-color: var(--2); color: var(--10);">
+                <div class="header-controls">
+                    <select onchange="updateSort('sort_film', this.value)" class="filter-select">
                         <option value="-id" {% if current_sort_film == '-id' %}selected{% endif %}>📅 Aggiunti di recente</option>
                         <option value="id" {% if current_sort_film == 'id' %}selected{% endif %}>📅 Aggiunti (meno recenti)</option>
                         <option value="titolo" {% if current_sort_film == 'titolo' %}selected{% endif %}>🔤 Alfabetico (A-Z)</option>
@@ -31,14 +31,14 @@ Pagina Principale - Catalogo Film
         <div class="scroll-area" id="lista-film">
             {% for film in films %}
             <div class="item-card" id="film_{{ film.id }}">
-                <div class="card-info" style="overflow: hidden;">
-                    <div style="display: flex; align-items: center; gap: 8px; overflow-x: auto; scrollbar-width: none; white-space: nowrap;">
+                <div class="card-info">
+                    <div class="card-title-row">
                         <strong style="white-space: nowrap;">{{ film.titolo }}</strong> 
                         {% if film.anno_uscita %}
                             <span style="opacity:0.7; white-space: nowrap;">({{ film.anno_uscita }})</span>
                         {% endif %}
                     </div>
-                    <small style="display: block; margin-top: 4px;">Posizione: {{ film.posizione_fisica }} 
+                    <small class="card-details-row">Posizione: {{ film.posizione_fisica }}
                         {% if film.media_type != "unknown" %}
                             <span style="opacity:0.7; white-space: nowrap;">({{ film.get_media_type_display }})</span>
                         {% endif %}
@@ -48,7 +48,7 @@ Pagina Principale - Catalogo Film
                             {% elif film.media == 6 %} voto-medio
                             {% elif film.media >= 4 %} voto-scarso
                             {% else %} voto-pessimo
-                            {% endif %}" style="flex-shrink: 0;">
+                            {% endif %}">
                             ★ {{ film.media|floatformat:1 }}
                         </span>
                         {% endif %}
@@ -58,7 +58,7 @@ Pagina Principale - Catalogo Film
                     </small>
                 </div>
                 
-                <div style="display: flex; gap: 10px; padding-left: 8px;">
+                <div class="card-actions">
                     {% if user.is_authenticated %}
                     <button class="modal-button" 
                         onclick="apriModalVoto('{{ film.id }}', '{{ film.titolo|escapejs }}', 'film', {% if film|ha_votato:request.user %}true{% else %}false{% endif %})">
@@ -94,8 +94,8 @@ Pagina Principale - Catalogo Film
             <div class="header-row">
                 <h2>🎵 I miei Dischi</h2>
                 
-                <div class="header-row">
-                    <select onchange="updateSort('sort_musica', this.value)" style="padding: 6px; border-radius: 4px; border: 1px solid var(--7); background-color: var(--2); color: var(--10);">
+                <div class="header-controls">
+                    <select onchange="updateSort('sort_musica', this.value)" class="filter-select">
                         <option value="-id" {% if current_sort_musica == '-id' %}selected{% endif %}>📅 Aggiunti di recente</option>
                         <option value="id" {% if current_sort_musica == 'id' %}selected{% endif %}>📅 Aggiunti (meno recenti)</option>
                         <option value="titolo" {% if current_sort_musica == 'titolo' %}selected{% endif %}>🔤 Artista (A-Z)</option>
@@ -113,14 +113,14 @@ Pagina Principale - Catalogo Film
         <div class="scroll-area" id="lista-musica">
             {% for disco in album %}
             <div class="item-card" id="disk_{{ disco.id }}">
-                <div class="card-info" style="overflow: hidden;">
-                    <div style="display: flex; align-items: center; gap: 8px; overflow-x: auto; scrollbar-width: none; white-space: nowrap;">
+                <div class="card-info">
+                    <div class="card-title-row">
                         <span style="white-space: nowrap;"><strong style="white-space: nowrap;">{{ disco.titolo }}</strong> - {{ disco.artista }}</span>
                         {% if disco.anno_uscita %} 
                             <span style="opacity: 0.7; white-space: nowrap;">({{ disco.anno_uscita }})</span> 
                         {% endif %}
                     </div>
-                    <small style="display: block; margin-top: 4px;">Posizione: {{ disco.posizione_fisica }} 
+                    <small class="card-details-row">Posizione: {{ disco.posizione_fisica }}
                         {% if disco.media_type != "unknown" %}
                             <span style="opacity:0.7; white-space: nowrap;">({{ disco.get_media_type_display }})</span>
                         {% endif %}
@@ -130,14 +130,14 @@ Pagina Principale - Catalogo Film
                             {% elif disco.media == 6 %} voto-medio
                             {% elif disco.media >= 4 %} voto-scarso
                             {% else %} voto-pessimo
-                            {% endif %}" style="flex-shrink: 0;">
+                            {% endif %}">
                             ★ {{ disco.media|floatformat:1 }}
                         </span>
                         {% endif %}
                     </small>
                 </div>
             
-                <div style="display: flex; gap: 10px; padding-left: 8px;">
+                <div class="card-actions">
                     {% if user.is_authenticated %}
                     <button class="modal-button" 
                         onclick="apriModalVoto('{{ disco.id }}', '{{ disco.titolo|escapejs }}', 'musica', {% if disco|ha_votato:request.user %}true{% else %}false{% endif %})">
@@ -185,7 +185,7 @@ Pagina Principale - Catalogo Film
 </div>
 
 <div id="modal-voto" class="modal-overlay">
-    <div class="modal-box" style="max-width: 400px; text-align: center;">
+    <div class="modal-box modal-box-small">
         <span class="close-btn" onclick="chiudiModalVoto()">&times;</span>
         
         <h2>Dai un voto</h2>
@@ -208,6 +208,7 @@ Pagina Principale - Catalogo Film
                 <option value="3">3 - Pessimo</option>
                 <option value="2">2 - Orribile</option>
                 <option value="1">1 - Inguardabile</option>
+                <option value="0">-- Rimuovi il tuo voto --</option>
             </select>
 
             <button type="submit" class="btn">Conferma Voto</button>

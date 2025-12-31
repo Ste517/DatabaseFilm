@@ -6,11 +6,11 @@ Profilo - Catalogo Film
 
 {% block content %}
 
-<div style="height: calc(100vh - 60px); display: flex; flex-direction: column; max-width: 900px; margin: 0 auto;">
+<div class="profile-main-container">
 
-    <div style="padding: 20px 20px 0 20px; flex-shrink: 0;">
+    <div class="profile-header">
         
-        <div style="background-color: var(--1); padding: 30px; border-radius: 8px; border: 1px solid var(--7); display: flex; align-items: center; gap: 20px; margin-bottom: 20px;">
+        <div class="profile-info-box">
             <div>
                 <h1 style="margin: 0; font-size: 24px;">{{ user.username }}</h1>
                 <p style="margin: 5px 0; color: var(--9);">{{ user.email }}</p>
@@ -21,17 +21,17 @@ Profilo - Catalogo Film
         <h2 style="padding-bottom: 10px; margin-bottom: 10px;">I tuoi Voti</h2>
     </div>
 
-    <div style="flex: 1; overflow-y: auto; padding: 0 20px 40px 20px;">
+    <div class="profile-votes-container">
         
         {% if voti %}
-        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px;">
+        <div class="profile-votes-grid">
             {% for voto in voti %}
             <div class="item-card" style="flex-direction: column; align-items: flex-start;" id="{% if voto.film %}disk_{{ voto.film.id }}_film{% elif voto.musica %}disk_{{ voto.musica.id }}_musica{% endif %}">
                 <div style="width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
                     {% if voto.film %}
-                        <span style="background-color: var(--4); font-size: 10px; padding: 2px 6px; border-radius: 4px;">FILM</span>
+                        <span class="vote-type-badge vote-type-film">FILM</span>
                     {% else %}
-                        <span style="background-color: var(--6); font-size: 10px; padding: 2px 6px; border-radius: 4px;">MUSICA</span>
+                        <span class="vote-type-badge vote-type-music">MUSICA</span>
                     {% endif %}
                     
                     <div class="voto-circle 
@@ -40,8 +40,7 @@ Profilo - Catalogo Film
                         {% elif voto.valore == 6 %} voto-medio
                         {% elif voto.valore >= 4 %} voto-scarso
                         {% else %} voto-pessimo
-                        {% endif %}"
-                        style="font-weight: bold; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px;">
+                        {% endif %}">
                         {{ voto.valore }}
                     </div>
                 </div>
@@ -51,12 +50,12 @@ Profilo - Catalogo Film
                 </h3>
                 
                 {% if voto.film %}
-                <button class="btn secondary" style="..."
+                <button class="btn secondary"
                    onclick="apriModalVoto('{{ voto.film.id }}', '{{ voto.film.titolo|escapejs }}', 'film', true)">
                    Modifica Voto
                 </button>
                 {% else %}
-                <button class="btn secondary" style="..."
+                <button class="btn secondary"
                    onclick="apriModalVoto('{{ voto.musica.id }}', '{{ voto.musica.titolo|escapejs }}', 'musica', true)">
                    Modifica Voto
                 </button>
@@ -73,7 +72,7 @@ Profilo - Catalogo Film
 </div>
 
 <div id="modal-voto" class="modal-overlay">
-    <div class="modal-box" style="max-width: 400px; text-align: center;">
+    <div class="modal-box modal-box-small">
         <span class="close-btn" onclick="chiudiModalVoto()">&times;</span>
         <h2>Modifica il tuo voto</h2>
         <p id="voto-titolo" style="color: var(--8); margin-bottom: 20px;"></p>

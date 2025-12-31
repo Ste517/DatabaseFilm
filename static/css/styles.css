@@ -12,10 +12,33 @@
     --9: #999999ff;
     --10: #ffffffff;
     --theme: "dark";
+
+    /* Voto Colors */
+    --voto-ottimo-bg: #1b5e20;
+    --voto-ottimo-color: white;
+    --voto-ottimo-border: #2e7d32;
+
+    --voto-buono-bg: #4caf50;
+    --voto-buono-color: white;
+    --voto-buono-border: #66bb6a;
+
+    --voto-medio-bg: #ffc107;
+    --voto-medio-color: #111;
+    --voto-medio-border: #ffd54f;
+
+    --voto-scarso-bg: #ff9800;
+    --voto-scarso-color: white;
+    --voto-scarso-border: #ffb74d;
+
+    --voto-pessimo-bg: #f44336;
+    --voto-pessimo-color: white;
+    --voto-pessimo-border: #e57373;
 }
 
 * {
     box-sizing: border-box;
+    scrollbar-width: thin; /* Firefox */
+    scrollbar-color: var(--7) var(--1); /* Firefox */
 }
 
 body {
@@ -23,9 +46,11 @@ body {
     font-family: 'Montserrat', sans-serif;
     background-color: var(--2);
     color: var(--10);
+    height: 100%;
+    overflow: hidden; /* Prevent full page scroll for split layout */
 }
 
-/* Top Navigation */
+/* --- TOP NAVIGATION --- */
 .topnav {
     overflow: hidden;
     background-color: var(--1);
@@ -82,7 +107,21 @@ body {
     background-color: var(--4);
 }
 
-/* Theme Switch */
+.log-button {
+    background: var(--4) !important;
+    border: none !important;
+    cursor: pointer !important;
+    color: inherit !important;
+    font: inherit !important;
+    padding: 10px 10px !important;
+    border-radius: 10px !important;
+}
+
+.log-button:hover {
+    background: var(--6) !important;
+}
+
+/* --- THEME SWITCH --- */
 .switch {
     position: relative;
     display: inline-block;
@@ -139,7 +178,7 @@ input:checked + .slider:before {
     border-radius: 50%;
 }
 
-/* Main Content */
+/* --- MAIN CONTENT --- */
 .content {
     padding: 16px;
 }
@@ -172,7 +211,7 @@ a:visited.link {
     color: var(--8);
 }
 
-/* Tables */
+/* --- TABLES --- */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -201,7 +240,12 @@ table tr:nth-child(even) {
     background-color: var(--1);
 }
 
-/* Lists */
+/* Responsive Table Wrapper */
+.table-wrapper {
+    overflow-x: auto;
+}
+
+/* --- LISTS --- */
 ul.lista {
     text-decoration: underline;
     color: var(--10);
@@ -211,7 +255,7 @@ ul.lista li {
     margin: 10px 0;
 }
 
-/* Buttons */
+/* --- BUTTONS --- */
 button, .btn {
     background-color: var(--4);
     border: none;
@@ -239,7 +283,7 @@ button.secondary:hover, .btn.secondary:hover {
     background-color: var(--5);
 }
 
-/* Forms */
+/* --- FORMS --- */
 input[type="text"],
 input[type="email"],
 input[type="password"],
@@ -266,7 +310,7 @@ select:focus {
     outline: none;
 }
 
-/* Messages */
+/* --- MESSAGES --- */
 .message {
     padding: 12px;
     margin: 12px 0;
@@ -297,7 +341,7 @@ p[style*="color: red"] {
     color: #ef5350;
 }
 
-/* Cookie Banner */
+/* --- COOKIE BANNER --- */
 .cookieadvise {
     background-color: var(--1);
     padding: 12px;
@@ -324,7 +368,42 @@ p[style*="color: red"] {
     background-color: var(--6);
 }
 
-/* Profile Page */
+/* --- LOGIN PAGE --- */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 80px);
+    padding: 20px;
+}
+
+.login-box {
+    background-color: var(--1);
+    padding: 40px;
+    border-radius: 10px;
+    border: 1px solid var(--7);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.login-box label {
+    display: block;
+    text-align: left;
+    margin-bottom: 5px;
+    color: var(--10);
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.login-box input[type="text"],
+.login-box input[type="password"] {
+    width: 100%;
+    background-color: var(--2);
+}
+
+/* --- PROFILE PAGE --- */
 .profile-container {
     max-width: 800px;
     margin: 0 auto;
@@ -350,44 +429,97 @@ p[style*="color: red"] {
     margin-top: 0;
 }
 
-/* Responsive Table Wrapper */
-.table-wrapper {
-    overflow-x: auto;
+.profile-main-container {
+    height: calc(100vh - 60px);
+    display: flex;
+    flex-direction: column;
+    max-width: 900px;
+    margin: 0 auto;
 }
 
-.modal-button {
-    padding: 6px 10px;
+.profile-header {
+    padding: 20px 20px 0 20px;
+    flex-shrink: 0;
 }
 
-/* L'ombra scura che copre tutto il sito */
+.profile-info-box {
+    background-color: var(--1);
+    padding: 30px;
+    border-radius: 8px;
+    border: 1px solid var(--7);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.profile-votes-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 20px 40px 20px;
+}
+
+.profile-votes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 15px;
+}
+
+.vote-type-badge {
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+.vote-type-film { background-color: var(--4); }
+.vote-type-music { background-color: var(--6); }
+
+.voto-circle {
+    font-weight: bold;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+}
+
+/* --- MODALS --- */
 .modal-overlay {
-    display: none; /* Di base è nascosto */
+    display: none;
     position: fixed; 
-    z-index: 1000; /* Sta sopra a tutto */
+    z-index: 1000;
     left: 0;
     top: 0;
     width: 100%; 
     height: 100%; 
     overflow: auto; 
-    background-color: rgba(0,0,0,0.8); /* Nero semitrasparente */
+    background-color: rgba(0,0,0,0.8);
     justify-content: center;
     align-items: center;
 }
 
-/* La scheda bianca (o del colore del tuo tema) */
 .modal-box {
-    background-color: var(--2); /* Cambia questo se vuoi uno sfondo scuro */
+    background-color: var(--1); /* Sfondo scuro per coerenza con il tema */
+    color: var(--10);
     margin: 5% auto; 
     padding: 20px;
-    border-radius: 10px; /* Angoli arrotondati */
+    border-radius: 10px;
     width: 80%; 
-    max-width: 800px; /* Non diventa mai troppo largo */
+    max-width: 800px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     position: relative;
-    color: var(--10); /* Colore del testo */
+    border: 1px solid var(--7);
+    max-height: 90vh;
+    overflow-y: auto;
 }
 
-/* La X per chiudere */
+/* Small modal variant for voting */
+.modal-box-small {
+    max-width: 400px;
+    text-align: center;
+}
+
 .close-btn {
     color: var(--10);
     float: right;
@@ -403,62 +535,60 @@ p[style*="color: red"] {
     color: var(--9);
 }
 
-/* Il Layout Flessibile: mette le cose una affianco all'altra */
 .modal-content-split {
     display: flex;
-    gap: 30px; /* Spazio tra locandina e testo */
+    gap: 30px;
     margin-top: 20px;
 }
 
-/* Colonna Sinistra: Immagine */
 .modal-left {
-    flex: 1; /* Prende 1 quota di spazio */
-    max-width: 300px; /* Limite larghezza locandina */
+    flex: 1;
+    max-width: 300px;
 }
 
 .modal-left img {
     width: 100%;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    border: 1px solid var(--7);
 }
 
-/* Colonna Destra: Testo */
 .modal-right {
-    flex: 2; /* Prende 2 quote di spazio (più largo dell'immagine) */
+    flex: 2;
     text-align: left;
     font-size: 16px;
-    line-height: 1.6; /* Interlinea leggibile */
+    line-height: 1.6;
 }
 
-
-/* --- NUOVO LAYOUT SPLIT SCREEN --- */
-
-/* Blocca lo scroll della pagina intera per gestire i pannelli interni */
-body, html {
-    height: 100%;
-    overflow: hidden; 
+.modal-button {
+    padding: 6px 10px;
 }
 
-/* Il contenitore che divide lo schermo */
+#modal-titolo {
+    margin-top: 0;
+    padding-right: 30px;
+    border-bottom: 1px solid var(--7);
+    padding-bottom: 10px;
+}
+
+/* --- SPLIT SCREEN LAYOUT --- */
 .split-screen-container {
     display: flex;
     flex-direction: column;
-    height: calc(100vh - 60px); /* 100% meno l'altezza della TopNav */
+    height: calc(100vh - 60px);
 }
 
-/* Le due metà */
 .half-section {
-    flex: 1; /* Ognuno prende il 50% */
+    flex: 1;
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    border-bottom: 1px solid var(--7); /* Divisore tra le sezioni */
+    border-bottom: 1px solid var(--7);
 }
 
-/* Header fisso (Titolo + Cerca) */
 .header-section {
     padding: 10px 10px;
-    background-color: var(--1); /* Sfondo header leggermente diverso */
+    background-color: var(--1);
     border-bottom: 1px solid var(--7);
     z-index: 10;
 }
@@ -476,7 +606,20 @@ body, html {
     white-space: nowrap;
 }
 
-/* Barra di ricerca specifica */
+.header-controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.filter-select {
+    padding: 6px;
+    border-radius: 4px;
+    border: 1px solid var(--7);
+    background-color: var(--2);
+    color: var(--10);
+}
+
 input.search-bar {
     margin: 0;
     width: 100%;
@@ -484,17 +627,15 @@ input.search-bar {
     padding: 6px 10px;
 }
 
-/* Area scrollabile */
 .scroll-area {
     flex: 1;
-    overflow-y: auto; /* Scroll solo qui */
+    overflow-y: auto;
     padding: 16px 10px;
-    background-color: var(--2); /* Sfondo principale */
+    background-color: var(--2);
 }
 
-/* Le Card (Film e Dischi) */
 .item-card {
-    background-color: var(--1); /* Colore contrasto rispetto allo sfondo */
+    background-color: var(--1);
     border: 1px solid var(--7);
     border-radius: 6px;
     padding: 12px;
@@ -506,90 +647,165 @@ input.search-bar {
 }
 
 .item-card:hover {
-    border-color: var(--4); /* Highlight al passaggio del mouse */
+    border-color: var(--4);
 }
 
 .card-info {
     color: var(--10);
+    overflow: hidden;
 }
 
-/* Modifiche per mobile */
-@media screen and (max-width: 600px) {
-    .header-row {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    input.search-bar {
-        max-width: 100%;
-    }
+.card-title-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    white-space: nowrap;
 }
 
-/* Responsive Mobile ottimizzato */
+.card-details-row {
+    display: block;
+    margin-top: 4px;
+}
+
+.card-actions {
+    display: flex;
+    gap: 10px;
+    padding-left: 8px;
+}
+
+/* --- BADGES & VOTES --- */
+.badge-voto {
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+    color: #000;
+    display: inline-flex;
+    align-items: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    margin-left: 5px;
+    flex-shrink: 0;
+}
+
+.voto-ottimo {
+    background-color: var(--voto-ottimo-bg) !important;
+    color: var(--voto-ottimo-color) !important;
+    border: 1px solid var(--voto-ottimo-border);
+}
+
+.voto-buono {
+    background-color: var(--voto-buono-bg) !important;
+    color: var(--voto-buono-color) !important;
+    border: 1px solid var(--voto-buono-border);
+}
+
+.voto-medio {
+    background-color: var(--voto-medio-bg) !important;
+    color: var(--voto-medio-color) !important;
+    border: 1px solid var(--voto-medio-border);
+}
+
+.voto-scarso {
+    background-color: var(--voto-scarso-bg) !important;
+    color: var(--voto-scarso-color) !important;
+    border: 1px solid var(--voto-scarso-border);
+}
+
+.voto-pessimo {
+    background-color: var(--voto-pessimo-bg) !important;
+    color: var(--voto-pessimo-color) !important;
+    border: 1px solid var(--voto-pessimo-border);
+}
+
+/* --- CUSTOM SCROLLBAR --- */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--1);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: var(--7);
+    border-radius: 5px;
+    border: 2px solid var(--1);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: var(--4);
+}
+
+::-webkit-scrollbar-corner {
+    background: var(--1);
+}
+
+/* --- MEDIA QUERIES --- */
 @media screen and (max-width: 600px) {
-    /* Il contenitore principale: teniamo tutto in riga */
+    /* Topnav */
     .topnav {
-        flex-direction: row;     /* Orizzontale, non verticale */
-        flex-wrap: wrap;         /* Se non ci sta, va a capo ordinatamente */
-        justify-content: space-between; /* Spinge Home a sinistra e Logout a destra */
-        padding: 0px 0px;       /* Riduciamo il padding esterno */
-        align-items: center;     /* Allinea tutto al centro verticalmente */
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        padding: 0px 0px;
+        align-items: center;
     }
 
-    /* I Link (Home, Profilo) */
     .topnav a {
-        width: auto;             /* Non deve occupare tutto lo schermo */
-        padding: 8px 10px;       /* Bottoni più compatti */
-        font-size: 14px;         /* Testo leggermente più piccolo */
-        text-align: left;        /* Allineato normale */
+        width: auto;
+        padding: 8px 10px;
+        font-size: 14px;
+        text-align: left;
         display: inline-block;
         margin-right: 5px;
     }
 
-    /* Il contenitore di destra (Switch + Logout) */
     .topnav-right {
-        width: auto;             /* Si stringe intorno al contenuto */
-        margin: 0;               /* Rimuoviamo margini inutili */
+        width: auto;
+        margin: 0;
         justify-content: flex-end;
         display: flex;
         align-items: center;
-        gap: 5px;                /* Spazio tra switch e logout */
+        gap: 5px;
     }
 
-    /* Rimpiccioliamo lo switch del tema (è enorme su mobile) */
     .switch {
-        transform: scale(0.7);   /* Lo riduciamo al 70% */
-        margin: 0;               /* Via i margini extra */
+        transform: scale(0.7);
+        margin: 0;
     }
 
-    /* Il bottone Logout */
     .topnav .logout-container a {
-        padding: 6px 12px;       /* Più piccolo */
+        padding: 6px 12px;
         font-size: 13px;
-        margin: 0;               /* Via il margine destro */
+        margin: 0;
     }
 
-    /* Adattamenti per il layout Split Screen su mobile */
+    /* Layout */
     .header-row {
         flex-direction: column;
         align-items: flex-start;
         gap: 0px;
     }
 
-    input.search-bar {
-        max-width: 100%;
-        width: 100%;             /* La barra di ricerca usa tutto lo spazio */
-    }
-    
-    .modal-content-split {
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    .modal-right {
-        text-align: center;
-        padding-top: 15px;
+    .header-controls {
+        width: 100%;
+        margin-top: 5px;
     }
 
+    .filter-select {
+        flex: 1;
+    }
+
+    input.search-bar {
+        max-width: 100%;
+        width: 100%;
+        margin-top: 5px;
+    }
+    
     .scroll-area {
         padding: 10px 10px;
     }
@@ -598,253 +814,20 @@ input.search-bar {
         margin-top: 4px !important;
         margin-left: 0px !important;
     }
-}
 
-/* --- COLORI VOTI (Badge) --- */
-
-/* 9-10: Eccellente (Verde Scuro) */
-.voto-ottimo {
-    background-color: #1b5e20 !important; /* Verde foresta */
-    color: white !important;
-    border: 1px solid #2e7d32;
-}
-
-/* 7-8: Buono (Verde) */
-.voto-buono {
-    background-color: #4caf50 !important; /* Verde standard */
-    color: white !important;
-    border: 1px solid #66bb6a;
-}
-
-/* 6: Sufficiente (Giallo/Oro) */
-.voto-medio {
-    background-color: #ffc107 !important; /* Ambra/Oro */
-    color: #111 !important; /* Testo scuro per leggere meglio su giallo */
-    border: 1px solid #ffd54f;
-}
-
-/* 4-5: Scarso (Arancione) */
-.voto-scarso {
-    background-color: #ff9800 !important; /* Arancione */
-    color: white !important;
-    border: 1px solid #ffb74d;
-}
-
-/* 1-3: Pessimo (Rosso) */
-.voto-pessimo {
-    background-color: #f44336 !important; /* Rosso */
-    color: white !important;
-    border: 1px solid #e57373;
-}
-
-/* --- LOGIN PAGE --- */
-
-.login-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    /* Altezza calcolata: 100% dello schermo meno l'altezza della navbar (circa 60px) */
-    min-height: calc(100vh - 80px); 
-    padding: 20px;
-}
-
-.login-box {
-    background-color: var(--1); /* Sfondo scuro della card */
-    padding: 40px;
-    border-radius: 10px;
-    border: 1px solid var(--7); /* Bordo sottile */
-    box-shadow: 0 10px 25px rgba(0,0,0,0.5); /* Ombra profonda */
-    width: 100%;
-    max-width: 400px; /* Non diventa mai troppo largo */
-    text-align: center;
-}
-
-.login-box label {
-    display: block;
-    text-align: left;
-    margin-bottom: 5px;
-    color: var(--10);
-    font-weight: bold;
-    font-size: 14px;
-}
-
-/* Assicuriamoci che gli input riempiano la card */
-.login-box input[type="text"],
-.login-box input[type="password"] {
-    width: 100%;
-    background-color: var(--2); /* Input leggermente più chiari/scuri dello sfondo card */
-}
-
-/* Badge per la media voti nella Home */
-.badge-voto {
-    color: #000; /* Testo nero per leggibilità */
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-size: 12px;
-    font-weight: bold;
-    display: inline-flex;
-    align-items: center;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
-}
-
-/* --- STILI PER I MODALI (Mancanti) --- */
-
-/* 1. Lo sfondo scuro che copre tutto (Nascosto di default) */
-.modal-overlay {
-    display: none; /* FONDAMENTALE: Di base non si deve vedere */
-    position: fixed; 
-    z-index: 1000; 
-    left: 0;
-    top: 0;
-    width: 100%; 
-    height: 100%; 
-    background-color: rgba(0,0,0,0.8); /* Sfondo semitrasparente scuro */
-    justify-content: center; /* Centra orizzontalmente */
-    align-items: center; /* Centra verticalmente */
-}
-
-/* 2. La scatola bianca/nera del modale */
-.modal-box {
-    background-color: var(--1);
-    color: var(--10);
-    padding: 20px;
-    border: 1px solid var(--7);
-    width: 90%;
-    max-width: 700px;
-    border-radius: 8px;
-    position: relative;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.5);
-    max-height: 90vh; /* Non più alto del 90% dello schermo */
-    overflow-y: auto; /* Se il contenuto è lungo, scorri */
-}
-
-/* 3. Bottone Chiudi (X) */
-.close-btn {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    font-size: 28px;
-    font-weight: bold;
-    color: var(--8);
-    cursor: pointer;
-}
-.close-btn:hover {
-    color: var(--4);
-}
-
-/* 4. Layout interno diviso (Sinistra: Poster, Destra: Testo) */
-.modal-content-split {
-    display: flex;
-    gap: 20px;
-    margin-top: 10px;
-    align-items: flex-start;
-}
-
-.modal-left {
-    flex: 1;
-    max-width: 200px; /* Larghezza massima poster */
-}
-
-.modal-left img {
-    width: 100%;
-    height: auto;
-    border-radius: 4px;
-    border: 1px solid var(--7);
-}
-
-.modal-right {
-    flex: 2;
-    text-align: left;
-}
-
-/* 5. Stile specifico per il Titolo e Testo nel modale */
-#modal-titolo {
-    margin-top: 0;
-    padding-right: 30px; /* Spazio per non finire sotto la X */
-    border-bottom: 1px solid var(--7);
-    padding-bottom: 10px;
-}
-
-/* 6. Adattamento Mobile per il Modale */
-@media screen and (max-width: 600px) {
+    /* Modals */
     .modal-content-split {
-        flex-direction: column; /* In colonna su mobile */
+        flex-direction: column;
         align-items: center;
     }
+
     .modal-left {
         max-width: 150px;
         margin-bottom: 15px;
     }
+
     .modal-right {
         text-align: center;
+        padding-top: 15px;
     }
-}
-
-/* 7. Stili Badge e Colori Voto (Li avevi nel template ma meglio averli nel CSS) */
-.badge-voto {
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-size: 12px;
-    font-weight: bold;
-    color: #000;
-    margin-left: 5px;
-    display: inline-block;
-}
-
-/* Colori specifici */
-.voto-ottimo { background-color: #1b5e20; color: white; } /* 9-10 */
-.voto-buono  { background-color: #4caf50; color: white; } /* 7-8 */
-.voto-medio  { background-color: #ffc107; color: black; } /* 6 */
-.voto-scarso { background-color: #ff9800; color: white; } /* 4-5 */
-.voto-pessimo{ background-color: #f44336; color: white; } /* 1-3 */
-
-.log-button:hover {
-    background: var(--6) !important;
-}
-
-.log-button {
-    background: var(--4) !important;
-    border: none !important;
-    cursor: pointer !important;
-    color: inherit !important;
-    font: inherit !important;
-    padding: 10px 10px !important;
-    border-radius: 10px !important;
-}
-
-/* --- CUSTOM SCROLLBAR --- */
-
-/* Per Firefox */
-* {
-    scrollbar-width: thin; /* Barra sottile */
-    scrollbar-color: var(--7) var(--1); /* Colore Cursore / Colore Sfondo */
-}
-
-/* Per Chrome, Edge, Safari (Webkit) */
-::-webkit-scrollbar {
-    width: 10px;  /* Larghezza barra verticale */
-    height: 10px; /* Altezza barra orizzontale */
-}
-
-/* Lo sfondo della barra (binario) */
-::-webkit-scrollbar-track {
-    background: var(--1); 
-    border-radius: 4px;
-}
-
-/* Il cursore che si muove */
-::-webkit-scrollbar-thumb {
-    background-color: var(--7); /* Grigio-Viola del tema */
-    border-radius: 5px;         /* Arrotondato */
-    border: 2px solid var(--1); /* Bordo interno per creare spaziatura */
-}
-
-/* Quando passi sopra col mouse */
-::-webkit-scrollbar-thumb:hover {
-    background-color: var(--4); /* Diventa Blu/Viola acceso (come i bottoni) */
-}
-
-/* Angolo dove si incontrano scroll orizzontale e verticale */
-::-webkit-scrollbar-corner {
-    background: var(--1);
 }
