@@ -1,310 +1,309 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: Catalogo Film 1.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-31 15:29+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2025-12-31 16:00+0100\n"
+"Last-Translator: Admin <admin@example.com>\n"
+"Language-Team: Italian\n"
+"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
 #: catalogo/templates/catalogo/404.html:5
 #: catalogo/templates/catalogo/404.html:9
 msgid "Errore 404 - Pagina non trovata"
-msgstr ""
+msgstr "Errore 404 - Pagina non trovata"
 
 #: catalogo/templates/catalogo/404.html:10
 msgid "Ci dispiace, la pagina che stai cercando non esiste."
-msgstr ""
+msgstr "Ci dispiace, la pagina che stai cercando non esiste."
 
 #: catalogo/templates/catalogo/404.html:12
 #, python-format
 msgid "Puoi tornare alla <a href=\"%(home_url)s\">pagina principale</a>."
-msgstr ""
+msgstr "Puoi tornare alla <a href=\"%(home_url)s\">pagina principale</a>."
 
 #: catalogo/templates/catalogo/homepage.html:6
 msgid "Pagina Principale - Catalogo Film"
-msgstr ""
+msgstr "Pagina Principale - Catalogo Film"
 
 #: catalogo/templates/catalogo/homepage.html:15
 msgid "I miei Film"
-msgstr ""
+msgstr "I miei Film"
 
 #: catalogo/templates/catalogo/homepage.html:19
 #: catalogo/templates/catalogo/homepage.html:100
 msgid "Aggiunti di recente"
-msgstr ""
+msgstr "Aggiunti di recente"
 
 #: catalogo/templates/catalogo/homepage.html:20
 #: catalogo/templates/catalogo/homepage.html:101
 msgid "Aggiunti (meno recenti)"
-msgstr ""
+msgstr "Aggiunti (meno recenti)"
 
 #: catalogo/templates/catalogo/homepage.html:21
 msgid "Alfabetico (A-Z)"
-msgstr ""
+msgstr "Alfabetico (A-Z)"
 
 #: catalogo/templates/catalogo/homepage.html:22
 #: catalogo/templates/catalogo/homepage.html:103
 msgid "Artista (Z-A)"
-msgstr ""
+msgstr "Artista (Z-A)"
 
 #: catalogo/templates/catalogo/homepage.html:23
 #: catalogo/templates/catalogo/homepage.html:104
 msgid "Voto (Migliori)"
-msgstr ""
+msgstr "Voto (Migliori)"
 
 #: catalogo/templates/catalogo/homepage.html:24
 #: catalogo/templates/catalogo/homepage.html:105
 msgid "Voto (Peggiori)"
-msgstr ""
+msgstr "Voto (Peggiori)"
 
 #: catalogo/templates/catalogo/homepage.html:25
 #: catalogo/templates/catalogo/homepage.html:106
 msgid "Formato"
-msgstr ""
+msgstr "Formato"
 
 #: catalogo/templates/catalogo/homepage.html:28
 msgid "Cerca film..."
-msgstr ""
+msgstr "Cerca film..."
 
 #: catalogo/templates/catalogo/homepage.html:42
 #: catalogo/templates/catalogo/homepage.html:126
 msgid "Posizione:"
-msgstr ""
+msgstr "Posizione:"
 
 #: catalogo/templates/catalogo/homepage.html:57
 msgid "Votato"
-msgstr ""
+msgstr "Votato"
 
 #: catalogo/templates/catalogo/homepage.html:67
 #: catalogo/templates/catalogo/homepage.html:148
 msgid "Modifica"
-msgstr ""
+msgstr "Modifica"
 
 #: catalogo/templates/catalogo/homepage.html:69
 #: catalogo/templates/catalogo/homepage.html:150
 msgid "Vota"
-msgstr ""
+msgstr "Vota"
 
 #: catalogo/templates/catalogo/homepage.html:87
 msgid "Nessun film inserito."
-msgstr ""
+msgstr "Nessun film inserito."
 
 #: catalogo/templates/catalogo/homepage.html:96
 msgid "I miei Dischi"
-msgstr ""
+msgstr "I miei Dischi"
 
 #: catalogo/templates/catalogo/homepage.html:102
 msgid "Artista (A-Z)"
-msgstr ""
+msgstr "Artista (A-Z)"
 
 #: catalogo/templates/catalogo/homepage.html:109
 msgid "Cerca artista o album..."
-msgstr ""
+msgstr "Cerca artista o album..."
 
 #: catalogo/templates/catalogo/homepage.html:168
 msgid "Nessun disco inserito."
-msgstr ""
+msgstr "Nessun disco inserito."
 
 #: catalogo/templates/catalogo/homepage.html:194
 msgid "Dai un voto"
-msgstr ""
+msgstr "Dai un voto"
 
 #: catalogo/templates/catalogo/homepage.html:203
 msgid "Scegli un voto..."
-msgstr ""
+msgstr "Scegli un voto..."
 
 #: catalogo/templates/catalogo/homepage.html:204
 #: catalogo/templates/catalogo/profile.html:86
 msgid "Capolavoro"
-msgstr ""
+msgstr "Capolavoro"
 
 #: catalogo/templates/catalogo/homepage.html:205
 #: catalogo/templates/catalogo/profile.html:87
 msgid "Eccellente"
-msgstr ""
+msgstr "Eccellente"
 
 #: catalogo/templates/catalogo/homepage.html:206
 #: catalogo/templates/catalogo/profile.html:88
 msgid "Ottimo"
-msgstr ""
+msgstr "Ottimo"
 
 #: catalogo/templates/catalogo/homepage.html:207
 #: catalogo/templates/catalogo/profile.html:89
 msgid "Buono"
-msgstr ""
+msgstr "Buono"
 
 #: catalogo/templates/catalogo/homepage.html:208
 #: catalogo/templates/catalogo/profile.html:90
 msgid "Sufficiente"
-msgstr ""
+msgstr "Sufficiente"
 
 #: catalogo/templates/catalogo/homepage.html:209
 #: catalogo/templates/catalogo/profile.html:91
 msgid "Mediocre"
-msgstr ""
+msgstr "Mediocre"
 
 #: catalogo/templates/catalogo/homepage.html:210
 #: catalogo/templates/catalogo/profile.html:92
 msgid "Scarso"
-msgstr ""
+msgstr "Scarso"
 
 #: catalogo/templates/catalogo/homepage.html:211
 #: catalogo/templates/catalogo/profile.html:93
 msgid "Pessimo"
-msgstr ""
+msgstr "Pessimo"
 
 #: catalogo/templates/catalogo/homepage.html:212
 #: catalogo/templates/catalogo/profile.html:94
 msgid "Orribile"
-msgstr ""
+msgstr "Orribile"
 
 #: catalogo/templates/catalogo/homepage.html:213
 #: catalogo/templates/catalogo/profile.html:95
 msgid "Inguardabile"
-msgstr ""
+msgstr "Inguardabile"
 
 #: catalogo/templates/catalogo/homepage.html:216
 msgid "Conferma Voto"
-msgstr ""
+msgstr "Conferma Voto"
 
 #: catalogo/templates/catalogo/login.html:5
 msgid "Login - Catalogo Film"
-msgstr ""
+msgstr "Login - Catalogo Film"
 
 #: catalogo/templates/catalogo/login.html:11
 msgid "Accedi"
-msgstr ""
+msgstr "Accedi"
 
 #: catalogo/templates/catalogo/login.html:12
 msgid "Inserisci le tue credenziali"
-msgstr ""
+msgstr "Inserisci le tue credenziali"
 
 #: catalogo/templates/catalogo/login.html:16
 msgid "Username o password non validi."
-msgstr ""
+msgstr "Username o password non validi."
 
 #: catalogo/templates/catalogo/login.html:24
 msgid "Username"
-msgstr ""
+msgstr "Username"
 
 #: catalogo/templates/catalogo/login.html:25
 msgid "Il tuo nome utente"
-msgstr ""
+msgstr "Il tuo nome utente"
 
 #: catalogo/templates/catalogo/login.html:29
 msgid "Password"
-msgstr ""
+msgstr "Password"
 
 #: catalogo/templates/catalogo/login.html:33
 msgid "Entra"
-msgstr ""
+msgstr "Entra"
 
 #: catalogo/templates/catalogo/login.html:39
 msgid "Non hai un account? Chiedi all'amministratore."
-msgstr ""
+msgstr "Non hai un account? Chiedi all'amministratore."
+
+#: catalogo/templates/catalogo/master.html:23
+msgid "Catalogo"
+msgstr "Catalogo"
 
 #: catalogo/templates/catalogo/master.html:27
 #: catalogo/templates/catalogo/master.html:77
 msgid "Film"
-msgstr ""
+msgstr "Film"
 
 #: catalogo/templates/catalogo/master.html:28
 #: catalogo/templates/catalogo/master.html:78
 msgid "Musica"
-msgstr ""
+msgstr "Musica"
 
 #: catalogo/templates/catalogo/master.html:30
 #: catalogo/templates/catalogo/master.html:80
 msgid "Profilo"
-msgstr ""
+msgstr "Profilo"
 
 #: catalogo/templates/catalogo/master.html:52
 #: catalogo/templates/catalogo/master.html:106
 msgid "Cambia tema"
-msgstr ""
+msgstr "Cambia tema"
 
 #: catalogo/templates/catalogo/master.html:60
 #: catalogo/templates/catalogo/master.html:115
 msgid "Logout"
-msgstr ""
+msgstr "Logout"
 
 #: catalogo/templates/catalogo/master.html:64
 #: catalogo/templates/catalogo/master.html:118
 msgid "Login"
-msgstr ""
+msgstr "Login"
 
 #: catalogo/templates/catalogo/master.html:87
 msgid "Lingua"
-msgstr ""
+msgstr "Lingua"
 
 #: catalogo/templates/catalogo/master.html:105
 msgid "Tema"
-msgstr ""
+msgstr "Tema"
 
 #: catalogo/templates/catalogo/master.html:128
 msgid "Questo sito utilizza cookie funzionali."
-msgstr ""
+msgstr "Questo sito utilizza cookie funzionali."
 
 #: catalogo/templates/catalogo/master.html:129
 msgid "Ok"
-msgstr ""
+msgstr "Ok"
 
 #: catalogo/templates/catalogo/profile.html:5
 msgid "Profilo - Catalogo Film"
-msgstr ""
+msgstr "Profilo - Catalogo Film"
 
 #: catalogo/templates/catalogo/profile.html:18
 msgid "Iscritto dal:"
-msgstr ""
+msgstr "Iscritto dal:"
 
 #: catalogo/templates/catalogo/profile.html:22
 msgid "I tuoi Voti"
-msgstr ""
+msgstr "I tuoi Voti"
 
 #: catalogo/templates/catalogo/profile.html:33
 msgid "FILM"
-msgstr ""
+msgstr "FILM"
 
 #: catalogo/templates/catalogo/profile.html:35
 msgid "MUSICA"
-msgstr ""
+msgstr "MUSICA"
 
 #: catalogo/templates/catalogo/profile.html:57
 #: catalogo/templates/catalogo/profile.html:62
 msgid "Modifica Voto"
-msgstr ""
+msgstr "Modifica Voto"
 
 #: catalogo/templates/catalogo/profile.html:69
 msgid "Non hai ancora votato nulla."
-msgstr ""
+msgstr "Non hai ancora votato nulla."
 
 #: catalogo/templates/catalogo/profile.html:79
 msgid "Modifica il tuo voto"
-msgstr ""
+msgstr "Modifica il tuo voto"
 
 #: catalogo/templates/catalogo/profile.html:96
 msgid "Rimuovi il tuo voto"
-msgstr ""
+msgstr "Rimuovi il tuo voto"
 
 #: catalogo/templates/catalogo/profile.html:98
 msgid "Aggiorna"
-msgstr ""
+msgstr "Aggiorna"
 
 #: my_media_site/settings.py:132
 msgid "English"
-msgstr ""
+msgstr "English"
 
 #: my_media_site/settings.py:133
 msgid "Italian"
-msgstr ""
+msgstr "Italian"
