@@ -6,6 +6,7 @@ from django.db.models import Avg
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 import json
+from urllib.parse import urlparse
 
 @login_required
 def salva_voto(request):
@@ -13,27 +14,42 @@ def salva_voto(request):
         tipo = request.POST.get('tipo') # "film" o "musica"
         id_oggetto = request.POST.get('id_oggetto')
         valore = request.POST.get('valore')
+        referer_url = request.META.get('HTTP_REFERER')
+        target_url = '/'
 
         if id_oggetto and valore:
             try:
                 if tipo == 'film':
                     # Cerca se esiste già un voto per questo utente e questo film
                     # Se c'è lo aggiorna, se no lo crea.
-                    Voto.objects.update_or_create(
-                        utente=request.user,
-                        film_id=id_oggetto,
-                        defaults={'valore': int(valore), 'musica': None}
-                    )
+                    if int(valore) == 0:
+                        Voto.objects.filter(utente=request.user,film_id=id_oggetto).delete()
+                    else:
+                        Voto.objects.update_or_create(
+                            utente=request.user,
+                            film_id=id_oggetto,
+                            defaults={'valore': int(valore), 'musica': None}
+                        )
                 elif tipo == 'musica':
-                    Voto.objects.update_or_create(
-                        utente=request.user,
-                        musica_id=id_oggetto,
-                        defaults={'valore': int(valore), 'film': None}
-                    )
+                    if int(valore) == 0:
+                        Voto.objects.filter(utente=request.user,musica_id=id_oggetto).delete()
+                    else:
+                        Voto.objects.update_or_create(
+                            utente=request.user,
+                            musica_id=id_oggetto,
+                            defaults={'valore': int(valore), 'film': None}
+                        )
+                if referer_url:
+                    parsed = urlparse(referer_url)
+                    target_url = parsed.path
+                    target_url += f"#disk_{id_oggetto}"
+                    if parsed.path == '/profilo/':
+                        target_url += f"_{tipo}"
             except Exception as e:
                 print(f"Errore salvataggio voto: {e}")
-
-    return redirect('home')
+    
+    return redirect(target_url)
+    
 
 @login_required
 def profilo(request):

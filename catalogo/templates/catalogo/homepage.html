@@ -1,4 +1,5 @@
 {% extends 'catalogo/master.html' %}
+{% load custom_filters %}
 
 {% block title %}
 Pagina Principale - Catalogo Film
@@ -29,7 +30,7 @@ Pagina Principale - Catalogo Film
         </div>
         <div class="scroll-area" id="lista-film">
             {% for film in films %}
-            <div class="item-card">
+            <div class="item-card" id="film_{{ film.id }}">
                 <div class="card-info" style="overflow: hidden;">
                     <div style="display: flex; align-items: center; gap: 8px; overflow-x: auto; scrollbar-width: none; white-space: nowrap;">
                         <strong style="white-space: nowrap;">{{ film.titolo }}</strong> 
@@ -50,14 +51,22 @@ Pagina Principale - Catalogo Film
                             {% endif %}" style="flex-shrink: 0;">
                             ★ {{ film.media|floatformat:1 }}
                         </span>
-                        {% endif %}</small>
+                        {% endif %}
+                        {% if film|ha_votato:request.user %}
+                            <span style="color: green; font-weight: bold;">(Votato ✅)</span>
+                        {% endif %}
+                    </small>
                 </div>
                 
                 <div style="display: flex; gap: 10px; padding-left: 8px;">
                     {% if user.is_authenticated %}
                     <button class="modal-button" 
-                        onclick="apriModalVoto('{{ film.id }}', '{{ film.titolo|escapejs }}', 'film')">
-                        ★ Vota
+                        onclick="apriModalVoto('{{ film.id }}', '{{ film.titolo|escapejs }}', 'film', {% if film|ha_votato:request.user %}true{% else %}false{% endif %})">
+                        {% if film|ha_votato:request.user %}
+                            ★ Modifica
+                        {% else %}
+                            ★ Vota
+                        {% endif %}
                     </button>
                     {% endif %}
                 
@@ -103,7 +112,7 @@ Pagina Principale - Catalogo Film
 
         <div class="scroll-area" id="lista-musica">
             {% for disco in album %}
-            <div class="item-card">
+            <div class="item-card" id="disk_{{ disco.id }}">
                 <div class="card-info" style="overflow: hidden;">
                     <div style="display: flex; align-items: center; gap: 8px; overflow-x: auto; scrollbar-width: none; white-space: nowrap;">
                         <span style="white-space: nowrap;"><strong style="white-space: nowrap;">{{ disco.titolo }}</strong> - {{ disco.artista }}</span>
@@ -124,14 +133,19 @@ Pagina Principale - Catalogo Film
                             {% endif %}" style="flex-shrink: 0;">
                             ★ {{ disco.media|floatformat:1 }}
                         </span>
-                        {% endif %}</small>
+                        {% endif %}
+                    </small>
                 </div>
             
                 <div style="display: flex; gap: 10px; padding-left: 8px;">
                     {% if user.is_authenticated %}
                     <button class="modal-button" 
-                        onclick="apriModalVoto('{{ disco.id }}', '{{ disco.titolo|escapejs }}', 'musica')">
-                        ★ Vota
+                        onclick="apriModalVoto('{{ disco.id }}', '{{ disco.titolo|escapejs }}', 'musica', {% if disco|ha_votato:request.user %}true{% else %}false{% endif %})">
+                        {% if disco|ha_votato:request.user %}
+                            ★ Modifica
+                        {% else %}
+                            ★ Vota
+                        {% endif %}
                     </button>
                     {% endif %}
                 

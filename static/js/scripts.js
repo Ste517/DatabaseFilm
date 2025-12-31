@@ -167,3 +167,18 @@ function updateSort(param, value) {
     url.searchParams.set(param, value);
     window.location.href = url.toString();
 }
+
+function apriModalVoto(id, titolo, tipo, giaVotato) {
+    document.getElementById('modal-voto').style.display = 'flex';
+    document.getElementById('input-voto-id').value = id;
+    document.getElementById('input-voto-tipo').value = tipo;
+    document.getElementById('voto-titolo').innerText = titolo;
+    
+    // Logica per cambiare il titolo
+    var titoloModale = document.querySelector('#modal-voto h2');
+    if (giaVotato) {
+        titoloModale.innerText = "Modifica il tuo voto";
+    } else {
+        titoloModale.innerText = "Dai un voto";
+    }
+}
