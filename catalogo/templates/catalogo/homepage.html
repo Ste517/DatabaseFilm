@@ -14,7 +14,7 @@ Pagina Principale - Catalogo Film
                 <h2>🎬 I miei Film</h2>
                 
                 <div class="header-row">
-                    <select onchange="updateSort('sort_film', this.value)" style="padding: 6px; border-radius: 4px; border: 1px solid var(--7); background-color: var(--2); color: var(--10);">
+                    <select onchange="updateSort('sort_film', this.value)">
                         <option value="-id" {% if current_sort_film == '-id' %}selected{% endif %}>📅 Aggiunti di recente</option>
                         <option value="id" {% if current_sort_film == 'id' %}selected{% endif %}>📅 Aggiunti (meno recenti)</option>
                         <option value="titolo" {% if current_sort_film == 'titolo' %}selected{% endif %}>🔤 Alfabetico (A-Z)</option>
@@ -31,9 +31,9 @@ Pagina Principale - Catalogo Film
         <div class="scroll-area" id="lista-film">
             {% for film in films %}
             <div class="item-card" id="film_{{ film.id }}">
-                <div class="card-info" style="overflow: hidden;">
-                    <div style="display: flex; align-items: center; gap: 8px; overflow-x: auto; scrollbar-width: none; white-space: nowrap;">
-                        <strong style="white-space: nowrap;">{{ film.titolo }}</strong> 
+                <div class="card-info" style="overflow: hidden; flex: 1;">
+                    <div class="card-title-row">
+                        <strong class="card-title-text">{{ film.titolo }}</strong>
                         {% if film.anno_uscita %}
                             <span style="opacity:0.7; white-space: nowrap;">({{ film.anno_uscita }})</span>
                         {% endif %}
@@ -53,14 +53,14 @@ Pagina Principale - Catalogo Film
                         </span>
                         {% endif %}
                         {% if film|ha_votato:request.user %}
-                            <span style="color: green; font-weight: bold;">(Votato ✅)</span>
+                            <span style="color: var(--color-success); font-weight: bold;">(Votato ✅)</span>
                         {% endif %}
                     </small>
                 </div>
                 
                 <div style="display: flex; gap: 10px; padding-left: 8px;">
                     {% if user.is_authenticated %}
-                    <button class="modal-button" 
+                    <button class="btn secondary"
                         onclick="apriModalVoto('{{ film.id }}', '{{ film.titolo|escapejs }}', 'film', {% if film|ha_votato:request.user %}true{% else %}false{% endif %})">
                         {% if film|ha_votato:request.user %}
                             ★ Modifica
@@ -71,7 +71,7 @@ Pagina Principale - Catalogo Film
                     {% endif %}
                 
                     {% if film.poster and film.trama %}
-                    <button class="modal-button" 
+                    <button class="btn secondary"
                             onclick="apriModal(this)" 
                             data-titolo="{{ film.titolo }}" 
                             data-trama="{{ film.trama }}" 
@@ -95,7 +95,7 @@ Pagina Principale - Catalogo Film
                 <h2>🎵 I miei Dischi</h2>
                 
                 <div class="header-row">
-                    <select onchange="updateSort('sort_musica', this.value)" style="padding: 6px; border-radius: 4px; border: 1px solid var(--7); background-color: var(--2); color: var(--10);">
+                    <select onchange="updateSort('sort_musica', this.value)">
                         <option value="-id" {% if current_sort_musica == '-id' %}selected{% endif %}>📅 Aggiunti di recente</option>
                         <option value="id" {% if current_sort_musica == 'id' %}selected{% endif %}>📅 Aggiunti (meno recenti)</option>
                         <option value="titolo" {% if current_sort_musica == 'titolo' %}selected{% endif %}>🔤 Artista (A-Z)</option>
@@ -113,9 +113,9 @@ Pagina Principale - Catalogo Film
         <div class="scroll-area" id="lista-musica">
             {% for disco in album %}
             <div class="item-card" id="disk_{{ disco.id }}">
-                <div class="card-info" style="overflow: hidden;">
-                    <div style="display: flex; align-items: center; gap: 8px; overflow-x: auto; scrollbar-width: none; white-space: nowrap;">
-                        <span style="white-space: nowrap;"><strong style="white-space: nowrap;">{{ disco.titolo }}</strong> - {{ disco.artista }}</span>
+                <div class="card-info" style="overflow: hidden; flex: 1;">
+                    <div class="card-title-row">
+                        <span class="card-title-text">{{ disco.titolo }} - {{ disco.artista }}</span>
                         {% if disco.anno_uscita %} 
                             <span style="opacity: 0.7; white-space: nowrap;">({{ disco.anno_uscita }})</span> 
                         {% endif %}
@@ -139,7 +139,7 @@ Pagina Principale - Catalogo Film
             
                 <div style="display: flex; gap: 10px; padding-left: 8px;">
                     {% if user.is_authenticated %}
-                    <button class="modal-button" 
+                    <button class="btn secondary"
                         onclick="apriModalVoto('{{ disco.id }}', '{{ disco.titolo|escapejs }}', 'musica', {% if disco|ha_votato:request.user %}true{% else %}false{% endif %})">
                         {% if disco|ha_votato:request.user %}
                             ★ Modifica
@@ -150,7 +150,7 @@ Pagina Principale - Catalogo Film
                     {% endif %}
                 
                     {% if disco.copertina or disco.descrizione %}
-                    <button class="modal-button" 
+                    <button class="btn secondary"
                             onclick="apriModal(this)" 
                             data-titolo="{{ disco.titolo }} - {{ disco.artista }}" 
                             data-trama="{{ disco.descrizione|default:'Nessuna descrizione.' }}" 
@@ -189,14 +189,14 @@ Pagina Principale - Catalogo Film
         <span class="close-btn" onclick="chiudiModalVoto()">&times;</span>
         
         <h2>Dai un voto</h2>
-        <p id="voto-titolo" style="color: var(--8); margin-bottom: 20px;"></p>
+        <p id="voto-titolo" style="color: var(--color-text-muted); margin-bottom: 20px;"></p>
 
         <form method="POST" action="{% url 'salva_voto' %}">
             {% csrf_token %}
             <input type="hidden" name="id_oggetto" id="input-voto-id">
             <input type="hidden" name="tipo" id="input-voto-tipo">
             
-            <select name="valore" style="width: 100%; padding: 10px; margin-bottom: 20px; background-color: var(--1); color: var(--10); border: 1px solid var(--7);">
+            <select name="valore" style="width: 100%; padding: 10px; margin-bottom: 20px; background-color: var(--color-bg-body); color: var(--color-text-main); border: 1px solid var(--color-border);">
                 <option value="" disabled selected>Scegli un voto...</option>
                 <option value="10">10 - Capolavoro</option>
                 <option value="9">9 - Eccellente</option>
