@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{% endblock %}</title>
     {% load static %}
+    {% load i18n %}
     <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
     <script>
         (function() {
@@ -23,17 +24,32 @@
 
         <!-- Desktop Menu -->
         <div class="nav-links">
-            <a href="{% url 'home' %}" class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}">Film</a>
-            <a href="{% url 'music' %}" class="{% if request.resolver_match.url_name == 'music' %}active{% endif %}">Musica</a>
+            <a href="{% url 'home' %}" class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}">{% trans "Film" %}</a>
+            <a href="{% url 'music' %}" class="{% if request.resolver_match.url_name == 'music' %}active{% endif %}">{% trans "Musica" %}</a>
             {% if user.is_authenticated %}
-                <a href="{% url 'profilo' %}" class="{% if request.resolver_match.url_name == 'profilo' %}active{% endif %}">Profilo</a>
+                <a href="{% url 'profilo' %}" class="{% if request.resolver_match.url_name == 'profilo' %}active{% endif %}">{% trans "Profilo" %}</a>
             {% endif %}
             {% if user.is_staff %}
                 <a href="/admin" class="{% if request.resolver_match.url_name == 'admin' %}active{% endif %}">Admin</a>
             {% endif %}
 
+            <form action="{% url 'set_language' %}" method="post" style="display: inline-flex; align-items: center;">
+                {% csrf_token %}
+                <input name="next" type="hidden" value="{{ redirect_to }}">
+                <select name="language" onchange="this.form.submit()" style="padding: 0.25rem; border-radius: 4px; border: 1px solid var(--color-border);">
+                    {% get_current_language as LANGUAGE_CODE %}
+                    {% get_available_languages as LANGUAGES %}
+                    {% get_language_info_list for LANGUAGES as languages %}
+                    {% for language in languages %}
+                        <option value="{{ language.code }}"{% if language.code == LANGUAGE_CODE %} selected{% endif %}>
+                            {{ language.code|upper }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </form>
+
             <!-- Theme Switcher -->
-            <button class="theme-toggle" onclick="themeSwitch()" aria-label="Cambia tema">
+            <button class="theme-toggle" onclick="themeSwitch()" aria-label="{% trans 'Cambia tema' %}">
                 <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
                 <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401" /></svg>
             </button>
@@ -41,11 +57,11 @@
             {% if user.is_authenticated %}
                 <form method="post" action="{% url 'logout' %}" style="display: inline;">
                     {% csrf_token %}
-                    <button type="submit" class="btn secondary">Logout</button>
+                    <button type="submit" class="btn secondary">{% trans "Logout" %}</button>
                 </form>
             {% else %}
                 {% if not request.resolver_match.url_name == 'login' %}
-                    <a href="{% url 'login' %}" class="btn">Login</a>
+                    <a href="{% url 'login' %}" class="btn">{% trans "Login" %}</a>
                 {% endif %}
             {% endif %}
         </div>
@@ -58,18 +74,36 @@
 
     <!-- Mobile Menu Dropdown -->
     <div id="mobile-menu" class="mobile-menu">
-        <a href="{% url 'home' %}" class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}">Film</a>
-        <a href="{% url 'music' %}" class="{% if request.resolver_match.url_name == 'music' %}active{% endif %}">Musica</a>
+        <a href="{% url 'home' %}" class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}">{% trans "Film" %}</a>
+        <a href="{% url 'music' %}" class="{% if request.resolver_match.url_name == 'music' %}active{% endif %}">{% trans "Musica" %}</a>
         {% if user.is_authenticated %}
-            <a href="{% url 'profilo' %}" class="{% if request.resolver_match.url_name == 'profilo' %}active{% endif %}">Profilo</a>
+            <a href="{% url 'profilo' %}" class="{% if request.resolver_match.url_name == 'profilo' %}active{% endif %}">{% trans "Profilo" %}</a>
         {% endif %}
         {% if user.is_staff %}
             <a href="/admin">Pannello Admin</a>
         {% endif %}
 
         <div style="display: flex; justify-content: space-between; align-items: center;">
-            <span style="color: var(--color-text-main);">Tema</span>
-            <button class="theme-toggle" onclick="themeSwitch()" aria-label="Cambia tema">
+            <span style="color: var(--color-text-main);">{% trans "Lingua" %}</span>
+            <form action="{% url 'set_language' %}" method="post" style="display: inline-flex; align-items: center;">
+                {% csrf_token %}
+                <input name="next" type="hidden" value="{{ redirect_to }}">
+                <select name="language" onchange="this.form.submit()" style="padding: 0.25rem; border-radius: 4px; border: 1px solid var(--color-border); color: #000;">
+                    {% get_current_language as LANGUAGE_CODE %}
+                    {% get_available_languages as LANGUAGES %}
+                    {% get_language_info_list for LANGUAGES as languages %}
+                    {% for language in languages %}
+                        <option value="{{ language.code }}"{% if language.code == LANGUAGE_CODE %} selected{% endif %}>
+                            {{ language.code|upper }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </form>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="color: var(--color-text-main);">{% trans "Tema" %}</span>
+            <button class="theme-toggle" onclick="themeSwitch()" aria-label="{% trans 'Cambia tema' %}">
                 <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
                 <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401" /></svg>
             </button>
@@ -78,10 +112,10 @@
         {% if user.is_authenticated %}
             <form method="post" action="{% url 'logout' %}" style="width: 100%;">
                 {% csrf_token %}
-                <button type="submit" class="btn secondary" style="width: 100%;">Logout</button>
+                <button type="submit" class="btn secondary" style="width: 100%;">{% trans "Logout" %}</button>
             </form>
         {% else %}
-            <a href="{% url 'login' %}" class="btn" style="text-align: center;">Login</a>
+            <a href="{% url 'login' %}" class="btn" style="text-align: center;">{% trans "Login" %}</a>
         {% endif %}
     </div>
 
@@ -91,8 +125,8 @@
     </div>
 
     <footer class="cookieadvise">
-        <span>Questo sito utilizza cookie funzionali.</span>
-        <button class="btn" onclick="closeCookies()">Ok</button>
+        <span>{% trans "Questo sito utilizza cookie funzionali." %}</span>
+        <button class="btn" onclick="closeCookies()">{% trans "Ok" %}</button>
     </footer>
 
     <script src="{% static 'js/scripts.js' %}"></script>

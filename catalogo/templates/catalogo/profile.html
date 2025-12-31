@@ -1,7 +1,8 @@
 {% extends 'catalogo/master.html' %}
+{% load i18n %}
 
 {% block title %}
-Profilo - Catalogo Film
+{% trans "Profilo - Catalogo Film" %}
 {% endblock %}
 
 {% block content %}
@@ -14,11 +15,11 @@ Profilo - Catalogo Film
             <div>
                 <h1 style="margin: 0; font-size: 24px;">{{ user.username }}</h1>
                 <p style="margin: 5px 0; color: var(--9);">{{ user.email }}</p>
-                <p style="margin: 0; font-size: 14px; color: var(--8);">Iscritto dal: {{ user.date_joined|date:"d M Y" }}</p>
+                <p style="margin: 0; font-size: 14px; color: var(--8);">{% trans "Iscritto dal:" %} {{ user.date_joined|date:"d M Y" }}</p>
             </div>
         </div>
 
-        <h2 style="padding-bottom: 10px; margin-bottom: 10px;">I tuoi Voti</h2>
+        <h2 style="padding-bottom: 10px; margin-bottom: 10px;">{% trans "I tuoi Voti" %}</h2>
     </div>
 
     <div style="flex: 1; overflow-y: auto; padding: 0 20px 40px 20px;">
@@ -29,9 +30,9 @@ Profilo - Catalogo Film
             <div class="item-card" style="flex-direction: column; align-items: flex-start;" id="{% if voto.film %}disk_{{ voto.film.id }}_film{% elif voto.musica %}disk_{{ voto.musica.id }}_musica{% endif %}">
                 <div style="width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
                     {% if voto.film %}
-                        <span style="background-color: var(--4); font-size: 10px; padding: 2px 6px; border-radius: 4px;">FILM</span>
+                        <span style="background-color: var(--4); font-size: 10px; padding: 2px 6px; border-radius: 4px;">{% trans "FILM" %}</span>
                     {% else %}
-                        <span style="background-color: var(--6); font-size: 10px; padding: 2px 6px; border-radius: 4px;">MUSICA</span>
+                        <span style="background-color: var(--6); font-size: 10px; padding: 2px 6px; border-radius: 4px;">{% trans "MUSICA" %}</span>
                     {% endif %}
                     
                     <div class="voto-circle 
@@ -53,19 +54,19 @@ Profilo - Catalogo Film
                 {% if voto.film %}
                 <button class="btn secondary" style="..."
                    onclick="apriModalVoto('{{ voto.film.id }}', '{{ voto.film.titolo|escapejs }}', 'film', true)">
-                   Modifica Voto
+                   {% trans "Modifica Voto" %}
                 </button>
                 {% else %}
                 <button class="btn secondary" style="..."
                    onclick="apriModalVoto('{{ voto.musica.id }}', '{{ voto.musica.titolo|escapejs }}', 'musica', true)">
-                   Modifica Voto
+                   {% trans "Modifica Voto" %}
                 </button>
                 {% endif %}
             </div>
             {% endfor %}
         </div>
         {% else %}
-            <p>Non hai ancora votato nulla.</p>
+            <p>{% trans "Non hai ancora votato nulla." %}</p>
         {% endif %}
 
     </div> 
@@ -75,26 +76,26 @@ Profilo - Catalogo Film
 <div id="modal-voto" class="modal-overlay">
     <div class="modal-box" style="max-width: 400px; text-align: center;">
         <span class="close-btn" onclick="chiudiModalVoto()">&times;</span>
-        <h2>Modifica il tuo voto</h2>
+        <h2>{% trans "Modifica il tuo voto" %}</h2>
         <p id="voto-titolo" style="color: var(--8); margin-bottom: 20px;"></p>
         <form method="POST" action="{% url 'salva_voto' %}">
             {% csrf_token %}
             <input type="hidden" name="id_oggetto" id="input-voto-id">
             <input type="hidden" name="tipo" id="input-voto-tipo">
             <select name="valore" style="width: 100%; padding: 10px; margin-bottom: 20px; background-color: var(--1); color: var(--10); border: 1px solid var(--7);">
-                <option value="10">10 - Capolavoro</option>
-                <option value="9">9 - Eccellente</option>
-                <option value="8">8 - Ottimo</option>
-                <option value="7">7 - Buono</option>
-                <option value="6">6 - Sufficiente</option>
-                <option value="5">5 - Mediocre</option>
-                <option value="4">4 - Scarso</option>
-                <option value="3">3 - Pessimo</option>
-                <option value="2">2 - Orribile</option>
-                <option value="1">1 - Inguardabile</option>
-                <option value="0">-- Rimuovi il tuo voto --</option>
+                <option value="10">10 - {% trans "Capolavoro" %}</option>
+                <option value="9">9 - {% trans "Eccellente" %}</option>
+                <option value="8">8 - {% trans "Ottimo" %}</option>
+                <option value="7">7 - {% trans "Buono" %}</option>
+                <option value="6">6 - {% trans "Sufficiente" %}</option>
+                <option value="5">5 - {% trans "Mediocre" %}</option>
+                <option value="4">4 - {% trans "Scarso" %}</option>
+                <option value="3">3 - {% trans "Pessimo" %}</option>
+                <option value="2">2 - {% trans "Orribile" %}</option>
+                <option value="1">1 - {% trans "Inguardabile" %}</option>
+                <option value="0">-- {% trans "Rimuovi il tuo voto" %} --</option>
             </select>
-            <button type="submit" class="btn">Aggiorna</button>
+            <button type="submit" class="btn">{% trans "Aggiorna" %}</button>
         </form>
     </div>
 </div>
