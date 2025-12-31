@@ -41,16 +41,17 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!cookieTheme) {
         cookieTheme = 'dark';
         setCookie("theme", "dark", 30);
+        sliders.forEach(slider => slider.checked = true);
     }
 
     if (cookieTheme == "light") {
         document.documentElement.setAttribute('data-theme', 'light');
         var sliders = document.querySelectorAll(".switch input");
-        sliders.forEach(slider => slider.checked = true);
+        sliders.forEach(slider => slider.checked = false);
     } else {
         document.documentElement.setAttribute('data-theme', 'dark');
         var sliders = document.querySelectorAll(".switch input");
-        sliders.forEach(slider => slider.checked = false);
+        sliders.forEach(slider => slider.checked = true);
     }
 });
 

@@ -225,7 +225,7 @@ select:focus {
 }
 
 .nav-links a {
-    color: var(--color-text-muted);
+    color: var(--color-text-main);
     font-weight: 500;
 }
 
@@ -388,8 +388,9 @@ input:checked + .slider:before {
 }
 
 .card-title-text {
-    white-space: nowrap;
+    white-space: normal;
     overflow: hidden;
+    text-wrap-mode: wrap;
     text-overflow: ellipsis;
     font-weight: bold;
 }
