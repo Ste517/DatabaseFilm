@@ -35,40 +35,26 @@ if (cookieAccepted == "true") {
 
 // Theme Initialization on Load
 document.addEventListener('DOMContentLoaded', function() {
-    var cookieTheme = getCookie("theme");
-
-    // Default to dark if no cookie
-    if (!cookieTheme) {
-        cookieTheme = 'dark';
-        setCookie("theme", "dark", 30);
-        sliders.forEach(slider => slider.checked = true);
-    }
-
-    if (cookieTheme == "light") {
-        document.documentElement.setAttribute('data-theme', 'light');
-        var sliders = document.querySelectorAll(".switch input");
-        sliders.forEach(slider => slider.checked = false);
-    } else {
-        document.documentElement.setAttribute('data-theme', 'dark');
-        var sliders = document.querySelectorAll(".switch input");
-        sliders.forEach(slider => slider.checked = true);
-    }
+    // Sync checkbox state with current theme
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const isDark = currentTheme === 'dark';
+    // We will update the button icon later, but for now we might still have the checkbox
+    // or we are moving to a button. The plan is to replace the UI.
+    // So I will just leave this empty for now or minimal until I implement the UI.
+    // If we still had the checkbox:
+    // var sliders = document.querySelectorAll(".switch input");
+    // sliders.forEach(slider => slider.checked = isDark);
 });
 
 function themeSwitch() {
-    var currentTheme = document.documentElement.getAttribute('data-theme');
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
 
-    if (currentTheme == 'dark' || !currentTheme) {
-        document.documentElement.setAttribute('data-theme', 'light');
-        setCookie("theme", "light", 30);
-        var sliders = document.querySelectorAll(".switch input");
-        sliders.forEach(slider => slider.checked = true);
-    } else {
-        document.documentElement.setAttribute('data-theme', 'dark');
-        setCookie("theme", "dark", 30);
-        var sliders = document.querySelectorAll(".switch input");
-        sliders.forEach(slider => slider.checked = false);
-    }
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+
+    // Dispatch event for UI updates if needed
+    window.dispatchEvent(new Event('theme-change'));
 }
 
 function closeCookies() {

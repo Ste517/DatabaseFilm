@@ -1,9 +1,9 @@
 :root {
     /* Color Palette - Blue/Celeste Theme */
-    --color-bg-body: #0b1120;       /* Very Dark Blue */
-    --color-bg-card: #1e293b;       /* Dark Blue/Slate */
-    --color-bg-element: #334155;    /* Lighter Blue/Slate */
-    --color-border: #475569;        /* Blue Grey */
+    --color-bg-body: #121212;       /* Dark Grey (Material Design Dark Theme Surface) */
+    --color-bg-card: #1e1e1e;       /* Dark Grey Card */
+    --color-bg-element: #2c2c2c;    /* Lighter Grey Element */
+    --color-border: #404040;        /* Grey Border */
 
     --color-text-main: #f0f9ff;     /* Sky 50 */
     --color-text-muted: #94a3b8;    /* Blue Grey 400 */
@@ -74,6 +74,7 @@ body {
     color: var(--color-text-main);
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Typography */
@@ -269,50 +270,59 @@ select:focus {
     padding: var(--space-2) 0;
 }
 
-/* Theme Switch */
-.switch {
-    position: relative;
-    display: inline-block;
-    width: 50px;
-    height: 28px;
-}
-
-.switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-
-.slider {
-    position: absolute;
+/* Theme Toggle Button */
+.theme-toggle {
+    background: none;
+    border: none;
     cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: var(--color-bg-element);
-    transition: .4s;
-    border-radius: 34px;
-}
-
-.slider:before {
-    position: absolute;
-    content: "";
-    height: 20px;
-    width: 20px;
-    left: 4px;
-    bottom: 4px;
-    background-color: white;
-    transition: .4s;
+    color: var(--color-text-main);
+    padding: var(--space-2);
     border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color var(--transition-fast), color var(--transition-fast);
 }
 
-input:checked + .slider {
-    background-color: var(--color-primary);
+.theme-toggle:hover {
+    background-color: var(--color-bg-element);
+    color: var(--color-primary);
 }
 
-input:checked + .slider:before {
-    transform: translateX(22px);
+.theme-toggle svg {
+    transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s ease;
+}
+
+/* Icon Visibility Logic */
+[data-theme="dark"] .theme-toggle .icon-sun {
+    display: block;
+    animation: rotateIn 0.5s forwards;
+}
+
+[data-theme="dark"] .theme-toggle .icon-moon {
+    display: none;
+    opacity: 0;
+}
+
+[data-theme="light"] .theme-toggle .icon-sun {
+    display: none;
+    opacity: 0;
+}
+
+[data-theme="light"] .theme-toggle .icon-moon {
+    display: block;
+    animation: rotateIn 0.5s forwards;
+}
+
+@keyframes rotateIn {
+    from {
+        transform: rotate(-90deg) scale(0.5);
+        opacity: 0;
+    }
+    to {
+        transform: rotate(0) scale(1);
+        opacity: 1;
+    }
 }
 
 /* Split Screen Layout (Desktop) */
