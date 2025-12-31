@@ -38,8 +38,7 @@
                 </div>
             {% else %}
             {% if not request.resolver_match.url_name == 'login' %}
-                <div style="padding-right: 10px;"><a href="{% url 'login' %}" class="log-button {% if request.resolver_match.url_name == 'login' %}active{% endif %}">Login</a></div>
-            
+                <div class="login-container-div" style="padding-right: 10px;"><a href="{% url 'login' %}" class="log-button {% if request.resolver_match.url_name == 'login' %}active{% endif %}">Login</a></div>
             {% endif %}
             {% endif %}
         </div>

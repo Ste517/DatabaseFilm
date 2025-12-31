@@ -778,6 +778,20 @@ input.search-bar {
     .modal-right {
         text-align: center;
     }
+
+    .logout-container {
+        position: absolute;
+        top: 30px;
+        right: -5px;
+        scale: 0.8;
+    }
+
+    .login-container-div {
+        position: absolute;
+        top: 0px;
+        right: 50px;
+        scale: 0.8;
+    }
 }
 
 /* 7. Stili Badge e Colori Voto (Li avevi nel template ma meglio averli nel CSS) */
