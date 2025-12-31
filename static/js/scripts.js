@@ -6,6 +6,16 @@ function toggleMobileMenu() {
     mobileMenu.classList.toggle('open');
 }
 
+// Close mobile menu on resize
+window.addEventListener('resize', function() {
+    if (window.innerWidth > 768) {
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (mobileMenu && mobileMenu.classList.contains('open')) {
+            mobileMenu.classList.remove('open');
+        }
+    }
+});
+
 function setCookie(cname, cvalue, exdays) {
     const d = new Date();
     d.setTime(d.getTime() + (exdays*24*60*60*1000));
@@ -23,17 +33,26 @@ if (cookieAccepted == "true") {
     if (cookieBanner) cookieBanner.style.display = 'none';
 }
 
-var cookieTheme = getCookie("theme");
-// We now set the theme on the HTML element data-theme attribute for CSS to pick up
-if (cookieTheme == "light") {
-    document.documentElement.setAttribute('data-theme', 'light');
-    var sliders = document.querySelectorAll(".switch input");
-    sliders.forEach(slider => slider.checked = true);
-} else {
-    document.documentElement.setAttribute('data-theme', 'dark');
-    var sliders = document.querySelectorAll(".switch input");
-    sliders.forEach(slider => slider.checked = false);
-}
+// Theme Initialization on Load
+document.addEventListener('DOMContentLoaded', function() {
+    var cookieTheme = getCookie("theme");
+
+    // Default to dark if no cookie
+    if (!cookieTheme) {
+        cookieTheme = 'dark';
+        setCookie("theme", "dark", 30);
+    }
+
+    if (cookieTheme == "light") {
+        document.documentElement.setAttribute('data-theme', 'light');
+        var sliders = document.querySelectorAll(".switch input");
+        sliders.forEach(slider => slider.checked = true);
+    } else {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        var sliders = document.querySelectorAll(".switch input");
+        sliders.forEach(slider => slider.checked = false);
+    }
+});
 
 function themeSwitch() {
     var currentTheme = document.documentElement.getAttribute('data-theme');

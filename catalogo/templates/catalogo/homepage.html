@@ -115,7 +115,9 @@ Pagina Principale - Catalogo Film
             <div class="item-card" id="disk_{{ disco.id }}">
                 <div class="card-info" style="overflow: hidden; flex: 1;">
                     <div class="card-title-row">
-                        <span class="card-title-text">{{ disco.titolo }} - {{ disco.artista }}</span>
+                        <span class="card-title-text" style="display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                            <strong>{{ disco.titolo }}</strong> - {{ disco.artista }}
+                        </span>
                         {% if disco.anno_uscita %} 
                             <span style="opacity: 0.7; white-space: nowrap;">({{ disco.anno_uscita }})</span> 
                         {% endif %}

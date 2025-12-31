@@ -139,6 +139,7 @@ a:hover {
 
 .btn:hover {
     background-color: var(--color-primary-hover);
+    color: var(--color-primary-text);
 }
 
 .btn.secondary {
@@ -148,6 +149,21 @@ a:hover {
 
 .btn.secondary:hover {
     background-color: var(--color-border);
+}
+
+/* Special case for login button if it uses different classes */
+.log-button {
+    background-color: var(--color-primary) !important;
+    color: var(--color-primary-text) !important;
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    display: inline-block;
+    font-weight: 500;
+}
+
+.log-button:hover {
+    background-color: var(--color-primary-hover) !important;
 }
 
 /* Forms */
