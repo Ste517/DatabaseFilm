@@ -1,0 +1,309 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Movie Catalog 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-31 15:29+0000\n"
+"PO-Revision-Date: 2025-12-31 16:00+0100\n"
+"Last-Translator: Admin <admin@example.com>\n"
+"Language-Team: English\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: catalogo/templates/catalogo/404.html:5
+#: catalogo/templates/catalogo/404.html:9
+msgid "Errore 404 - Pagina non trovata"
+msgstr "Error 404 - Page not found"
+
+#: catalogo/templates/catalogo/404.html:10
+msgid "Ci dispiace, la pagina che stai cercando non esiste."
+msgstr "Sorry, the page you are looking for does not exist."
+
+#: catalogo/templates/catalogo/404.html:12
+#, python-format
+msgid "Puoi tornare alla <a href=\"%(home_url)s\">pagina principale</a>."
+msgstr "You can go back to the <a href=\"%(home_url)s\">home page</a>."
+
+#: catalogo/templates/catalogo/homepage.html:6
+msgid "Pagina Principale - Catalogo Film"
+msgstr "Home Page - Movie Catalog"
+
+#: catalogo/templates/catalogo/homepage.html:15
+msgid "I miei Film"
+msgstr "My Movies"
+
+#: catalogo/templates/catalogo/homepage.html:19
+#: catalogo/templates/catalogo/homepage.html:100
+msgid "Aggiunti di recente"
+msgstr "Recently added"
+
+#: catalogo/templates/catalogo/homepage.html:20
+#: catalogo/templates/catalogo/homepage.html:101
+msgid "Aggiunti (meno recenti)"
+msgstr "Added (oldest first)"
+
+#: catalogo/templates/catalogo/homepage.html:21
+msgid "Alfabetico (A-Z)"
+msgstr "Alphabetical (A-Z)"
+
+#: catalogo/templates/catalogo/homepage.html:22
+#: catalogo/templates/catalogo/homepage.html:103
+msgid "Artista (Z-A)"
+msgstr "Artist (Z-A)"
+
+#: catalogo/templates/catalogo/homepage.html:23
+#: catalogo/templates/catalogo/homepage.html:104
+msgid "Voto (Migliori)"
+msgstr "Rating (Best)"
+
+#: catalogo/templates/catalogo/homepage.html:24
+#: catalogo/templates/catalogo/homepage.html:105
+msgid "Voto (Peggiori)"
+msgstr "Rating (Worst)"
+
+#: catalogo/templates/catalogo/homepage.html:25
+#: catalogo/templates/catalogo/homepage.html:106
+msgid "Formato"
+msgstr "Format"
+
+#: catalogo/templates/catalogo/homepage.html:28
+msgid "Cerca film..."
+msgstr "Search movies..."
+
+#: catalogo/templates/catalogo/homepage.html:42
+#: catalogo/templates/catalogo/homepage.html:126
+msgid "Posizione:"
+msgstr "Location:"
+
+#: catalogo/templates/catalogo/homepage.html:57
+msgid "Votato"
+msgstr "Rated"
+
+#: catalogo/templates/catalogo/homepage.html:67
+#: catalogo/templates/catalogo/homepage.html:148
+msgid "Modifica"
+msgstr "Edit"
+
+#: catalogo/templates/catalogo/homepage.html:69
+#: catalogo/templates/catalogo/homepage.html:150
+msgid "Vota"
+msgstr "Rate"
+
+#: catalogo/templates/catalogo/homepage.html:87
+msgid "Nessun film inserito."
+msgstr "No movies added."
+
+#: catalogo/templates/catalogo/homepage.html:96
+msgid "I miei Dischi"
+msgstr "My Records"
+
+#: catalogo/templates/catalogo/homepage.html:102
+msgid "Artista (A-Z)"
+msgstr "Artist (A-Z)"
+
+#: catalogo/templates/catalogo/homepage.html:109
+msgid "Cerca artista o album..."
+msgstr "Search artist or album..."
+
+#: catalogo/templates/catalogo/homepage.html:168
+msgid "Nessun disco inserito."
+msgstr "No records added."
+
+#: catalogo/templates/catalogo/homepage.html:194
+msgid "Dai un voto"
+msgstr "Rate this"
+
+#: catalogo/templates/catalogo/homepage.html:203
+msgid "Scegli un voto..."
+msgstr "Choose a rating..."
+
+#: catalogo/templates/catalogo/homepage.html:204
+#: catalogo/templates/catalogo/profile.html:86
+msgid "Capolavoro"
+msgstr "Masterpiece"
+
+#: catalogo/templates/catalogo/homepage.html:205
+#: catalogo/templates/catalogo/profile.html:87
+msgid "Eccellente"
+msgstr "Excellent"
+
+#: catalogo/templates/catalogo/homepage.html:206
+#: catalogo/templates/catalogo/profile.html:88
+msgid "Ottimo"
+msgstr "Great"
+
+#: catalogo/templates/catalogo/homepage.html:207
+#: catalogo/templates/catalogo/profile.html:89
+msgid "Buono"
+msgstr "Good"
+
+#: catalogo/templates/catalogo/homepage.html:208
+#: catalogo/templates/catalogo/profile.html:90
+msgid "Sufficiente"
+msgstr "Fair"
+
+#: catalogo/templates/catalogo/homepage.html:209
+#: catalogo/templates/catalogo/profile.html:91
+msgid "Mediocre"
+msgstr "Mediocre"
+
+#: catalogo/templates/catalogo/homepage.html:210
+#: catalogo/templates/catalogo/profile.html:92
+msgid "Scarso"
+msgstr "Poor"
+
+#: catalogo/templates/catalogo/homepage.html:211
+#: catalogo/templates/catalogo/profile.html:93
+msgid "Pessimo"
+msgstr "Very Poor"
+
+#: catalogo/templates/catalogo/homepage.html:212
+#: catalogo/templates/catalogo/profile.html:94
+msgid "Orribile"
+msgstr "Horrible"
+
+#: catalogo/templates/catalogo/homepage.html:213
+#: catalogo/templates/catalogo/profile.html:95
+msgid "Inguardabile"
+msgstr "Unwatchable"
+
+#: catalogo/templates/catalogo/homepage.html:216
+msgid "Conferma Voto"
+msgstr "Confirm Rating"
+
+#: catalogo/templates/catalogo/login.html:5
+msgid "Login - Catalogo Film"
+msgstr "Login - Movie Catalog"
+
+#: catalogo/templates/catalogo/login.html:11
+msgid "Accedi"
+msgstr "Login"
+
+#: catalogo/templates/catalogo/login.html:12
+msgid "Inserisci le tue credenziali"
+msgstr "Enter your credentials"
+
+#: catalogo/templates/catalogo/login.html:16
+msgid "Username o password non validi."
+msgstr "Invalid username or password."
+
+#: catalogo/templates/catalogo/login.html:24
+msgid "Username"
+msgstr "Username"
+
+#: catalogo/templates/catalogo/login.html:25
+msgid "Il tuo nome utente"
+msgstr "Your username"
+
+#: catalogo/templates/catalogo/login.html:29
+msgid "Password"
+msgstr "Password"
+
+#: catalogo/templates/catalogo/login.html:33
+msgid "Entra"
+msgstr "Sign In"
+
+#: catalogo/templates/catalogo/login.html:39
+msgid "Non hai un account? Chiedi all'amministratore."
+msgstr "Don't have an account? Ask the administrator."
+
+#: catalogo/templates/catalogo/master.html:23
+msgid "Catalogo"
+msgstr "Catalogue"
+
+#: catalogo/templates/catalogo/master.html:27
+#: catalogo/templates/catalogo/master.html:77
+msgid "Film"
+msgstr "Movies"
+
+#: catalogo/templates/catalogo/master.html:28
+#: catalogo/templates/catalogo/master.html:78
+msgid "Musica"
+msgstr "Music"
+
+#: catalogo/templates/catalogo/master.html:30
+#: catalogo/templates/catalogo/master.html:80
+msgid "Profilo"
+msgstr "Profile"
+
+#: catalogo/templates/catalogo/master.html:52
+#: catalogo/templates/catalogo/master.html:106
+msgid "Cambia tema"
+msgstr "Switch Theme"
+
+#: catalogo/templates/catalogo/master.html:60
+#: catalogo/templates/catalogo/master.html:115
+msgid "Logout"
+msgstr "Logout"
+
+#: catalogo/templates/catalogo/master.html:64
+#: catalogo/templates/catalogo/master.html:118
+msgid "Login"
+msgstr "Login"
+
+#: catalogo/templates/catalogo/master.html:87
+msgid "Lingua"
+msgstr "Language"
+
+#: catalogo/templates/catalogo/master.html:105
+msgid "Tema"
+msgstr "Theme"
+
+#: catalogo/templates/catalogo/master.html:128
+msgid "Questo sito utilizza cookie funzionali."
+msgstr "This site uses functional cookies."
+
+#: catalogo/templates/catalogo/master.html:129
+msgid "Ok"
+msgstr "Ok"
+
+#: catalogo/templates/catalogo/profile.html:5
+msgid "Profilo - Catalogo Film"
+msgstr "Profile - Movie Catalog"
+
+#: catalogo/templates/catalogo/profile.html:18
+msgid "Iscritto dal:"
+msgstr "Member since:"
+
+#: catalogo/templates/catalogo/profile.html:22
+msgid "I tuoi Voti"
+msgstr "Your Ratings"
+
+#: catalogo/templates/catalogo/profile.html:33
+msgid "FILM"
+msgstr "MOVIES"
+
+#: catalogo/templates/catalogo/profile.html:35
+msgid "MUSICA"
+msgstr "MUSIC"
+
+#: catalogo/templates/catalogo/profile.html:57
+#: catalogo/templates/catalogo/profile.html:62
+msgid "Modifica Voto"
+msgstr "Edit Rating"
+
+#: catalogo/templates/catalogo/profile.html:69
+msgid "Non hai ancora votato nulla."
+msgstr "You haven't rated anything yet."
+
+#: catalogo/templates/catalogo/profile.html:79
+msgid "Modifica il tuo voto"
+msgstr "Edit your rating"
+
+#: catalogo/templates/catalogo/profile.html:96
+msgid "Rimuovi il tuo voto"
+msgstr "Remove your rating"
+
+#: catalogo/templates/catalogo/profile.html:98
+msgid "Aggiorna"
+msgstr "Update"
+
+#: my_media_site/settings.py:132
+msgid "English"
+msgstr "English"
+
+#: my_media_site/settings.py:133
+msgid "Italian"
+msgstr "Italian"

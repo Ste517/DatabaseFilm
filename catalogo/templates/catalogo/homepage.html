@@ -1,8 +1,9 @@
 {% extends 'catalogo/master.html' %}
 {% load custom_filters %}
+{% load i18n %}
 
 {% block title %}
-Pagina Principale - Catalogo Film
+{% trans "Pagina Principale - Catalogo Film" %}
 {% endblock %}
 
 {% block content %}
@@ -11,34 +12,34 @@ Pagina Principale - Catalogo Film
     <div class="half-section section-top">
         <div class="header-section">
             <div class="header-row">
-                <h2>🎬 I miei Film</h2>
+                <h2>🎬 {% trans "I miei Film" %}</h2>
                 
                 <div class="header-row">
-                    <select onchange="updateSort('sort_film', this.value)" style="padding: 6px; border-radius: 4px; border: 1px solid var(--7); background-color: var(--2); color: var(--10);">
-                        <option value="-id" {% if current_sort_film == '-id' %}selected{% endif %}>📅 Aggiunti di recente</option>
-                        <option value="id" {% if current_sort_film == 'id' %}selected{% endif %}>📅 Aggiunti (meno recenti)</option>
-                        <option value="titolo" {% if current_sort_film == 'titolo' %}selected{% endif %}>🔤 Alfabetico (A-Z)</option>
-                        <option value="-titolo" {% if current_sort_film == '-titolo' %}selected{% endif %}>🔤 Artista (Z-A)</option>
-                        <option value="-media" {% if current_sort_film == '-media' %}selected{% endif %}>⭐ Voto (Migliori)</option>
-                        <option value="media" {% if current_sort_film == 'media' %}selected{% endif %}>⭐ Voto (Peggiori)</option>
-                        <option value="media_type" {% if current_sort_film == 'media_type' %}selected{% endif %}>💽 Formato</option>
+                    <select onchange="updateSort('sort_film', this.value)">
+                        <option value="-id" {% if current_sort_film == '-id' %}selected{% endif %}>📅 {% trans "Aggiunti di recente" %}</option>
+                        <option value="id" {% if current_sort_film == 'id' %}selected{% endif %}>📅 {% trans "Aggiunti (meno recenti)" %}</option>
+                        <option value="titolo" {% if current_sort_film == 'titolo' %}selected{% endif %}>🔤 {% trans "Alfabetico (A-Z)" %}</option>
+                        <option value="-titolo" {% if current_sort_film == '-titolo' %}selected{% endif %}>🔤 {% trans "Artista (Z-A)" %}</option>
+                        <option value="-media" {% if current_sort_film == '-media' %}selected{% endif %}>⭐ {% trans "Voto (Migliori)" %}</option>
+                        <option value="media" {% if current_sort_film == 'media' %}selected{% endif %}>⭐ {% trans "Voto (Peggiori)" %}</option>
+                        <option value="media_type" {% if current_sort_film == 'media_type' %}selected{% endif %}>💽 {% trans "Formato" %}</option>
                     </select>
             
-                    <input type="text" id="cercaFilm" onkeyup="filtraLista('cercaFilm', 'lista-film')" placeholder="Cerca film..." class="search-bar">
+                    <input type="text" id="cercaFilm" onkeyup="filtraLista('cercaFilm', 'lista-film')" placeholder="{% trans 'Cerca film...' %}" class="search-bar">
                 </div>
             </div>
         </div>
         <div class="scroll-area" id="lista-film">
             {% for film in films %}
-            <div class="item-card" id="film_{{ film.id }}">
-                <div class="card-info" style="overflow: hidden;">
-                    <div style="display: flex; align-items: center; gap: 8px; overflow-x: auto; scrollbar-width: none; white-space: nowrap;">
-                        <strong style="white-space: nowrap;">{{ film.titolo }}</strong> 
+            <div class="item-card animate-on-scroll" id="film_{{ film.id }}">
+                <div class="card-info" style="overflow: hidden; flex: 1;">
+                    <div class="card-title-row">
+                        <strong class="card-title-text">{{ film.titolo }}</strong>
                         {% if film.anno_uscita %}
                             <span style="opacity:0.7; white-space: nowrap;">({{ film.anno_uscita }})</span>
                         {% endif %}
                     </div>
-                    <small style="display: block; margin-top: 4px;">Posizione: {{ film.posizione_fisica }} 
+                    <small style="display: block; margin-top: 4px;">{% trans "Posizione:" %} {{ film.posizione_fisica }}
                         {% if film.media_type != "unknown" %}
                             <span style="opacity:0.7; white-space: nowrap;">({{ film.get_media_type_display }})</span>
                         {% endif %}
@@ -53,25 +54,25 @@ Pagina Principale - Catalogo Film
                         </span>
                         {% endif %}
                         {% if film|ha_votato:request.user %}
-                            <span style="color: green; font-weight: bold;">(Votato ✅)</span>
+                            <span style="color: var(--color-success); font-weight: bold;">({% trans "Votato" %} ✅)</span>
                         {% endif %}
                     </small>
                 </div>
                 
                 <div style="display: flex; gap: 10px; padding-left: 8px;">
                     {% if user.is_authenticated %}
-                    <button class="modal-button" 
+                    <button class="btn secondary"
                         onclick="apriModalVoto('{{ film.id }}', '{{ film.titolo|escapejs }}', 'film', {% if film|ha_votato:request.user %}true{% else %}false{% endif %})">
                         {% if film|ha_votato:request.user %}
-                            ★ Modifica
+                            ★ {% trans "Modifica" %}
                         {% else %}
-                            ★ Vota
+                            ★ {% trans "Vota" %}
                         {% endif %}
                     </button>
                     {% endif %}
                 
                     {% if film.poster and film.trama %}
-                    <button class="modal-button" 
+                    <button class="btn secondary"
                             onclick="apriModal(this)" 
                             data-titolo="{{ film.titolo }}" 
                             data-trama="{{ film.trama }}" 
@@ -83,7 +84,7 @@ Pagina Principale - Catalogo Film
                 </div>
             </div>
             {% empty %}
-                <div style="padding:20px;">Nessun film inserito.</div>
+                <div style="padding:20px;">{% trans "Nessun film inserito." %}</div>
             {% endfor %}
         </div>
     </div>
@@ -92,35 +93,37 @@ Pagina Principale - Catalogo Film
     <div class="half-section section-bottom">
         <div class="header-section">
             <div class="header-row">
-                <h2>🎵 I miei Dischi</h2>
+                <h2>🎵 {% trans "I miei Dischi" %}</h2>
                 
                 <div class="header-row">
-                    <select onchange="updateSort('sort_musica', this.value)" style="padding: 6px; border-radius: 4px; border: 1px solid var(--7); background-color: var(--2); color: var(--10);">
-                        <option value="-id" {% if current_sort_musica == '-id' %}selected{% endif %}>📅 Aggiunti di recente</option>
-                        <option value="id" {% if current_sort_musica == 'id' %}selected{% endif %}>📅 Aggiunti (meno recenti)</option>
-                        <option value="titolo" {% if current_sort_musica == 'titolo' %}selected{% endif %}>🔤 Artista (A-Z)</option>
-                        <option value="-titolo" {% if current_sort_musica == '-titolo' %}selected{% endif %}>🔤 Artista (Z-A)</option>
-                        <option value="-media" {% if current_sort_musica == '-media' %}selected{% endif %}>⭐ Voto (Migliori)</option>
-                        <option value="media" {% if current_sort_musica == 'media' %}selected{% endif %}>⭐ Voto (Peggiori)</option>
-                        <option value="media_type" {% if current_sort_musica == 'media_type' %}selected{% endif %}>💽 Formato</option>
+                    <select onchange="updateSort('sort_musica', this.value)">
+                        <option value="-id" {% if current_sort_musica == '-id' %}selected{% endif %}>📅 {% trans "Aggiunti di recente" %}</option>
+                        <option value="id" {% if current_sort_musica == 'id' %}selected{% endif %}>📅 {% trans "Aggiunti (meno recenti)" %}</option>
+                        <option value="titolo" {% if current_sort_musica == 'titolo' %}selected{% endif %}>🔤 {% trans "Artista (A-Z)" %}</option>
+                        <option value="-titolo" {% if current_sort_musica == '-titolo' %}selected{% endif %}>🔤 {% trans "Artista (Z-A)" %}</option>
+                        <option value="-media" {% if current_sort_musica == '-media' %}selected{% endif %}>⭐ {% trans "Voto (Migliori)" %}</option>
+                        <option value="media" {% if current_sort_musica == 'media' %}selected{% endif %}>⭐ {% trans "Voto (Peggiori)" %}</option>
+                        <option value="media_type" {% if current_sort_musica == 'media_type' %}selected{% endif %}>💽 {% trans "Formato" %}</option>
                     </select>
                 
-                    <input type="text" id="cercaMusica" onkeyup="filtraLista('cercaMusica', 'lista-musica')" placeholder="Cerca artista o album..." class="search-bar">
+                    <input type="text" id="cercaMusica" onkeyup="filtraLista('cercaMusica', 'lista-musica')" placeholder="{% trans 'Cerca artista o album...' %}" class="search-bar">
                 </div>
             </div>
         </div>
 
         <div class="scroll-area" id="lista-musica">
             {% for disco in album %}
-            <div class="item-card" id="disk_{{ disco.id }}">
-                <div class="card-info" style="overflow: hidden;">
-                    <div style="display: flex; align-items: center; gap: 8px; overflow-x: auto; scrollbar-width: none; white-space: nowrap;">
-                        <span style="white-space: nowrap;"><strong style="white-space: nowrap;">{{ disco.titolo }}</strong> - {{ disco.artista }}</span>
+            <div class="item-card animate-on-scroll" id="disk_{{ disco.id }}">
+                <div class="card-info" style="overflow: hidden; flex: 1;">
+                    <div class="card-title-row">
+                        <span class="card-title-text" style="display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                            <strong>{{ disco.titolo }}</strong> - {{ disco.artista }}
+                        </span>
                         {% if disco.anno_uscita %} 
                             <span style="opacity: 0.7; white-space: nowrap;">({{ disco.anno_uscita }})</span> 
                         {% endif %}
                     </div>
-                    <small style="display: block; margin-top: 4px;">Posizione: {{ disco.posizione_fisica }} 
+                    <small style="display: block; margin-top: 4px;">{% trans "Posizione:" %} {{ disco.posizione_fisica }}
                         {% if disco.media_type != "unknown" %}
                             <span style="opacity:0.7; white-space: nowrap;">({{ disco.get_media_type_display }})</span>
                         {% endif %}
@@ -139,18 +142,18 @@ Pagina Principale - Catalogo Film
             
                 <div style="display: flex; gap: 10px; padding-left: 8px;">
                     {% if user.is_authenticated %}
-                    <button class="modal-button" 
+                    <button class="btn secondary"
                         onclick="apriModalVoto('{{ disco.id }}', '{{ disco.titolo|escapejs }}', 'musica', {% if disco|ha_votato:request.user %}true{% else %}false{% endif %})">
                         {% if disco|ha_votato:request.user %}
-                            ★ Modifica
+                            ★ {% trans "Modifica" %}
                         {% else %}
-                            ★ Vota
+                            ★ {% trans "Vota" %}
                         {% endif %}
                     </button>
                     {% endif %}
                 
                     {% if disco.copertina or disco.descrizione %}
-                    <button class="modal-button" 
+                    <button class="btn secondary"
                             onclick="apriModal(this)" 
                             data-titolo="{{ disco.titolo }} - {{ disco.artista }}" 
                             data-trama="{{ disco.descrizione|default:'Nessuna descrizione.' }}" 
@@ -162,7 +165,7 @@ Pagina Principale - Catalogo Film
                 </div>
             </div>
             {% empty %}
-                <div style="padding:20px;">Nessun disco inserito.</div>
+                <div style="padding:20px;">{% trans "Nessun disco inserito." %}</div>
             {% endfor %}
         </div>
     </div>
@@ -188,29 +191,29 @@ Pagina Principale - Catalogo Film
     <div class="modal-box" style="max-width: 400px; text-align: center;">
         <span class="close-btn" onclick="chiudiModalVoto()">&times;</span>
         
-        <h2>Dai un voto</h2>
-        <p id="voto-titolo" style="color: var(--8); margin-bottom: 20px;"></p>
+        <h2>{% trans "Dai un voto" %}</h2>
+        <p id="voto-titolo" style="color: var(--color-text-muted); margin-bottom: 20px;"></p>
 
         <form method="POST" action="{% url 'salva_voto' %}">
             {% csrf_token %}
             <input type="hidden" name="id_oggetto" id="input-voto-id">
             <input type="hidden" name="tipo" id="input-voto-tipo">
             
-            <select name="valore" style="width: 100%; padding: 10px; margin-bottom: 20px; background-color: var(--1); color: var(--10); border: 1px solid var(--7);">
-                <option value="" disabled selected>Scegli un voto...</option>
-                <option value="10">10 - Capolavoro</option>
-                <option value="9">9 - Eccellente</option>
-                <option value="8">8 - Ottimo</option>
-                <option value="7">7 - Buono</option>
-                <option value="6">6 - Sufficiente</option>
-                <option value="5">5 - Mediocre</option>
-                <option value="4">4 - Scarso</option>
-                <option value="3">3 - Pessimo</option>
-                <option value="2">2 - Orribile</option>
-                <option value="1">1 - Inguardabile</option>
+            <select name="valore" style="width: 100%; padding: 10px; margin-bottom: 20px; background-color: var(--color-bg-body); color: var(--color-text-main); border: 1px solid var(--color-border);">
+                <option value="" disabled selected>{% trans "Scegli un voto..." %}</option>
+                <option value="10">10 - {% trans "Capolavoro" %}</option>
+                <option value="9">9 - {% trans "Eccellente" %}</option>
+                <option value="8">8 - {% trans "Ottimo" %}</option>
+                <option value="7">7 - {% trans "Buono" %}</option>
+                <option value="6">6 - {% trans "Sufficiente" %}</option>
+                <option value="5">5 - {% trans "Mediocre" %}</option>
+                <option value="4">4 - {% trans "Scarso" %}</option>
+                <option value="3">3 - {% trans "Pessimo" %}</option>
+                <option value="2">2 - {% trans "Orribile" %}</option>
+                <option value="1">1 - {% trans "Inguardabile" %}</option>
             </select>
 
-            <button type="submit" class="btn">Conferma Voto</button>
+            <button type="submit" class="btn">{% trans "Conferma Voto" %}</button>
         </form>
     </div>
 </div>
