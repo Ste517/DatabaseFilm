@@ -23,6 +23,7 @@
                         <option value="-media" {% if current_sort_film == '-media' %}selected{% endif %}>⭐ {% trans "Voto (Migliori)" %}</option>
                         <option value="media" {% if current_sort_film == 'media' %}selected{% endif %}>⭐ {% trans "Voto (Peggiori)" %}</option>
                         <option value="media_type" {% if current_sort_film == 'media_type' %}selected{% endif %}>💽 {% trans "Formato" %}</option>
+                        <option value="posizione_fisica" {% if current_sort_film == 'posizione_fisica' %}selected{% endif %}>📍 {% trans "Posizione fisica" %}</option>
                     </select>
             
                     <input type="text" id="cercaFilm" onkeyup="filtraLista('cercaFilm', 'lista-film')" placeholder="{% trans 'Cerca film...' %}" class="search-bar">
@@ -104,6 +105,7 @@
                         <option value="-media" {% if current_sort_musica == '-media' %}selected{% endif %}>⭐ {% trans "Voto (Migliori)" %}</option>
                         <option value="media" {% if current_sort_musica == 'media' %}selected{% endif %}>⭐ {% trans "Voto (Peggiori)" %}</option>
                         <option value="media_type" {% if current_sort_musica == 'media_type' %}selected{% endif %}>💽 {% trans "Formato" %}</option>
+                        <option value="posizione_fisica" {% if current_sort_musica == 'posizione_fisica' %}selected{% endif %}>📍 {% trans "Posizione fisica" %}</option>
                     </select>
                 
                     <input type="text" id="cercaMusica" onkeyup="filtraLista('cercaMusica', 'lista-musica')" placeholder="{% trans 'Cerca artista o album...' %}" class="search-bar">

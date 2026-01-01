@@ -68,6 +68,11 @@ msgstr "Rating (Worst)"
 msgid "Formato"
 msgstr "Format"
 
+#: catalogo/templates/catalogo/homepage.html:26
+#: catalogo/templates/catalogo/homepage.html:108
+msgid "Posizione fisica"
+msgstr "Physical location"
+
 #: catalogo/templates/catalogo/homepage.html:28
 msgid "Cerca film..."
 msgstr "Search movies..."

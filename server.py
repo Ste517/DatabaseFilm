@@ -65,6 +65,8 @@ if len(sys.argv) > 1 and sys.argv[1] == '--worker':
 logger = logging.getLogger("AccessLog")
 logger.setLevel(logging.INFO)
 
+logger.propagate = False
+
 # RotatingFileHandler:
 # maxBytes=10MB. Se supera 10MB crea latest.log.1, latest.log.2...
 # Al riavvio successivo, TUTTI questi verranno rinominati dalla funzione sopra.

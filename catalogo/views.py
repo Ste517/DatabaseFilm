@@ -78,6 +78,8 @@ def homepage(request, view):
     
     if sort_film == 'media_type':
         films = Film.objects.annotate(media=Avg('voti__valore')).order_by('media_type','titolo')
+    elif sort_film == 'posizione_fisica':
+        films = Film.objects.annotate(media=Avg('voti__valore')).order_by('posizione_fisica','titolo')
     else:
         films = Film.objects.annotate(media=Avg('voti__valore')).order_by(sort_film)
     
@@ -85,6 +87,8 @@ def homepage(request, view):
         album = Musica.objects.annotate(media=Avg('voti__valore')).order_by('artista', 'titolo')
     elif sort_musica == '-titolo':
         album = Musica.objects.annotate(media=Avg('voti__valore')).order_by('-artista', '-titolo')
+    elif sort_musica == 'posizione_fisica':
+        album = Film.objects.annotate(media=Avg('voti__valore')).order_by('posizione_fisica', 'artista', 'titolo')
     elif sort_musica == 'media_type':
         album = Musica.objects.annotate(media=Avg('voti__valore')).order_by('media_type', 'artista', 'titolo')
     else:
