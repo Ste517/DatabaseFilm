@@ -30,23 +30,27 @@ def get_local_ip():
 
 LOCAL_IP_ADDRESS = get_local_ip()
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+try:
+    from dotenv import get_key
+    SECRET_KEY = get_key(f"{BASE_DIR}/.env",'SECRET_KEY')
+except:
+    print("Impossibile procedere, la chiave segreta non è stata trovata.")
+    os.abort()
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-rgdsgb0hgnys2t1827a_hs3$e^$$8muf02=0j1ucwfwhhf5g$m'
-
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = [
+hosts = [
     'localhost',
     LOCAL_IP_ADDRESS,
 ]
+
+DOMINIO_ESTERNO = get_key(f"{BASE_DIR}/.env",'DOMINIO')
+if DOMINIO_ESTERNO is not None:
+    hosts.append(DOMINIO_ESTERNO)
+
+ALLOWED_HOSTS = hosts
 
 
 # Application definition
@@ -158,3 +162,18 @@ LOGOUT_REDIRECT_URL = 'home'
 LOGIN_REDIRECT_URL = 'home'
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# Https settings
+
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+SECURE_SSL_REDIRECT = True
+
+SECURE_HSTS_SECONDS = 0
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://localhost',
+    'https://127.0.0.1',
+    f'https://{LOCAL_IP_ADDRESS}',  # Esempio: https://192.168.1.15
+]
