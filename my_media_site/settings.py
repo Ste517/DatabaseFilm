@@ -50,9 +50,8 @@ try:
     DOMINIO_ESTERNO = get_key(f"{BASE_DIR}/.env",'DOMINIO')
     if DOMINIO_ESTERNO is not None:
         hosts.append(DOMINIO_ESTERNO)
-
 except:
-    pass
+    print("\nNon ho trovato nessun dominio esterno\n")
 
 ALLOWED_HOSTS = hosts
 
