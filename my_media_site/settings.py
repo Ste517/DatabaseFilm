@@ -46,9 +46,13 @@ hosts = [
     LOCAL_IP_ADDRESS,
 ]
 
-DOMINIO_ESTERNO = get_key(f"{BASE_DIR}/.env",'DOMINIO')
-if DOMINIO_ESTERNO is not None:
-    hosts.append(DOMINIO_ESTERNO)
+try:
+    DOMINIO_ESTERNO = get_key(f"{BASE_DIR}/.env",'DOMINIO')
+    if DOMINIO_ESTERNO is not None:
+        hosts.append(DOMINIO_ESTERNO)
+
+except:
+    pass
 
 ALLOWED_HOSTS = hosts
 
