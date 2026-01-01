@@ -41,20 +41,14 @@ except:
 
 DEBUG = False
 
-hosts = [
+DOMAIN_NAME = os.getenv('DOMAIN_NAME')
+
+ALLOWED_HOSTS = [
     'localhost',
+    '127.0.0.1',
     LOCAL_IP_ADDRESS,
+    DOMAIN_NAME
 ]
-
-try:
-    DOMINIO_ESTERNO = get_key(f"{BASE_DIR}/.env",'DOMINIO')
-    if DOMINIO_ESTERNO is not None:
-        hosts.append(DOMINIO_ESTERNO)
-except:
-    print("\nNon ho trovato nessun dominio esterno\n")
-
-ALLOWED_HOSTS = hosts
-
 
 # Application definition
 
@@ -177,6 +171,6 @@ SECURE_HSTS_SECONDS = 0
 
 CSRF_TRUSTED_ORIGINS = [
     'https://localhost',
-    'https://127.0.0.1',
-    f'https://{LOCAL_IP_ADDRESS}',  # Esempio: https://192.168.1.15
+    f'https://{os.getenv("SERVER_IP")}',
+    f'https://{DOMAIN_NAME}',
 ]
