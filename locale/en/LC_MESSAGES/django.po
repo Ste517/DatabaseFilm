@@ -312,3 +312,7 @@ msgstr "English"
 #: my_media_site/settings.py:133
 msgid "Italian"
 msgstr "Italian"
+
+#: catalogo/templates/catalogo/profile.html:27
+msgid "Cerca il tuo voto..."
+msgstr "Find your vote..."

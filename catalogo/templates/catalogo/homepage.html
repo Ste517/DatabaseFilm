@@ -8,11 +8,16 @@
 
 {% block content %}
 <div class="split-screen-container">
-    {% if views.movies %}
+    {% if views.movies or views.netflix %}
     <div class="half-section section-top">
         <div class="header-section">
             <div class="header-row">
+                {% if views.movies %}
                 <h2>🎬 {% trans "I miei Film" %}</h2>
+                {% endif %}
+                {% if views.netflix %}
+                <h2>Netflix</h2>
+                {% endif %}
                 
                 <div class="header-row">
                     <select onchange="updateSort('sort_film', this.value)">
@@ -54,14 +59,14 @@
                             ★ {{ film.media|floatformat:1 }}
                         </span>
                         {% endif %}
-                        {% if film|ha_votato:request.user %}
+                        {% if not film.is_virtual and film|ha_votato:request.user %}
                             <span style="color: var(--color-success); font-weight: bold;">({% trans "Votato" %} ✅)</span>
                         {% endif %}
                     </small>
                 </div>
                 
                 <div style="display: flex; gap: 10px; padding-left: 8px;">
-                    {% if user.is_authenticated %}
+                    {% if user.is_authenticated and not film.is_virtual%}
                     <button class="btn secondary"
                         onclick="apriModalVoto('{{ film.id }}', '{{ film.titolo|escapejs }}', 'film', {% if film|ha_votato:request.user %}true{% else %}false{% endif %})">
                         {% if film|ha_votato:request.user %}

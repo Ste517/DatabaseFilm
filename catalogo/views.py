@@ -7,6 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 import json
 from urllib.parse import urlparse
+from .utils import cerca_catalogo_netflix
 
 @login_required
 def salva_voto(request):
@@ -62,11 +63,9 @@ def profilo(request):
     }
     return render(request, 'catalogo/profile.html', context)
 
+@login_required
 def homepage(request, view):
-    if view == 'music':
-        views = {"music": True,"movies": False,}
-    else:
-        views = {"music": False,"movies": True,}
+    views = {"music": False, "movies": False, "netflix": False}
 
     sort_film = request.GET.get('sort_film')
     if not sort_film:
@@ -94,6 +93,14 @@ def homepage(request, view):
     else:
         album = Musica.objects.annotate(media=Avg('voti__valore')).order_by(sort_musica)
     
+    if view == 'music':
+        views["music"] = True
+    elif view == 'netflix':
+        views["netflix"] = True
+        films = cerca_catalogo_netflix(40,sort_film)
+    else:
+        views["movies"] = True
+
     context = {
         'views': views,
         'films': films,
