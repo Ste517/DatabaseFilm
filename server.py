@@ -83,7 +83,6 @@ try:
     from geoip2.errors import AddressNotFoundError
     if os.path.exists(GEOIP_DB_PATH):
         GEOIP_AVAILABLE = True
-        print("🌍 Modulo GeoIP2 caricato e Database trovato!")
     else:
         print(f"⚠️  Libreria GeoIP2 ok, ma file '{GEOIP_DB_PATH}' mancante.")
 except ImportError:
@@ -92,10 +91,19 @@ except ImportError:
 PORT = 8080
 
 load_dotenv()
+online_mode: bool
 DOMAIN_NAME = os.getenv('DOMAIN_NAME')
 DUCKDNS_TOKEN = os.getenv('DUCKDNS_TOKEN')
 
-HELP_MESSAGE = "Utility Server Django + Caddy + DuckDNS + Smart Logging"
+HELP_MESSAGE = """
+Run utility for django server
+
+Arguments:
+--help: shows this message
+--worker: just runs the server without restart utility
+--online: runs the server in online mode
+--no-online-mode-message: doesn't show utility message that tells you whether or not the server is running in online mode
+"""
 
 
 def get_geo_info(ip):
@@ -164,7 +172,7 @@ def create_caddyfile():
         }}
     """
     caddy_content = f"localhost {{\n{proxy_block}\n}}\n"
-    if DOMAIN_NAME:
+    if DOMAIN_NAME and online_mode:
         caddy_content += f"{DOMAIN_NAME} {{\n{proxy_block}\n}}\n"
     caddy_content += f"{LOCAL_IP_ADDRESS} {{\n{proxy_block}\ntls internal\n}}\n"
     
@@ -182,12 +190,12 @@ def start_caddy_service(caddy_exe_path) -> subprocess.Popen:
     print("✅ Caddy attivo.")
     return process
 
-def run_worker():
+def run_worker(online_mode = False):
     load_dotenv()
     try:
         print("-------------------------------------------------------")
         print(f"🟢 Waitress attivo su porta {PORT}")
-        if DOMAIN_NAME: print(f"🌍 Esterno: https://{DOMAIN_NAME}")
+        if DOMAIN_NAME and online_mode: print(f"🌍 Esterno: https://{DOMAIN_NAME}")
         print(f"🏠 Interno: https://{LOCAL_IP_ADDRESS}")
         print(f"📄 Log Corrente: logs/latest.log")
         print("-------------------------------------------------------")
@@ -196,11 +204,21 @@ def run_worker():
         print(f"Errore Django: {e}")
 
 if __name__ == '__main__':
-    if len(sys.argv) > 1 and sys.argv[1] == '--worker':
-        run_worker()
-        sys.exit()
-    elif len(sys.argv) > 1 and sys.argv[1] == '--help':
+    if len(sys.argv) > 1 and sys.argv[1] == '--help':
         print(HELP_MESSAGE)
+        sys.exit()
+    if len(sys.argv) > 1 and '--online' in sys.argv:
+        online_mode = True
+        if not '--no-online-mode-message' in sys.argv:
+            print("🌐 Il tuo server sta operando in modalità Online")
+    else:
+        online_mode = False
+        if not '--no-online-mode-message' in sys.argv:
+            print("🏠 Il tuo server sta operando in modalità Offline")
+    if GEOIP_AVAILABLE:
+        print("🌍 Modulo GeoIP2 caricato e Database trovato!")
+    if len(sys.argv) > 1 and '--worker' in sys.argv:
+        run_worker(online_mode)
         sys.exit()
     else:
         print("🤖 Supervisore avviato.")
@@ -213,10 +231,15 @@ if __name__ == '__main__':
             caddy_process = None
             django_process = None
             try:
-                update_duckdns()
+                if online_mode:
+                    update_duckdns()
                 create_caddyfile()
                 caddy_process = start_caddy_service(caddy_executable)
-                django_process = subprocess.Popen([sys.executable, __file__, '--worker'])
+                process = [sys.executable, __file__, '--worker']
+                if online_mode:
+                    process.append('--online')
+                    process.append('--no-online-mode-message')
+                django_process = subprocess.Popen(process)
                 
                 print("👉 Premi CTRL+C per fermare il server.")
                 django_process.wait()
