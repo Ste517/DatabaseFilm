@@ -61,20 +61,20 @@ def archive_old_logs():
 if len(sys.argv) > 1 and sys.argv[1] == '--worker':
     archive_old_logs()
 
-# --- SETUP LOGGER ---
-logger = logging.getLogger("AccessLog")
-logger.setLevel(logging.INFO)
+    # --- SETUP LOGGER ---
+    logger = logging.getLogger("AccessLog")
+    logger.setLevel(logging.INFO)
 
-logger.propagate = False
+    logger.propagate = False
 
-# RotatingFileHandler:
-# maxBytes=10MB. Se supera 10MB crea latest.log.1, latest.log.2...
-# Al riavvio successivo, TUTTI questi verranno rinominati dalla funzione sopra.
-handler = RotatingFileHandler(LATEST_LOG_PATH, maxBytes=10*1024*1024, backupCount=5, encoding='utf-8')
-formatter = logging.Formatter('[%(asctime)s] %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
-handler.setFormatter(formatter)
-logger.addHandler(handler)
-# --------------------
+    # RotatingFileHandler:
+    # maxBytes=10MB. Se supera 10MB crea latest.log.1, latest.log.2...
+    # Al riavvio successivo, TUTTI questi verranno rinominati dalla funzione sopra.
+    handler = RotatingFileHandler(LATEST_LOG_PATH, maxBytes=10*1024*1024, backupCount=5, encoding='utf-8')
+    formatter = logging.Formatter('[%(asctime)s] %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+    # --------------------
 
 # --- CONFIGURAZIONE GEOIP ---
 GEOIP_AVAILABLE = False
