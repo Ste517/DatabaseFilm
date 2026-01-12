@@ -33,18 +33,6 @@ if (cookieAccepted == "true") {
     if (cookieBanner) cookieBanner.style.display = 'none';
 }
 
-// Theme Initialization on Load
-document.addEventListener('DOMContentLoaded', function() {
-    // Sync checkbox state with current theme
-    const currentTheme = document.documentElement.getAttribute('data-theme');
-    const isDark = currentTheme === 'dark';
-    // We will update the button icon later, but for now we might still have the checkbox
-    // or we are moving to a button. The plan is to replace the UI.
-    // So I will just leave this empty for now or minimal until I implement the UI.
-    // If we still had the checkbox:
-    // var sliders = document.querySelectorAll(".switch input");
-    // sliders.forEach(slider => slider.checked = isDark);
-});
 
 function themeSwitch() {
     const currentTheme = document.documentElement.getAttribute('data-theme');
