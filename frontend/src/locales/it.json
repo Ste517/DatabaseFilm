@@ -1,0 +1,32 @@
+{
+  "translation": {
+    "Movies": "Film",
+    "Music": "Musica",
+    "Profile": "Profilo",
+    "Logout": "Esci",
+    "Login": "Accedi",
+    "Grid": "Griglia",
+    "List": "Lista",
+    "SortBy": "Ordina per",
+    "Title": "Titolo",
+    "Year": "Anno",
+    "Rating": "Voto",
+    "Search": "Cerca...",
+    "YourVote": "Il tuo voto",
+    "Save": "Salva",
+    "UpdatingVote": "Modifica il tuo voto",
+    "NewVote": "Vota ora",
+    "MediaType": "Tipo Media",
+    "Position": "Posizione",
+    "Description": "Descrizione",
+    "Artist": "Artista",
+    "ChangePassword": "Cambia Password",
+    "CurrentPassword": "Password Attuale",
+    "NewPassword": "Nuova Password",
+    "Update": "Aggiorna",
+    "MyVotes": "I Miei Voti",
+    "NoVotes": "Non hai ancora votato.",
+    "Theme": "Tema",
+    "Language": "Lingua"
+  }
+}

@@ -1,13 +1,17 @@
 import React from 'react';
 import type { Film } from '../types';
+import { useTranslation } from 'react-i18next';
 
 interface FilmListProps {
   films: Film[];
   viewMode: 'grid' | 'list';
+  userVotes: Record<string, number>;
   onItemClick: (item: Film) => void;
 }
 
-const FilmList: React.FC<FilmListProps> = ({ films, viewMode, onItemClick }) => {
+const FilmList: React.FC<FilmListProps> = ({ films, viewMode, userVotes, onItemClick }) => {
+  const { t } = useTranslation();
+
   if (viewMode === 'list') {
     return (
       <table>
@@ -23,7 +27,14 @@ const FilmList: React.FC<FilmListProps> = ({ films, viewMode, onItemClick }) => 
         <tbody>
           {films.map((film) => (
             <tr key={film.id} onClick={() => onItemClick(film)} style={{ cursor: 'pointer' }}>
-              <td>{film.titolo}</td>
+              <td>
+                  {film.titolo}
+                  {userVotes[`film_${film.id}`] && (
+                      <span style={{ marginLeft: '8px', fontSize: '0.8em', color: 'var(--color-primary)' }}>
+                          ({t('YourVote')}: {userVotes[`film_${film.id}`]})
+                      </span>
+                  )}
+              </td>
               <td>{film.anno_uscita}</td>
               <td>
                 {film.media_rating ? (
@@ -59,6 +70,13 @@ const FilmList: React.FC<FilmListProps> = ({ films, viewMode, onItemClick }) => 
           )}
           <div className="grid-card-content">
             <div className="grid-card-title" title={film.titolo}>{film.titolo}</div>
+
+            {userVotes[`film_${film.id}`] && (
+                <div style={{ fontSize: '0.8rem', color: 'var(--color-primary)', marginBottom: '4px' }}>
+                    {t('YourVote')}: {userVotes[`film_${film.id}`]}
+                </div>
+            )}
+
             <div className="flex justify-between items-center text-sm text-muted">
               <span>{film.anno_uscita}</span>
               {film.media_rating && (

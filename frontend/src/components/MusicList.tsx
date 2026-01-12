@@ -1,13 +1,17 @@
 import React from 'react';
 import type { Musica } from '../types';
+import { useTranslation } from 'react-i18next';
 
 interface MusicListProps {
   music: Musica[];
   viewMode: 'grid' | 'list';
+  userVotes: Record<string, number>;
   onItemClick: (item: Musica) => void;
 }
 
-const MusicList: React.FC<MusicListProps> = ({ music, viewMode, onItemClick }) => {
+const MusicList: React.FC<MusicListProps> = ({ music, viewMode, userVotes, onItemClick }) => {
+  const { t } = useTranslation();
+
   if (viewMode === 'list') {
     return (
       <table>
@@ -25,7 +29,14 @@ const MusicList: React.FC<MusicListProps> = ({ music, viewMode, onItemClick }) =
           {music.map((item) => (
             <tr key={item.id} onClick={() => onItemClick(item)} style={{ cursor: 'pointer' }}>
               <td>{item.artista}</td>
-              <td>{item.titolo}</td>
+              <td>
+                  {item.titolo}
+                  {userVotes[`musica_${item.id}`] && (
+                      <span style={{ marginLeft: '8px', fontSize: '0.8em', color: 'var(--color-primary)' }}>
+                          ({t('YourVote')}: {userVotes[`musica_${item.id}`]})
+                      </span>
+                  )}
+              </td>
               <td>{item.anno_uscita}</td>
               <td>
                 {item.media_rating ? (
@@ -62,6 +73,13 @@ const MusicList: React.FC<MusicListProps> = ({ music, viewMode, onItemClick }) =
           <div className="grid-card-content">
             <div className="grid-card-title" title={item.titolo}>{item.titolo}</div>
             <div style={{ fontSize: '0.9rem', color: 'var(--color-text-muted)', marginBottom: '4px' }}>{item.artista}</div>
+
+            {userVotes[`musica_${item.id}`] && (
+                <div style={{ fontSize: '0.8rem', color: 'var(--color-primary)', marginBottom: '4px' }}>
+                    {t('YourVote')}: {userVotes[`musica_${item.id}`]}
+                </div>
+            )}
+
              <div className="flex justify-between items-center text-sm text-muted">
               <span>{item.anno_uscita}</span>
               {item.media_rating && (

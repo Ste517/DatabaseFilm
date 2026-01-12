@@ -23,6 +23,9 @@ function App() {
   const [music, setMusic] = useState<Musica[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // Store user votes mapping: ItemID -> VoteValue
+  const [userVotes, setUserVotes] = useState<Record<string, number>>({});
+
   // Modal State
   const [selectedItem, setSelectedItem] = useState<Film | Musica | null>(null);
 
@@ -45,11 +48,36 @@ function App() {
     i18n.changeLanguage(newLang);
   };
 
+  const fetchVotes = async () => {
+      try {
+          const response = await api.get('voti/');
+          const votesList = response.data.results || response.data;
+          const votesMap: Record<string, number> = {};
+          votesList.forEach((v: any) => {
+              // Create unique keys for films vs music to avoid collision if IDs overlap
+              if (v.film) votesMap[`film_${v.film}`] = v.valore;
+              if (v.musica) votesMap[`musica_${v.musica}`] = v.valore;
+          });
+          setUserVotes(votesMap);
+      } catch (e) {
+          console.error("Error fetching votes", e);
+      }
+  };
+
   const fetchData = async () => {
-    if (activeTab === 'profile') return;
+    if (activeTab === 'profile') {
+        // Just refresh votes if we are on profile, though Profile component handles its own fetch usually
+        // But we want to keep app state in sync
+        fetchVotes();
+        return;
+    }
 
     try {
       setLoading(true);
+
+      // Fetch votes in parallel
+      fetchVotes();
+
       const endpoint = activeTab === 'movies' ? 'films/' : 'musica/';
       const params: any = { ordering: sortBy };
 
@@ -190,12 +218,14 @@ function App() {
                 <FilmList
                     films={films}
                     viewMode={viewMode}
+                    userVotes={userVotes}
                     onItemClick={(item) => setSelectedItem(item)}
                 />
                 ) : (
                 <MusicList
                     music={music}
                     viewMode={viewMode}
+                    userVotes={userVotes}
                     onItemClick={(item) => setSelectedItem(item)}
                 />
                 )}
