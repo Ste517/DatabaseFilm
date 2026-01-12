@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import api from '../api/axios';
 import type { Film, Musica } from '../types';
+import { useTranslation } from 'react-i18next';
 
 interface DetailModalProps {
   item: Film | Musica | null;
@@ -10,13 +11,13 @@ interface DetailModalProps {
 }
 
 const DetailModal: React.FC<DetailModalProps> = ({ item, type, onClose, onVoteSuccess }) => {
+  const { t } = useTranslation();
   const [voteValue, setVoteValue] = useState<number | ''>('');
   const [submitting, setSubmitting] = useState(false);
 
   if (!item) return null;
 
   const isFilm = type === 'film';
-  // Cast to specific type safely
   const filmItem = isFilm ? (item as Film) : null;
   const musicItem = !isFilm ? (item as Musica) : null;
 
@@ -24,6 +25,9 @@ const DetailModal: React.FC<DetailModalProps> = ({ item, type, onClose, onVoteSu
   const title = isFilm ? filmItem?.titolo : musicItem?.titolo;
   const subtitle = isFilm ? filmItem?.anno_uscita : musicItem?.artista;
   const description = isFilm ? filmItem?.trama : musicItem?.descrizione;
+
+  // Visual indication of editing or new vote could be done here if we fetch user's vote first
+  // But for now, we just show "Your Vote"
 
   const handleVote = async () => {
     if (voteValue === '') return;
@@ -41,12 +45,12 @@ const DetailModal: React.FC<DetailModalProps> = ({ item, type, onClose, onVoteSu
         }
 
         await api.post('voti/', payload);
-        alert('Voto salvato!');
-        onVoteSuccess(); // Refresh data potentially
+        alert(t('Save') + '!');
+        onVoteSuccess();
         onClose();
     } catch (error) {
         console.error(error);
-        alert('Errore nel salvataggio del voto');
+        alert('Error saving vote');
     } finally {
         setSubmitting(false);
     }
@@ -76,34 +80,38 @@ const DetailModal: React.FC<DetailModalProps> = ({ item, type, onClose, onVoteSu
                 No Image
               </div>
             )}
+
+            <div style={{ marginTop: '1rem', textAlign: 'center', fontWeight: 'bold' }}>
+                {isFilm ? '🎬 Movie' : '🎵 Music'}
+            </div>
           </div>
 
           <div className="modal-right">
             {description && (
                 <div style={{ marginBottom: '1.5rem', whiteSpace: 'pre-wrap' }}>
-                    <strong>Descrizione:</strong><br/>
+                    <strong>{t('Description')}:</strong><br/>
                     {description}
                 </div>
             )}
 
             <div style={{ marginBottom: '1rem' }}>
-                <strong>Media Type:</strong> {item.media_type}
+                <strong>{t('MediaType')}:</strong> {item.media_type}
             </div>
 
             <div style={{ marginBottom: '1rem' }}>
-                <strong>Posizione:</strong> {item.posizione_fisica}
+                <strong>{t('Position')}:</strong> {item.posizione_fisica}
             </div>
 
             <hr style={{ borderColor: 'var(--color-border)', margin: '1.5rem 0' }} />
 
-            <h3>Il tuo voto</h3>
+            <h3>{t('YourVote')}</h3>
             <div className="flex gap-2 items-center">
                 <select
                     value={voteValue}
                     onChange={(e) => setVoteValue(Number(e.target.value))}
                     style={{ maxWidth: '100px' }}
                 >
-                    <option value="">Vota...</option>
+                    <option value="">...</option>
                     {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(v => (
                         <option key={v} value={v}>{v}</option>
                     ))}
@@ -113,7 +121,7 @@ const DetailModal: React.FC<DetailModalProps> = ({ item, type, onClose, onVoteSu
                     onClick={handleVote}
                     disabled={submitting || voteValue === ''}
                 >
-                    {submitting ? '...' : 'Salva'}
+                    {submitting ? '...' : t('Save')}
                 </button>
             </div>
           </div>

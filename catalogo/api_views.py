@@ -6,6 +6,39 @@ from django.db.models import Avg
 from .models import Film, Musica, Voto, ApiKeys
 from .serializers import FilmSerializer, MusicaSerializer, VotoSerializer
 import json
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.models import User
+from rest_framework import serializers
+
+class ChangePasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
+
+class UserViewSet(viewsets.ViewSet):
+    permission_classes = [permissions.IsAuthenticated]
+
+    @action(detail=False, methods=['post'])
+    def change_password(self, request):
+        user = request.user
+        serializer = ChangePasswordSerializer(data=request.data)
+
+        if serializer.is_valid():
+            if not user.check_password(serializer.data.get("old_password")):
+                return Response({"old_password": ["Wrong password."]}, status=status.HTTP_400_BAD_REQUEST)
+
+            user.set_password(serializer.data.get("new_password"))
+            user.save()
+            update_session_auth_hash(request, user)
+            return Response({'status': 'password set'}, status=status.HTTP_200_OK)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=False, methods=['get'])
+    def me(self, request):
+        return Response({
+            'username': request.user.username,
+            'email': request.user.email,
+        })
 
 class FilmViewSet(viewsets.ModelViewSet):
     """
@@ -15,7 +48,7 @@ class FilmViewSet(viewsets.ModelViewSet):
     serializer_class = FilmSerializer
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['titolo']
-    ordering_fields = ['titolo', 'anno_uscita', 'media_rating', 'posizione_fisica']
+    ordering_fields = ['titolo', 'anno_uscita', 'media_rating', 'posizione_fisica', 'id']
 
 class MusicaViewSet(viewsets.ModelViewSet):
     """
@@ -25,7 +58,7 @@ class MusicaViewSet(viewsets.ModelViewSet):
     serializer_class = MusicaSerializer
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['titolo', 'artista']
-    ordering_fields = ['titolo', 'artista', 'anno_uscita', 'media_rating', 'posizione_fisica']
+    ordering_fields = ['titolo', 'artista', 'anno_uscita', 'media_rating', 'posizione_fisica', 'id']
 
 class VotoViewSet(viewsets.ModelViewSet):
     """
@@ -36,36 +69,18 @@ class VotoViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
+        # Allow expanding related fields if needed, or better, the frontend fetches details separately.
+        # For the profile view, we want to know details about what was voted.
+        # But VotoSerializer only returns IDs. We might need a ReadSerializer.
         return Voto.objects.filter(utente=self.request.user)
 
+    def get_serializer_class(self):
+        # We could use a different serializer for list actions to include details
+        return VotoSerializer
+
     def perform_create(self, serializer):
-        # Automatically set the user to the current logged-in user
-        # Check if vote exists and update it instead?
-        # The frontend logic was: "Se c'è lo aggiorna, se no lo crea."
-        # The serializer validates uniqueness, but here we might want to handle upsert behavior.
-        # But standard DRF create will fail on uniqueness constraint.
-        # Let's handle upsert logic in create manually or rely on client to use ID for updates.
-        # Ideally client checks if vote exists. But to mimic `salva_voto` logic:
-
-        film = serializer.validated_data.get('film')
-        musica = serializer.validated_data.get('musica')
-        valore = serializer.validated_data.get('valore')
-
-        if film:
-            Voto.objects.update_or_create(
-                utente=self.request.user,
-                film=film,
-                defaults={'valore': valore, 'musica': None}
-            )
-        elif musica:
-            Voto.objects.update_or_create(
-                utente=self.request.user,
-                musica=musica,
-                defaults={'valore': valore, 'film': None}
-            )
-        # Note: We are intercepting save, so we don't call super().save() or serializer.save()
-        # if we do update_or_create manually.
-        # However, to keep it clean with DRF response, we might need to return the instance.
+        # ... logic handled in create ...
+        pass
 
     def create(self, request, *args, **kwargs):
         # We need to manually validate because serializer.is_valid() would fail

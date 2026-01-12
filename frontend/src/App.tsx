@@ -1,18 +1,23 @@
 import { useState, useEffect } from 'react';
 import './App.css';
+import './AppOverrides.css';
 import api from './api/axios';
 import type { Film, Musica } from './types';
 import FilmList from './components/FilmList';
 import MusicList from './components/MusicList';
 import Login from './components/Login';
 import DetailModal from './components/DetailModal';
+import Profile from './components/Profile';
+import { useTranslation } from 'react-i18next';
 
 function App() {
+  const { t, i18n } = useTranslation();
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(!!localStorage.getItem('access_token'));
-  const [activeTab, setActiveTab] = useState<'movies' | 'music'>('movies');
+  const [activeTab, setActiveTab] = useState<'movies' | 'music' | 'profile'>('movies');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
   const [searchQuery, setSearchQuery] = useState('');
+  const [sortBy, setSortBy] = useState<string>('-id');
 
   const [films, setFilms] = useState<Film[]>([]);
   const [music, setMusic] = useState<Musica[]>([]);
@@ -35,14 +40,19 @@ function App() {
     document.documentElement.setAttribute('data-theme', newTheme);
   };
 
+  const toggleLanguage = () => {
+    const newLang = i18n.language === 'en' ? 'it' : 'en';
+    i18n.changeLanguage(newLang);
+  };
+
   const fetchData = async () => {
+    if (activeTab === 'profile') return;
+
     try {
       setLoading(true);
       const endpoint = activeTab === 'movies' ? 'films/' : 'musica/';
-      const params: any = {};
+      const params: any = { ordering: sortBy };
 
-      // Basic client-side filtering support via API search parameter if supported
-      // The backend supports ?search=...
       if (searchQuery) {
           params.search = searchQuery;
       }
@@ -64,7 +74,7 @@ function App() {
     if (isAuthenticated) {
         fetchData();
     }
-  }, [activeTab, isAuthenticated, searchQuery]); // Re-fetch on tab, auth, or search change
+  }, [activeTab, isAuthenticated, searchQuery, sortBy]);
 
   const handleLogout = () => {
     localStorage.removeItem('access_token');
@@ -83,11 +93,10 @@ function App() {
       <nav className="navbar">
         <div className="nav-brand">My Media Site</div>
 
-        {/* Search Bar - Only show on desktop for now or make responsive */}
         <div className="search-container" style={{ flex: 1, margin: '0 2rem', maxWidth: '400px' }}>
             <input
                 type="text"
-                placeholder="Cerca..."
+                placeholder={t('Search')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 style={{ borderRadius: '20px' }}
@@ -100,72 +109,99 @@ function App() {
             className={activeTab === 'movies' ? 'active' : ''}
             onClick={() => setActiveTab('movies')}
           >
-            Movies
+            {t('Movies')}
           </a>
           <a
             href="#"
             className={activeTab === 'music' ? 'active' : ''}
             onClick={() => setActiveTab('music')}
           >
-            Music
+            {t('Music')}
+          </a>
+          <a
+            href="#"
+            className={activeTab === 'profile' ? 'active' : ''}
+            onClick={() => setActiveTab('profile')}
+          >
+            {t('Profile')}
           </a>
         </div>
 
         <div className="flex items-center gap-4" style={{ marginLeft: '1rem' }}>
-            <button className="theme-toggle" onClick={toggleTheme} aria-label="Toggle theme">
+             <button className="btn secondary" onClick={toggleLanguage} style={{ fontSize: '0.8rem', padding: '0.25rem 0.5rem', minHeight: 'auto' }}>
+                {i18n.language.toUpperCase()}
+            </button>
+
+            <button className="theme-toggle" onClick={toggleTheme} aria-label={t('Theme')}>
              {theme === 'dark' ? (
-                // Sun Icon
                 <svg className="icon-sun" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
              ) : (
-                // Moon Icon
                 <svg className="icon-moon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
              )}
             </button>
             <button className="btn secondary" onClick={handleLogout} style={{ fontSize: '0.8rem', padding: '0.25rem 0.75rem', minHeight: 'auto' }}>
-                Logout
+                {t('Logout')}
             </button>
         </div>
       </nav>
 
       {/* Main Content */}
       <main className="container" style={{ marginTop: '2rem' }}>
-        <div className="flex justify-between items-center" style={{ marginBottom: '1rem' }}>
-          <h1>{activeTab === 'movies' ? 'Film Catalog' : 'Music Collection'}</h1>
-
-          <div className="flex gap-2">
-            <button
-              className={`btn ${viewMode === 'grid' ? '' : 'secondary'}`}
-              onClick={() => setViewMode('grid')}
-            >
-              Grid
-            </button>
-            <button
-              className={`btn ${viewMode === 'list' ? '' : 'secondary'}`}
-              onClick={() => setViewMode('list')}
-            >
-              List
-            </button>
-          </div>
-        </div>
-
-        {loading ? (
-          <div className="text-center" style={{ padding: '2rem' }}>Loading...</div>
+        {activeTab === 'profile' ? (
+            <Profile />
         ) : (
-          <>
-            {activeTab === 'movies' ? (
-              <FilmList
-                films={films}
-                viewMode={viewMode}
-                onItemClick={(item) => setSelectedItem(item)}
-              />
+        <>
+            <div className="flex justify-between items-center flex-wrap gap-4" style={{ marginBottom: '1rem' }}>
+            <h1>{activeTab === 'movies' ? t('Movies') : t('Music')}</h1>
+
+            <div className="flex gap-4 items-center flex-wrap">
+                <div className="flex items-center gap-2">
+                    <label>{t('SortBy')}:</label>
+                    <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+                        <option value="-id">Default</option>
+                        <option value="titolo">{t('Title')}</option>
+                        <option value="-anno_uscita">{t('Year')}</option>
+                        <option value="-media_rating">{t('Rating')}</option>
+                    </select>
+                </div>
+
+                <div className="flex gap-2">
+                    <button
+                    className={`btn ${viewMode === 'grid' ? '' : 'secondary'}`}
+                    onClick={() => setViewMode('grid')}
+                    >
+                    {t('Grid')}
+                    </button>
+                    <button
+                    className={`btn ${viewMode === 'list' ? '' : 'secondary'}`}
+                    onClick={() => setViewMode('list')}
+                    >
+                    {t('List')}
+                    </button>
+                </div>
+            </div>
+            </div>
+
+            {loading ? (
+            <div className="text-center" style={{ padding: '2rem' }}>Loading...</div>
             ) : (
-              <MusicList
-                music={music}
-                viewMode={viewMode}
-                onItemClick={(item) => setSelectedItem(item)}
-              />
+            <>
+                {activeTab === 'movies' ? (
+                <FilmList
+                    films={films}
+                    viewMode={viewMode}
+                    onItemClick={(item) => setSelectedItem(item)}
+                />
+                ) : (
+                <MusicList
+                    music={music}
+                    viewMode={viewMode}
+                    onItemClick={(item) => setSelectedItem(item)}
+                />
+                )}
+            </>
             )}
-          </>
+        </>
         )}
       </main>
 
