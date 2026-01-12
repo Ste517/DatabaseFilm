@@ -1,0 +1,77 @@
+import React from 'react';
+import type { Musica } from '../types';
+
+interface MusicListProps {
+  music: Musica[];
+  viewMode: 'grid' | 'list';
+}
+
+const MusicList: React.FC<MusicListProps> = ({ music, viewMode }) => {
+  if (viewMode === 'list') {
+    return (
+      <table>
+        <thead>
+          <tr>
+            <th>Artista</th>
+            <th>Titolo</th>
+            <th>Anno</th>
+            <th>Rating</th>
+            <th>Posizione</th>
+            <th>Media</th>
+          </tr>
+        </thead>
+        <tbody>
+          {music.map((item) => (
+            <tr key={item.id}>
+              <td>{item.artista}</td>
+              <td>{item.titolo}</td>
+              <td>{item.anno_uscita}</td>
+              <td>
+                {item.media_rating ? (
+                  <span className={`badge-voto ${
+                    item.media_rating >= 8 ? 'voto-ottimo' :
+                    item.media_rating >= 6 ? 'voto-buono' :
+                    item.media_rating >= 4 ? 'voto-medio' :
+                    'voto-scarso'
+                  }`}>
+                    {item.media_rating.toFixed(1)}
+                  </span>
+                ) : '-'}
+              </td>
+              <td>{item.posizione_fisica}</td>
+              <td>{item.media_type}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    );
+  }
+
+  return (
+    <div className="grid-container">
+      {music.map((item) => (
+        <div key={item.id} className="grid-card">
+          {item.copertina ? (
+            <img src={item.copertina} alt={item.titolo} />
+          ) : (
+            <div style={{ aspectRatio: '1/1', backgroundColor: 'var(--color-bg-element)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <span>No Cover</span>
+            </div>
+          )}
+          <div className="grid-card-content">
+            <div className="grid-card-title" title={item.titolo}>{item.titolo}</div>
+            <div style={{ fontSize: '0.9rem', color: 'var(--color-text-muted)', marginBottom: '4px' }}>{item.artista}</div>
+             <div className="flex justify-between items-center text-sm text-muted">
+              <span>{item.anno_uscita}</span>
+              {item.media_rating && (
+                 <span style={{ fontSize: '0.8rem', fontWeight: 'bold' }}>★ {item.media_rating.toFixed(1)}</span>
+              )}
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default MusicList;
