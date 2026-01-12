@@ -4,6 +4,8 @@ from django.urls import reverse
 from .models import Film, Musica, Voto, ApiKeys
 from unittest.mock import patch, MagicMock
 import json
+from rest_framework.test import APIClient
+from rest_framework import status
 
 class ModelTests(TestCase):
     def setUp(self):
@@ -92,16 +94,17 @@ class ViewTests(TestCase):
         self.musica = Musica.objects.create(titolo="Test Album", artista="Artist", media_type="cd")
 
     def test_homepage_movies(self):
+        # We need to be logged in to access homepage now that login is required (implied by 302 redirect)
+        # Actually homepage is @login_required in views.py
+        self.client.login(username='testuser', password='password')
         response = self.client.get(reverse('home'))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Test Film")
-        # Should not contain music by default/context logic if purely separate,
-        # but template renders both usually hidden by CSS/JS or context flag.
-        # Checking context:
         self.assertTrue(response.context['views']['movies'])
         self.assertFalse(response.context['views']['music'])
 
     def test_homepage_music(self):
+        self.client.login(username='testuser', password='password')
         response = self.client.get(reverse('music'))
         self.assertEqual(response.status_code, 200)
         self.assertTrue(response.context['views']['music'])
@@ -124,7 +127,13 @@ class ViewTests(TestCase):
             'id_oggetto': self.film.id,
             'valore': 9
         })
-        self.assertEqual(Voto.objects.filter(utente=self.user, film=self.film).first().valore, 9)
+        # The view redirects, so validation of logic happens by checking DB
+        self.assertEqual(response.status_code, 302)
+
+        # Check if vote was created
+        voto = Voto.objects.filter(utente=self.user, film=self.film).first()
+        self.assertIsNotNone(voto)
+        self.assertEqual(voto.valore, 9)
 
         # Test updating vote
         response = self.client.post(reverse('salva_voto'), {
@@ -132,7 +141,8 @@ class ViewTests(TestCase):
             'id_oggetto': self.film.id,
             'valore': 5
         })
-        self.assertEqual(Voto.objects.filter(utente=self.user, film=self.film).first().valore, 5)
+        voto.refresh_from_db()
+        self.assertEqual(voto.valore, 5)
 
         # Test deleting vote
         response = self.client.post(reverse('salva_voto'), {
@@ -182,3 +192,31 @@ class ViewTests(TestCase):
             HTTP_X_API_KEY='wrongkey'
         )
         self.assertEqual(response.status_code, 403)
+
+class ApiViewSetTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='apitestuser', password='password')
+        self.client = APIClient()
+        self.film = Film.objects.create(titolo="API Test Film", media_type="dvd")
+
+        # Get token
+        response = self.client.post(reverse('token_obtain_pair'), {'username': 'apitestuser', 'password': 'password'}, format='json')
+        self.token = response.data['access']
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.token)
+
+    def test_vote_lifecycle(self):
+        # 1. Create Vote
+        data = {'film': self.film.id, 'valore': 8}
+        response = self.client.post('/api/v1/voti/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['valore'], 8)
+
+        # 2. Update Vote (Upsert)
+        data = {'film': self.film.id, 'valore': 10}
+        response = self.client.post('/api/v1/voti/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['valore'], 10)
+
+        # Verify DB
+        voto = Voto.objects.get(utente=self.user, film=self.film)
+        self.assertEqual(voto.valore, 10)
