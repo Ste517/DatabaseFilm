@@ -16,7 +16,7 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
     setError('');
 
     try {
-      const response = await api.post('/token/', { username, password });
+      const response = await api.post('token/', { username, password });
       const { access, refresh } = response.data;
 
       localStorage.setItem('access_token', access);
