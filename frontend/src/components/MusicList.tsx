@@ -4,9 +4,10 @@ import type { Musica } from '../types';
 interface MusicListProps {
   music: Musica[];
   viewMode: 'grid' | 'list';
+  onItemClick: (item: Musica) => void;
 }
 
-const MusicList: React.FC<MusicListProps> = ({ music, viewMode }) => {
+const MusicList: React.FC<MusicListProps> = ({ music, viewMode, onItemClick }) => {
   if (viewMode === 'list') {
     return (
       <table>
@@ -22,7 +23,7 @@ const MusicList: React.FC<MusicListProps> = ({ music, viewMode }) => {
         </thead>
         <tbody>
           {music.map((item) => (
-            <tr key={item.id}>
+            <tr key={item.id} onClick={() => onItemClick(item)} style={{ cursor: 'pointer' }}>
               <td>{item.artista}</td>
               <td>{item.titolo}</td>
               <td>{item.anno_uscita}</td>
@@ -50,9 +51,9 @@ const MusicList: React.FC<MusicListProps> = ({ music, viewMode }) => {
   return (
     <div className="grid-container">
       {music.map((item) => (
-        <div key={item.id} className="grid-card">
+        <div key={item.id} className="grid-card" onClick={() => onItemClick(item)} style={{ cursor: 'pointer' }}>
           {item.copertina ? (
-            <img src={item.copertina} alt={item.titolo} />
+            <img src={item.copertina} alt={item.titolo} style={{ aspectRatio: '1/1' }} />
           ) : (
             <div style={{ aspectRatio: '1/1', backgroundColor: 'var(--color-bg-element)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <span>No Cover</span>

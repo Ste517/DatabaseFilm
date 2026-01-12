@@ -4,9 +4,10 @@ import type { Film } from '../types';
 interface FilmListProps {
   films: Film[];
   viewMode: 'grid' | 'list';
+  onItemClick: (item: Film) => void;
 }
 
-const FilmList: React.FC<FilmListProps> = ({ films, viewMode }) => {
+const FilmList: React.FC<FilmListProps> = ({ films, viewMode, onItemClick }) => {
   if (viewMode === 'list') {
     return (
       <table>
@@ -21,7 +22,7 @@ const FilmList: React.FC<FilmListProps> = ({ films, viewMode }) => {
         </thead>
         <tbody>
           {films.map((film) => (
-            <tr key={film.id}>
+            <tr key={film.id} onClick={() => onItemClick(film)} style={{ cursor: 'pointer' }}>
               <td>{film.titolo}</td>
               <td>{film.anno_uscita}</td>
               <td>
@@ -48,7 +49,7 @@ const FilmList: React.FC<FilmListProps> = ({ films, viewMode }) => {
   return (
     <div className="grid-container">
       {films.map((film) => (
-        <div key={film.id} className="grid-card">
+        <div key={film.id} className="grid-card" onClick={() => onItemClick(film)} style={{ cursor: 'pointer' }}>
           {film.poster ? (
             <img src={film.poster} alt={film.titolo} />
           ) : (
