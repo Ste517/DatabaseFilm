@@ -16,10 +16,28 @@ class MusicaSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class VotoSerializer(serializers.ModelSerializer):
+    item_details = serializers.SerializerMethodField()
+
     class Meta:
         model = Voto
-        fields = ['id', 'utente', 'film', 'musica', 'valore']
-        read_only_fields = ['utente']
+        fields = ['id', 'utente', 'film', 'musica', 'valore', 'item_details']
+        read_only_fields = ['utente', 'item_details']
+
+    def get_item_details(self, obj):
+        if obj.film:
+            return {
+                'title': obj.film.titolo,
+                'image': obj.film.poster,
+                'type': 'film'
+            }
+        elif obj.musica:
+            return {
+                'title': obj.musica.titolo,
+                'subtitle': obj.musica.artista,
+                'image': obj.musica.copertina,
+                'type': 'musica'
+            }
+        return None
 
     def validate(self, data):
         """

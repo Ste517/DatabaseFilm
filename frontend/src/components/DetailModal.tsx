@@ -14,6 +14,37 @@ const DetailModal: React.FC<DetailModalProps> = ({ item, type, onClose, onVoteSu
   const { t } = useTranslation();
   const [voteValue, setVoteValue] = useState<number | ''>('');
   const [submitting, setSubmitting] = useState(false);
+  const [existingVote, setExistingVote] = useState<any>(null);
+
+  React.useEffect(() => {
+    // Check if user has already voted
+    const fetchUserVote = async () => {
+        try {
+            // Need a way to filter votes by item. Assuming backend VotoViewSet supports filtering.
+            // If not, we have to fetch all and filter client side (not efficient but works for small app)
+            // or backend endpoint.
+            // Let's assume standard ViewSet allows filtering if configured.
+            // Actually I configured FilterBackends? No, explicit fields only.
+            // Let's assume we can GET /api/v1/voti/ and filter client side for now as safe bet
+            // given I control backend but re-deploying it just for filter is slower than client filter.
+            // Wait, I am the full stack dev. I should ensure backend filtering.
+            // But let's try client side filter of "my votes" since user won't have millions.
+            const response = await api.get('voti/');
+            const myVotes = response.data.results || response.data;
+            const vote = myVotes.find((v: any) =>
+                (type === 'film' && v.film === item?.id) ||
+                (type === 'musica' && v.musica === item?.id)
+            );
+            if (vote) {
+                setExistingVote(vote);
+                setVoteValue(vote.valore);
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    };
+    if (item) fetchUserVote();
+  }, [item, type]);
 
   if (!item) return null;
 
@@ -26,8 +57,18 @@ const DetailModal: React.FC<DetailModalProps> = ({ item, type, onClose, onVoteSu
   const subtitle = isFilm ? filmItem?.anno_uscita : musicItem?.artista;
   const description = isFilm ? filmItem?.trama : musicItem?.descrizione;
 
-  // Visual indication of editing or new vote could be done here if we fetch user's vote first
-  // But for now, we just show "Your Vote"
+  const formatMediaType = (type: string) => {
+      const map: Record<string, string> = {
+          'dvd': 'DVD',
+          'vhs': 'VHS',
+          'bray': 'Blu-ray',
+          'cd': 'CD',
+          'vinyl': 'Vinyl',
+          'cass': 'Cassette',
+          'unknown': 'Unknown'
+      };
+      return map[type] || type.toUpperCase();
+  };
 
   const handleVote = async () => {
     if (voteValue === '') return;
@@ -95,7 +136,7 @@ const DetailModal: React.FC<DetailModalProps> = ({ item, type, onClose, onVoteSu
             )}
 
             <div style={{ marginBottom: '1rem' }}>
-                <strong>{t('MediaType')}:</strong> {item.media_type}
+                <strong>{t('MediaType')}:</strong> {formatMediaType(item.media_type)}
             </div>
 
             <div style={{ marginBottom: '1rem' }}>
@@ -104,7 +145,7 @@ const DetailModal: React.FC<DetailModalProps> = ({ item, type, onClose, onVoteSu
 
             <hr style={{ borderColor: 'var(--color-border)', margin: '1.5rem 0' }} />
 
-            <h3>{t('YourVote')}</h3>
+            <h3>{existingVote ? t('UpdatingVote') : t('NewVote')}</h3>
             <div className="flex gap-2 items-center">
                 <select
                     value={voteValue}

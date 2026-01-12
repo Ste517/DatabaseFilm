@@ -66,13 +66,35 @@ const Profile: React.FC = () => {
                     {votes.length === 0 ? (
                         <p>{t('NoVotes')}</p>
                     ) : (
-                        <ul className="lista">
-                            {votes.map(vote => (
-                                <li key={vote.id}>
-                                    ID: {vote.film || vote.musica} - Voto: {vote.valore}
-                                </li>
-                            ))}
-                        </ul>
+                        <div className="votes-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))', gap: '1rem' }}>
+                            {votes.map(vote => {
+                                const details = vote.item_details;
+                                return (
+                                    <div key={vote.id} className="vote-card" style={{ textAlign: 'center' }}>
+                                        {details?.image ? (
+                                            <img
+                                                src={details.image}
+                                                alt={details.title}
+                                                style={{ width: '100%', aspectRatio: details.type === 'film' ? '2/3' : '1/1', borderRadius: '8px', objectFit: 'cover' }}
+                                            />
+                                        ) : (
+                                            <div style={{ width: '100%', aspectRatio: '1/1', background: '#333', borderRadius: '8px' }} />
+                                        )}
+                                        <div style={{ fontWeight: 'bold', fontSize: '0.9rem', margin: '0.5rem 0 0.2rem' }}>
+                                            {details?.title || 'Unknown'}
+                                        </div>
+                                        <div className={`badge-voto ${
+                                            vote.valore >= 8 ? 'voto-ottimo' :
+                                            vote.valore >= 6 ? 'voto-buono' :
+                                            vote.valore >= 4 ? 'voto-medio' :
+                                            'voto-scarso'
+                                        }`}>
+                                            {vote.valore}
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
                     )}
                 </div>
             </div>
