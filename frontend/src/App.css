@@ -608,6 +608,7 @@ table tr:nth-child(even) {
 
 .forms-container {
     display: flex;
+    flex-direction: column;
     flex-wrap: wrap;
     gap: var(--space-4);
     margin-top: var(--space-4);

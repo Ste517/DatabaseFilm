@@ -1,0 +1,33 @@
+{
+  "translation": {
+    "MovieCatalogue": "Index Pellicularum",
+    "Movies": "Pelliculae",
+    "Music": "Musica",
+    "Profile": "Persona",
+    "Logout": "Exire",
+    "Login": "Inire",
+    "Grid": "Reticulum",
+    "List": "Index",
+    "SortBy": "Ordinare per",
+    "Title": "Titulus",
+    "Year": "Annus",
+    "Rating": "Aestimatio",
+    "Search": "Quaere...",
+    "YourVote": "Sententia Tua",
+    "Save": "Serva",
+    "UpdatingVote": "Sententia renovatur",
+    "NewVote": "Sententiam fer",
+    "MediaType": "Genus",
+    "Position": "Locus",
+    "Description": "Descriptio",
+    "Artist": "Artifex",
+    "ChangePassword": "Tesseram Mutare",
+    "CurrentPassword": "Tessera Praesens",
+    "NewPassword": "Tessera Nova",
+    "Update": "Renova",
+    "MyVotes": "Sententiae Meae",
+    "NoVotes": "Nondum sententiam tulisti.",
+    "Theme": "Facies",
+    "Language": "Lingua"
+  }
+}

@@ -8,10 +8,11 @@ import MusicList from './components/MusicList';
 import Login from './components/Login';
 import DetailModal from './components/DetailModal';
 import Profile from './components/Profile';
+import LanguageSelector from './components/LanguageSelector';
 import { useTranslation } from 'react-i18next';
 
 function App() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(!!localStorage.getItem('access_token'));
   const [activeTab, setActiveTab] = useState<'movies' | 'music' | 'profile'>('movies');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
@@ -43,10 +44,9 @@ function App() {
     document.documentElement.setAttribute('data-theme', newTheme);
   };
 
-  const toggleLanguage = () => {
-    const newLang = i18n.language === 'en' ? 'it' : 'en';
-    i18n.changeLanguage(newLang);
-  };
+  <LanguageSelector />;
+
+  document.title = t('MovieCatalogue');
 
   const fetchVotes = async () => {
       try {
@@ -119,7 +119,7 @@ function App() {
     <div className="App">
       {/* Navbar */}
       <nav className="navbar">
-        <div className="nav-brand">My Media Site</div>
+        <div className="nav-brand">{t('MovieCatalogue')}</div>
 
         <div className="search-container" style={{ flex: 1, margin: '0 2rem', maxWidth: '400px' }}>
             <input
@@ -156,9 +156,7 @@ function App() {
         </div>
 
         <div className="flex items-center gap-4" style={{ marginLeft: '1rem' }}>
-             <button className="btn secondary" onClick={toggleLanguage} style={{ fontSize: '0.8rem', padding: '0.25rem 0.5rem', minHeight: 'auto' }}>
-                {i18n.language.toUpperCase()}
-            </button>
+            <LanguageSelector />
 
             <button className="theme-toggle" onClick={toggleTheme} aria-label={t('Theme')}>
              {theme === 'dark' ? (
@@ -187,9 +185,12 @@ function App() {
                     <label>{t('SortBy')}:</label>
                     <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
                         <option value="-id">Default</option>
-                        <option value="titolo">{t('Title')}</option>
-                        <option value="-anno_uscita">{t('Year')}</option>
-                        <option value="-media_rating">{t('Rating')}</option>
+                        <option value="titolo">{t('Title')} &uarr;</option>
+                        <option value="-titolo">{t('Title')} &darr;</option>
+                        <option value="anno_uscita">{t('Year')} &uarr;</option>
+                        <option value="-anno_uscita">{t('Year')} &darr;</option>
+                        <option value="media_rating">{t('Rating')} &uarr;</option>
+                        <option value="-media_rating">{t('Rating')} &darr;</option>
                     </select>
                 </div>
 

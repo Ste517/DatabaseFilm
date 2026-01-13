@@ -1,0 +1,33 @@
+{
+  "translation": {
+    "MovieCatalogue": "Каталог фильмов",
+    "Movies": "Фильмы",
+    "Music": "Музыка",
+    "Profile": "Профиль",
+    "Logout": "Выйти",
+    "Login": "Войти",
+    "Grid": "Сетка",
+    "List": "Список",
+    "SortBy": "Сортировать по",
+    "Title": "Название",
+    "Year": "Год",
+    "Rating": "Рейтинг",
+    "Search": "Поиск...",
+    "YourVote": "Ваша оценка",
+    "Save": "Сохранить",
+    "UpdatingVote": "Обновление оценки",
+    "NewVote": "Оценить",
+    "MediaType": "Тип медиа",
+    "Position": "Расположение",
+    "Description": "Описание",
+    "Artist": "Исполнитель",
+    "ChangePassword": "Сменить пароль",
+    "CurrentPassword": "Текущий пароль",
+    "NewPassword": "Новый пароль",
+    "Update": "Обновить",
+    "MyVotes": "Мои оценки",
+    "NoVotes": "Вы еще ничего не оценили.",
+    "Theme": "Тема",
+    "Language": "Язык"
+  }
+}

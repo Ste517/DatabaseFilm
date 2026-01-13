@@ -121,10 +121,7 @@ const DetailModal: React.FC<DetailModalProps> = ({ item, type, onClose, onVoteSu
                 No Image
               </div>
             )}
-
-            <div style={{ marginTop: '1rem', textAlign: 'center', fontWeight: 'bold' }}>
-                {isFilm ? '🎬 Movie' : '🎵 Music'}
-            </div>
+            
           </div>
 
           <div className="modal-right">

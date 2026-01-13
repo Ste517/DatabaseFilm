@@ -15,6 +15,9 @@ import os
 import socket
 import dj_database_url
 from django.utils.translation import gettext_lazy as _
+from dotenv import get_key,load_dotenv
+
+load_dotenv()
 
 def get_local_ip():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -29,12 +32,11 @@ def get_local_ip():
         s.close()
     return IP
 
-LOCAL_IP_ADDRESS = get_local_ip()
+LOCAL_IP_ADDRESS = os.getenv('LOCAL_IP_ADDRESS')
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 try:
-    from dotenv import get_key
     SECRET_KEY = get_key(f"{BASE_DIR}/.env",'SECRET_KEY')
 except:
     print("Impossibile procedere, la chiave segreta non è stata trovata.")
@@ -47,8 +49,10 @@ DOMAIN_NAME = os.getenv('DOMAIN_NAME')
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
-    LOCAL_IP_ADDRESS,
 ]
+
+if LOCAL_IP_ADDRESS:
+    ALLOWED_HOSTS.append(LOCAL_IP_ADDRESS)
 
 if DOMAIN_NAME:
     ALLOWED_HOSTS.append(DOMAIN_NAME)
@@ -189,17 +193,17 @@ SECURE_HSTS_SECONDS = 0
 
 CSRF_TRUSTED_ORIGINS = [
     'https://localhost',
-    'http://localhost:5173',
-    'http://127.0.0.1:5173',
+    'http://127.0.0.1',
 ]
 
 if DOMAIN_NAME:
     CSRF_TRUSTED_ORIGINS.append(f'https://{DOMAIN_NAME}')
     CSRF_TRUSTED_ORIGINS.append(f'http://{DOMAIN_NAME}')
 
-server_ip = os.getenv("SERVER_IP")
-if server_ip:
-    CSRF_TRUSTED_ORIGINS.append(f'https://{server_ip}')
+if LOCAL_IP_ADDRESS:
+    CSRF_TRUSTED_ORIGINS.append(f'https://{LOCAL_IP_ADDRESS}')
+    CSRF_TRUSTED_ORIGINS.append(f'http://{LOCAL_IP_ADDRESS}')
+
 
 # REST Framework Settings
 REST_FRAMEWORK = {
@@ -224,3 +228,5 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
 }
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

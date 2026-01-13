@@ -1,8 +1,9 @@
+from django_filters import OrderingFilter
 from rest_framework import viewsets, permissions, status, filters
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.views import APIView
-from django.db.models import Avg
+from django.db.models import Avg, F
 from .models import Film, Musica, Voto, ApiKeys
 from .serializers import FilmSerializer, MusicaSerializer, VotoSerializer
 import json
@@ -41,24 +42,48 @@ class UserViewSet(viewsets.ViewSet):
         })
 
 class FilmViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows films to be viewed or edited.
-    """
-    queryset = Film.objects.annotate(media_rating=Avg('voti__valore')).order_by('-id')
+    queryset = Film.objects.all()
     serializer_class = FilmSerializer
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['titolo']
-    ordering_fields = ['titolo', 'anno_uscita', 'media_rating', 'posizione_fisica', 'id']
+    ordering_fields = ['titolo', 'anno_uscita', 'posizione_fisica', 'id']
+
+    def get_queryset(self):
+        return Film.objects.annotate(media_rating=Avg('voti__valore'))
+
+    def filter_queryset(self, queryset):
+        queryset = super().filter_queryset(queryset)
+        ordering = self.request.query_params.get('ordering', '')
+
+        if ordering == 'media_rating':
+            return queryset.order_by(F('media_rating').asc(nulls_last=True), '-id')
+        
+        if ordering == '-media_rating':
+            return queryset.order_by(F('media_rating').desc(nulls_last=True), '-id')
+
+        return queryset
 
 class MusicaViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows music albums to be viewed or edited.
-    """
-    queryset = Musica.objects.annotate(media_rating=Avg('voti__valore')).order_by('-id')
+    queryset = Musica.objects.all()
     serializer_class = MusicaSerializer
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['titolo', 'artista']
-    ordering_fields = ['titolo', 'artista', 'anno_uscita', 'media_rating', 'posizione_fisica', 'id']
+    ordering_fields = ['titolo', 'artista', 'anno_uscita', 'posizione_fisica', 'id']
+    
+    def get_queryset(self):
+        return Musica.objects.annotate(media_rating=Avg('voti__valore'))
+
+    def filter_queryset(self, queryset):
+        queryset = super().filter_queryset(queryset)
+        ordering = self.request.query_params.get('ordering', '')
+
+        if ordering == 'media_rating':
+            return queryset.order_by(F('media_rating').asc(nulls_last=True), '-id')
+        
+        if ordering == '-media_rating':
+            return queryset.order_by(F('media_rating').desc(nulls_last=True), '-id')
+
+        return queryset
 
 class VotoViewSet(viewsets.ModelViewSet):
     """
