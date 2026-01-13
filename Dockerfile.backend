@@ -24,7 +24,7 @@ COPY . /app/
 
 # Collect static files
 # Note: We need secret key to run collectstatic, so we provide a dummy one or use env var
-RUN SECRET_KEY=dummy python manage.py collectstatic --noinput
+RUN SECRET_KEY=${SECRET_KEY} python manage.py collectstatic --noinput
 
 # Expose port
 EXPOSE 8000

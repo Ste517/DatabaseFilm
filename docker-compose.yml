@@ -7,8 +7,8 @@ services:
       - postgres_data:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=my_media_site
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
@@ -23,9 +23,9 @@ services:
     volumes:
       - .:/app
     environment:
-      - SECRET_KEY=prod-secret-key-change-me
+      - SECRET_KEY=${SECRET_KEY}
       - DATABASE_URL=postgres://postgres:postgres@db:5432/my_media_site
-      - DOMAIN_NAME=localhost
+      - DOMAIN_NAME=${DOMAIN_NAME}
       - SPOTIPY_CLIENT_ID=${SPOTIPY_CLIENT_ID}
       - SPOTIPY_CLIENT_SECRET=${SPOTIPY_CLIENT_SECRET}
     depends_on:
