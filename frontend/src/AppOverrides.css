@@ -1,8 +1,78 @@
-/* New Styles for PR Feedback */
+.navbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-2) var(--space-4);
+    gap: var(--space-4);
+}
+
+.nav-brand {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: var(--color-primary);
+    white-space: nowrap;
+}
+
+.nav-links {
+    display: flex;
+    gap: var(--space-4);
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.search-container {
+    flex-grow: 1;
+    min-width: 200px;
+    margin: 0 var(--space-4);
+}
+
+@media screen and (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--space-2);
+        height: auto;
+        padding: var(--space-3);
+    }
+
+    .nav-brand {
+        text-align: center;
+        margin-bottom: var(--space-2);
+    }
+
+    .search-container {
+        width: 100%;
+        margin: 0;
+        order: 2; /* Put search below brand */
+    }
+
+    .nav-links {
+        justify-content: center;
+        width: 100%;
+        order: 3;
+        gap: var(--space-3);
+        margin-top: var(--space-2);
+    }
+
+    .nav-links a {
+        padding: var(--space-2);
+    }
+
+    /* Controls (Theme, Language, Logout) */
+    .navbar > div:last-child {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        order: 4;
+        margin-top: var(--space-2);
+        margin-left: 0 !important;
+    }
+}
 
 /* Popup Close Button - Better Visibility */
 .close-btn {
-    color: var(--color-text-main); /* Was muted */
+    color: var(--color-text-main);
     background-color: var(--color-bg-element);
     border-radius: 50%;
     width: 32px;
@@ -12,54 +82,21 @@
     justify-content: center;
     top: var(--space-4);
     right: var(--space-4);
+    z-index: 10;
 }
 
 .close-btn:hover {
     background-color: var(--color-border);
 }
 
-/* Mobile Responsive Tweaks */
-@media screen and (max-width: 768px) {
-    .container {
-        padding-left: var(--space-2);
-        padding-right: var(--space-2);
-    }
+.grid-container {
+    padding: var(--space-4);
+}
 
+@media screen and (max-width: 768px) {
     .grid-container {
-        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); /* Smaller cards on mobile */
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
         gap: var(--space-2);
         padding: var(--space-2);
-    }
-
-    .navbar {
-        height: auto;
-        flex-wrap: wrap;
-        padding: var(--space-2);
-    }
-
-    .nav-brand {
-        flex: 1 0 100%;
-        text-align: center;
-        margin-bottom: var(--space-2);
-    }
-
-    .search-container {
-        order: 3;
-        width: 100%;
-        margin: var(--space-2) 0;
-        max-width: none !important;
-    }
-
-    .nav-links {
-        display: flex; /* Override previous hide */
-        justify-content: center;
-        gap: var(--space-4);
-        width: 100%;
-        order: 2;
-    }
-
-    /* Hide specific desktop toggles if needed, but let's try to fit them */
-    .theme-toggle, .btn.secondary {
-        /* Keep accessible */
     }
 }

@@ -1,6 +1,7 @@
 import React from 'react';
 import type { Film } from '../types';
 import { useTranslation } from 'react-i18next';
+import { getVoteBadgeStyle } from '../utils/styleUtils';
 
 interface FilmListProps {
   films: Film[];
@@ -38,12 +39,7 @@ const FilmList: React.FC<FilmListProps> = ({ films, viewMode, userVotes, onItemC
               <td>{film.anno_uscita}</td>
               <td>
                 {film.media_rating ? (
-                  <span className={`badge-voto ${
-                    film.media_rating >= 8 ? 'voto-ottimo' :
-                    film.media_rating >= 6 ? 'voto-buono' :
-                    film.media_rating >= 4 ? 'voto-medio' :
-                    'voto-scarso'
-                  }`}>
+                  <span style={getVoteBadgeStyle(film.media_rating)}>
                     {film.media_rating.toFixed(1)}
                   </span>
                 ) : '-'}
@@ -80,7 +76,9 @@ const FilmList: React.FC<FilmListProps> = ({ films, viewMode, userVotes, onItemC
             <div className="flex justify-between items-center text-sm text-muted">
               <span>{film.anno_uscita}</span>
               {film.media_rating && (
-                 <span style={{ fontSize: '0.8rem', fontWeight: 'bold' }}>★ {film.media_rating.toFixed(1)}</span>
+                 <span style={getVoteBadgeStyle(film.media_rating)}>
+                    {film.media_rating.toFixed(1)}
+                 </span>
               )}
             </div>
           </div>

@@ -48,8 +48,14 @@ ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
     LOCAL_IP_ADDRESS,
-    DOMAIN_NAME
 ]
+
+if DOMAIN_NAME:
+    ALLOWED_HOSTS.append(DOMAIN_NAME)
+
+# Allow all hosts if DEBUG is True (for development ease)
+if DEBUG:
+    ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -183,10 +189,17 @@ SECURE_HSTS_SECONDS = 0
 
 CSRF_TRUSTED_ORIGINS = [
     'https://localhost',
-    f'https://{os.getenv("SERVER_IP")}',
-    f'https://{DOMAIN_NAME}',
     'http://localhost:5173',
+    'http://127.0.0.1:5173',
 ]
+
+if DOMAIN_NAME:
+    CSRF_TRUSTED_ORIGINS.append(f'https://{DOMAIN_NAME}')
+    CSRF_TRUSTED_ORIGINS.append(f'http://{DOMAIN_NAME}')
+
+server_ip = os.getenv("SERVER_IP")
+if server_ip:
+    CSRF_TRUSTED_ORIGINS.append(f'https://{server_ip}')
 
 # REST Framework Settings
 REST_FRAMEWORK = {

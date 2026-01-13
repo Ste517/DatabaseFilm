@@ -1,6 +1,7 @@
 import React from 'react';
 import type { Musica } from '../types';
 import { useTranslation } from 'react-i18next';
+import { getVoteBadgeStyle } from '../utils/styleUtils';
 
 interface MusicListProps {
   music: Musica[];
@@ -40,12 +41,7 @@ const MusicList: React.FC<MusicListProps> = ({ music, viewMode, userVotes, onIte
               <td>{item.anno_uscita}</td>
               <td>
                 {item.media_rating ? (
-                  <span className={`badge-voto ${
-                    item.media_rating >= 8 ? 'voto-ottimo' :
-                    item.media_rating >= 6 ? 'voto-buono' :
-                    item.media_rating >= 4 ? 'voto-medio' :
-                    'voto-scarso'
-                  }`}>
+                  <span style={getVoteBadgeStyle(item.media_rating)}>
                     {item.media_rating.toFixed(1)}
                   </span>
                 ) : '-'}
@@ -83,7 +79,9 @@ const MusicList: React.FC<MusicListProps> = ({ music, viewMode, userVotes, onIte
              <div className="flex justify-between items-center text-sm text-muted">
               <span>{item.anno_uscita}</span>
               {item.media_rating && (
-                 <span style={{ fontSize: '0.8rem', fontWeight: 'bold' }}>★ {item.media_rating.toFixed(1)}</span>
+                 <span style={getVoteBadgeStyle(item.media_rating)}>
+                    {item.media_rating.toFixed(1)}
+                 </span>
               )}
             </div>
           </div>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import api from '../api/axios';
 import { useTranslation } from 'react-i18next';
+import { getVoteBadgeStyle } from '../utils/styleUtils';
 
 const Profile: React.FC = () => {
     const { t } = useTranslation();
@@ -83,12 +84,7 @@ const Profile: React.FC = () => {
                                         <div style={{ fontWeight: 'bold', fontSize: '0.9rem', margin: '0.5rem 0 0.2rem' }}>
                                             {details?.title || 'Unknown'}
                                         </div>
-                                        <div className={`badge-voto ${
-                                            vote.valore >= 8 ? 'voto-ottimo' :
-                                            vote.valore >= 6 ? 'voto-buono' :
-                                            vote.valore >= 4 ? 'voto-medio' :
-                                            'voto-scarso'
-                                        }`}>
+                                        <div style={getVoteBadgeStyle(vote.valore)}>
                                             {vote.valore}
                                         </div>
                                     </div>

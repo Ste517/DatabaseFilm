@@ -11,4 +11,3 @@ caddy.exe
 Caddyfile
 GeoLite2-City.mmdb
 /logs
-/certs
