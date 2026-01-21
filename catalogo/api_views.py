@@ -1,0 +1,213 @@
+from django_filters import OrderingFilter
+from rest_framework import viewsets, permissions, status, filters
+from rest_framework.response import Response
+from rest_framework.decorators import action
+from rest_framework.views import APIView
+from django.db.models import Avg, F
+from .models import Film, Musica, Voto, ApiKeys
+from .serializers import FilmSerializer, MusicaSerializer, VotoSerializer
+import json
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.models import User
+from rest_framework import serializers
+
+class ChangePasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
+
+class UserViewSet(viewsets.ViewSet):
+    permission_classes = [permissions.IsAuthenticated]
+
+    @action(detail=False, methods=['post'])
+    def change_password(self, request):
+        user = request.user
+        serializer = ChangePasswordSerializer(data=request.data)
+
+        if serializer.is_valid():
+            if not user.check_password(serializer.data.get("old_password")):
+                return Response({"old_password": ["Wrong password."]}, status=status.HTTP_400_BAD_REQUEST)
+
+            user.set_password(serializer.data.get("new_password"))
+            user.save()
+            update_session_auth_hash(request, user)
+            return Response({'status': 'password set'}, status=status.HTTP_200_OK)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=False, methods=['get'])
+    def me(self, request):
+        return Response({
+            'username': request.user.username,
+            'email': request.user.email,
+        })
+
+class FilmViewSet(viewsets.ModelViewSet):
+    queryset = Film.objects.all()
+    serializer_class = FilmSerializer
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['titolo']
+    ordering_fields = ['titolo', 'anno_uscita', 'posizione_fisica', 'id']
+
+    def get_queryset(self):
+        return Film.objects.annotate(media_rating=Avg('voti__valore'))
+
+    def filter_queryset(self, queryset):
+        queryset = super().filter_queryset(queryset)
+        ordering = self.request.query_params.get('ordering', '')
+
+        if ordering == 'media_rating':
+            return queryset.order_by(F('media_rating').asc(nulls_last=True), '-id')
+        
+        if ordering == '-media_rating':
+            return queryset.order_by(F('media_rating').desc(nulls_last=True), '-id')
+
+        return queryset
+
+class MusicaViewSet(viewsets.ModelViewSet):
+    queryset = Musica.objects.all()
+    serializer_class = MusicaSerializer
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['titolo', 'artista']
+    ordering_fields = ['titolo', 'artista', 'anno_uscita', 'posizione_fisica', 'id']
+    
+    def get_queryset(self):
+        return Musica.objects.annotate(media_rating=Avg('voti__valore'))
+
+    def filter_queryset(self, queryset):
+        queryset = super().filter_queryset(queryset)
+        ordering = self.request.query_params.get('ordering', '')
+
+        if ordering == 'media_rating':
+            return queryset.order_by(F('media_rating').asc(nulls_last=True), '-id')
+        
+        if ordering == '-media_rating':
+            return queryset.order_by(F('media_rating').desc(nulls_last=True), '-id')
+
+        return queryset
+
+class VotoViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint for handling user votes.
+    Users can only see and edit their own votes.
+    """
+    serializer_class = VotoSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        # Allow expanding related fields if needed, or better, the frontend fetches details separately.
+        # For the profile view, we want to know details about what was voted.
+        # But VotoSerializer only returns IDs. We might need a ReadSerializer.
+        return Voto.objects.filter(utente=self.request.user)
+
+    def get_serializer_class(self):
+        # We could use a different serializer for list actions to include details
+        return VotoSerializer
+
+    def perform_create(self, serializer):
+        # ... logic handled in create ...
+        pass
+
+    def create(self, request, *args, **kwargs):
+        # We need to manually validate because serializer.is_valid() would fail
+        # on the unique constraint if the vote already exists.
+
+        # 1. Instantiate serializer to validate types and required fields,
+        # but ignoring uniqueness for now (or catching it).
+        # Easier approach: Use the serializer but catch validation error if it's just uniqueness?
+        # No, let's just use `update_or_create` logic directly if basic validation passes.
+
+        # Let's clean the data first
+        data = request.data.copy()
+
+        # We can't trust `is_valid` fully for upsert if it checks uniqueness.
+        # But we need it for field validation (e.g. valid film ID).
+
+        # Workaround: Check existence manually first.
+        film_id = data.get('film')
+        musica_id = data.get('musica')
+        valore = data.get('valore')
+
+        if not film_id and not musica_id:
+             return Response({'error': 'Devi specificare un film o un album.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        instance = None
+        created = False
+
+        try:
+            if film_id:
+                instance, created = Voto.objects.update_or_create(
+                    utente=request.user,
+                    film_id=film_id,
+                    defaults={'valore': valore}
+                )
+            elif musica_id:
+                instance, created = Voto.objects.update_or_create(
+                    utente=request.user,
+                    musica_id=musica_id,
+                    defaults={'valore': valore}
+                )
+        except Exception as e:
+            # Catch invalid IDs or other db errors
+             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Re-serialize the instance to return
+        return Response(self.get_serializer(instance).data, status=status.HTTP_201_CREATED if created else status.HTTP_200_OK)
+
+class AddElementApiView(APIView):
+    """
+    Endpoint to add elements via API Key (legacy support / automation).
+    """
+    permission_classes = [permissions.AllowAny] # We handle auth manually via API Key
+
+    def post(self, request, format=None):
+        # 1. Search for API Key
+        api_key = request.headers.get('X-API-KEY') or request.data.get('api_key')
+
+        if not api_key:
+            return Response({'error': 'API Key mancante'}, status=status.HTTP_401_UNAUTHORIZED)
+
+        # 2. Validate Key
+        try:
+            key_obj = ApiKeys.objects.get(key=api_key)
+        except ApiKeys.DoesNotExist:
+            return Response({'error': 'API Key non valida'}, status=status.HTTP_403_FORBIDDEN)
+
+        # 3. Check Permissions
+        if not key_obj.user.is_staff:
+            return Response({'error': 'L\'utente associato a questa chiave non ha permessi di amministrazione'}, status=status.HTTP_403_FORBIDDEN)
+
+        # 4. Action
+        tipo = request.data.get('tipo')
+
+        try:
+            titolo_creato = ""
+
+            if tipo == 'film':
+                nuovo_film = Film.objects.create(
+                    imdb_tmdb_id=request.data.get('id_riferimento'),
+                    posizione_fisica=request.data.get('posizione', 'Libreria')
+                )
+                titolo_creato = nuovo_film.titolo
+
+            elif tipo == 'musica':
+                nuova_musica = Musica.objects.create(
+                    spotify_url=request.data.get('id_riferimento'),
+                    posizione_fisica=request.data.get('posizione', 'Libreria')
+                )
+                titolo_creato = nuova_musica.titolo
+
+            else:
+                return Response({'error': 'Tipo non valido (usa "film" o "musica")'}, status=status.HTTP_400_BAD_REQUEST)
+
+            # 5. Increment Counter
+            key_obj.utilizzi += 1
+            key_obj.save()
+
+            return Response({
+                'success': True,
+                'titolo': titolo_creato,
+                'utilizzi_chiave': key_obj.utilizzi
+            }, status=status.HTTP_201_CREATED)
+
+        except Exception as e:
+            return Response({'error': f"Errore interno: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

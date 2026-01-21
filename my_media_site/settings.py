@@ -13,7 +13,11 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 from pathlib import Path
 import os
 import socket
+import dj_database_url
 from django.utils.translation import gettext_lazy as _
+from dotenv import get_key,load_dotenv
+
+load_dotenv()
 
 def get_local_ip():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -28,12 +32,11 @@ def get_local_ip():
         s.close()
     return IP
 
-LOCAL_IP_ADDRESS = get_local_ip()
+LOCAL_IP_ADDRESS = os.getenv('LOCAL_IP_ADDRESS')
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 try:
-    from dotenv import get_key
     SECRET_KEY = get_key(f"{BASE_DIR}/.env",'SECRET_KEY')
 except:
     print("Impossibile procedere, la chiave segreta non è stata trovata.")
@@ -46,9 +49,17 @@ DOMAIN_NAME = os.getenv('DOMAIN_NAME')
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
-    LOCAL_IP_ADDRESS,
-    DOMAIN_NAME
 ]
+
+if LOCAL_IP_ADDRESS:
+    ALLOWED_HOSTS.append(LOCAL_IP_ADDRESS)
+
+if DOMAIN_NAME:
+    ALLOWED_HOSTS.append(DOMAIN_NAME)
+
+# Allow all hosts if DEBUG is True (for development ease)
+if DEBUG:
+    ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -59,6 +70,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'rest_framework_simplejwt',
+    'corsheaders',
     'catalogo',
 ]
 
@@ -66,6 +80,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -103,6 +118,11 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# Override database configuration if DATABASE_URL is present
+database_url = os.getenv('DATABASE_URL')
+if database_url:
+    DATABASES['default'] = dj_database_url.parse(database_url, conn_max_age=600)
 
 
 # Password validation
@@ -167,12 +187,46 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 
-SECURE_SSL_REDIRECT = True
+SECURE_SSL_REDIRECT = False
 
 SECURE_HSTS_SECONDS = 0
 
 CSRF_TRUSTED_ORIGINS = [
     'https://localhost',
-    f'https://{os.getenv("SERVER_IP")}',
-    f'https://{DOMAIN_NAME}',
+    'http://127.0.0.1',
 ]
+
+if DOMAIN_NAME:
+    CSRF_TRUSTED_ORIGINS.append(f'https://{DOMAIN_NAME}')
+    CSRF_TRUSTED_ORIGINS.append(f'http://{DOMAIN_NAME}')
+
+if LOCAL_IP_ADDRESS:
+    CSRF_TRUSTED_ORIGINS.append(f'https://{LOCAL_IP_ADDRESS}')
+    CSRF_TRUSTED_ORIGINS.append(f'http://{LOCAL_IP_ADDRESS}')
+
+
+# REST Framework Settings
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+    ],
+}
+
+# CORS Settings
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+]
+
+# JWT Settings (Optional Customization)
+from datetime import timedelta
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+}
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

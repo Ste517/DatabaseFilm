@@ -1,0 +1,33 @@
+{
+  "translation": {
+    "MovieCatalogue": "Movie Catalogue",
+    "Movies": "Movies",
+    "Music": "Music",
+    "Profile": "Profile",
+    "Logout": "Logout",
+    "Login": "Login",
+    "Grid": "Grid",
+    "List": "List",
+    "SortBy": "Sort By",
+    "Title": "Title",
+    "Year": "Year",
+    "Rating": "Rating",
+    "Search": "Search...",
+    "YourVote": "Your Vote",
+    "Save": "Save",
+    "UpdatingVote": "Updating existing vote",
+    "NewVote": "Cast your vote",
+    "MediaType": "Media Type",
+    "Position": "Position",
+    "Description": "Description",
+    "Artist": "Artist",
+    "ChangePassword": "Change Password",
+    "CurrentPassword": "Current Password",
+    "NewPassword": "New Password",
+    "Update": "Update",
+    "MyVotes": "My Votes",
+    "NoVotes": "You haven't voted yet.",
+    "Theme": "Theme",
+    "Language": "Language"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "translation": {
+    "MovieCatalogue": "Filmkatalog",
+    "Movies": "Filme",
+    "Music": "Musik",
+    "Profile": "Profil",
+    "Logout": "Abmelden",
+    "Login": "Anmelden",
+    "Grid": "Raster",
+    "List": "Liste",
+    "SortBy": "Sortieren nach",
+    "Title": "Titel",
+    "Year": "Jahr",
+    "Rating": "Bewertung",
+    "Search": "Suchen...",
+    "YourVote": "Deine Bewertung",
+    "Save": "Speichern",
+    "UpdatingVote": "Bewertung aktualisieren",
+    "NewVote": "Bewertung abgeben",
+    "MediaType": "Medientyp",
+    "Position": "Position",
+    "Description": "Beschreibung",
+    "Artist": "Künstler",
+    "ChangePassword": "Passwort ändern",
+    "CurrentPassword": "Aktuelles Passwort",
+    "NewPassword": "Neues Passwort",
+    "Update": "Aktualisieren",
+    "MyVotes": "Meine Bewertungen",
+    "NoVotes": "Du hast noch nicht abgestimmt.",
+    "Theme": "Design",
+    "Language": "Sprache"
+  }
+}

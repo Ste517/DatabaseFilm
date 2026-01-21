@@ -1,0 +1,18 @@
+:root {
+  /* Using variables from App.css primarily, reset base here if needed */
+}
+
+/* Ensure full height application */
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Remove default Vite styling that centers everything and restricts width */
+body {
+  display: block; /* Override flex place-items: center */
+  min-width: 0;
+  min-height: 100vh;
+}
