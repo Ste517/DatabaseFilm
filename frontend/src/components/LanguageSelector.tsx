@@ -10,13 +10,15 @@ interface LanguageOption {
 
 // --- CONFIGURAZIONE ---
 const FLAGS: Record<string, string> = {
-  en: '🇬🇧',
-  it: '🇮🇹',
-  fr: '🇫🇷',
-  de: '🇩🇪',
-  es: '🇪🇸',
-  ru: '🇷🇺',
-  zh: '🇨🇳',
+  en: 'US',
+  it: 'IT',
+  fr: 'FR',
+  de: 'DE',
+  es: 'ES',
+  ru: 'RU',
+  zh: 'CN',
+  la: 'LA',
+  el: 'EL',
 };
 
 const getNativeName = (code: string): string => {
