@@ -209,6 +209,7 @@ select:focus {
 }
 
 /* Navigation - Modern & Responsive */
+/* COMMENTED OUT FOR TAILWIND REFACTOR
 .navbar {
     background-color: var(--color-bg-card);
     border-bottom: 1px solid var(--color-border);
@@ -225,7 +226,7 @@ select:focus {
 .nav-brand {
     font-weight: 700;
     font-size: var(--font-size-lg);
-    color: var(--color-primary); /* Celeste brand */
+    color: var(--color-primary);
 }
 
 .nav-links {
@@ -243,8 +244,10 @@ select:focus {
 .nav-links a.active {
     color: var(--color-primary);
 }
+*/
 
 /* Mobile Menu */
+/*
 .hamburger {
     display: none;
     background: none;
@@ -263,7 +266,7 @@ select:focus {
     background-color: var(--color-bg-card);
     border-bottom: 1px solid var(--color-border);
     padding: var(--space-4);
-    display: none; /* Hidden by default */
+    display: none;
     flex-direction: column;
     gap: var(--space-4);
     z-index: 49;
@@ -278,6 +281,7 @@ select:focus {
     color: var(--color-text-main);
     padding: var(--space-2) 0;
 }
+*/
 
 /* Theme Toggle Button */
 .theme-toggle {
@@ -642,13 +646,15 @@ ul.lista li {
 /* --- MOBILE RESPONSIVENESS --- */
 @media screen and (max-width: 768px) {
     /* Navigation */
+    /*
     .nav-links {
-        display: none; /* Hide desktop links */
+        display: none;
     }
 
     .hamburger {
-        display: block; /* Show hamburger */
+        display: block;
     }
+    */
 
     /* Layout */
     .split-screen-container {

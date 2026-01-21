@@ -8,6 +8,7 @@ const Profile: React.FC = () => {
     const [oldPassword, setOldPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [message, setMessage] = useState('');
+    const [messageType, setMessageType] = useState<'success' | 'error'>('success');
 
     // For votes list, reusing types/components ideally, but simplified here
     const [votes, setVotes] = useState<any[]>([]);
@@ -33,59 +34,88 @@ const Profile: React.FC = () => {
                 old_password: oldPassword,
                 new_password: newPassword
             });
+            setMessageType('success');
             setMessage('Password updated successfully');
             setOldPassword('');
             setNewPassword('');
         } catch (error: any) {
+            setMessageType('error');
             setMessage('Error: ' + (error.response?.data?.old_password || 'Failed to update'));
         }
     };
 
     return (
-        <div className="profile-container">
-            <h1>{t('Profile')}</h1>
+        <div className="max-w-4xl mx-auto p-4">
+            <h1 className="text-3xl font-bold mb-6 text-[var(--color-primary)]">{t('Profile')}</h1>
 
-            <div className="forms-container">
-                <div className="form-box">
-                    <h2>{t('ChangePassword')}</h2>
-                    {message && <div className="message">{message}</div>}
-                    <form onSubmit={handleChangePassword}>
-                        <div style={{ marginBottom: '1rem' }}>
-                            <label>{t('CurrentPassword')}</label>
-                            <input type="password" value={oldPassword} onChange={e => setOldPassword(e.target.value)} required />
+            <div className="flex flex-col lg:flex-row gap-6">
+                <div className="flex-1 bg-[var(--color-bg-card)] p-6 rounded-xl border border-[var(--color-border)] shadow-lg h-fit">
+                    <h2 className="text-xl font-bold mb-4 border-b border-[var(--color-border)] pb-2">{t('ChangePassword')}</h2>
+                    {message && (
+                        <div className={`p-3 rounded-md mb-4 font-medium text-sm ${messageType === 'success' ? 'bg-green-500/10 border border-green-500 text-green-500' : 'bg-red-500/10 border border-red-500 text-red-500'}`}>
+                            {message}
                         </div>
-                        <div style={{ marginBottom: '1rem' }}>
-                            <label>{t('NewPassword')}</label>
-                            <input type="password" value={newPassword} onChange={e => setNewPassword(e.target.value)} required />
+                    )}
+                    <form onSubmit={handleChangePassword} className="space-y-4">
+                        <div>
+                            <label className="block text-sm font-medium text-[var(--color-text-muted)] mb-1">{t('CurrentPassword')}</label>
+                            <input
+                                type="password"
+                                value={oldPassword}
+                                onChange={e => setOldPassword(e.target.value)}
+                                required
+                                className="w-full px-3 py-2 bg-[var(--color-bg-body)] border border-[var(--color-border)] rounded-md text-[var(--color-text-main)] focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)]"
+                            />
                         </div>
-                        <button type="submit" className="btn">{t('Update')}</button>
+                        <div>
+                            <label className="block text-sm font-medium text-[var(--color-text-muted)] mb-1">{t('NewPassword')}</label>
+                            <input
+                                type="password"
+                                value={newPassword}
+                                onChange={e => setNewPassword(e.target.value)}
+                                required
+                                className="w-full px-3 py-2 bg-[var(--color-bg-body)] border border-[var(--color-border)] rounded-md text-[var(--color-text-main)] focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)]"
+                            />
+                        </div>
+                        <button
+                            type="submit"
+                            className="w-full bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] text-white font-bold py-2 px-4 rounded-md transition-colors"
+                        >
+                            {t('Update')}
+                        </button>
                     </form>
                 </div>
 
-                <div className="form-box">
-                    <h2>{t('MyVotes')}</h2>
+                <div className="flex-[2] bg-[var(--color-bg-card)] p-6 rounded-xl border border-[var(--color-border)] shadow-lg">
+                    <h2 className="text-xl font-bold mb-4 border-b border-[var(--color-border)] pb-2">{t('MyVotes')}</h2>
                     {votes.length === 0 ? (
-                        <p>{t('NoVotes')}</p>
+                        <p className="text-[var(--color-text-muted)]">{t('NoVotes')}</p>
                     ) : (
-                        <div className="votes-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))', gap: '1rem' }}>
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                             {votes.map(vote => {
                                 const details = vote.item_details;
                                 return (
-                                    <div key={vote.id} className="vote-card" style={{ textAlign: 'center' }}>
-                                        {details?.image ? (
-                                            <img
-                                                src={details.image}
-                                                alt={details.title}
-                                                style={{ width: '100%', aspectRatio: details.type === 'film' ? '2/3' : '1/1', borderRadius: '8px', objectFit: 'cover' }}
-                                            />
-                                        ) : (
-                                            <div style={{ width: '100%', aspectRatio: '1/1', background: '#333', borderRadius: '8px' }} />
-                                        )}
-                                        <div style={{ fontWeight: 'bold', fontSize: '0.9rem', margin: '0.5rem 0 0.2rem' }}>
-                                            {details?.title || 'Unknown'}
+                                    <div key={vote.id} className="text-center group cursor-pointer">
+                                        <div className="relative aspect-[2/3] rounded-lg overflow-hidden mb-2 shadow-sm group-hover:shadow-md transition-shadow">
+                                            {details?.image ? (
+                                                <img
+                                                    src={details.image}
+                                                    alt={details.title}
+                                                    className={`w-full h-full object-cover ${details.type !== 'film' ? 'aspect-square' : ''}`}
+                                                />
+                                            ) : (
+                                                <div className="w-full h-full bg-[var(--color-bg-element)] flex items-center justify-center text-xs text-[var(--color-text-muted)]">
+                                                    No Image
+                                                </div>
+                                            )}
+                                            <div className="absolute top-1 right-1">
+                                                <span style={getVoteBadgeStyle(vote.valore)} className="px-1.5 py-0.5 rounded text-xs font-bold text-white shadow-sm">
+                                                    {vote.valore}
+                                                </span>
+                                            </div>
                                         </div>
-                                        <div style={getVoteBadgeStyle(vote.valore)}>
-                                            {vote.valore}
+                                        <div className="text-xs font-semibold truncate px-1" title={details?.title}>
+                                            {details?.title || 'Unknown'}
                                         </div>
                                     </div>
                                 );

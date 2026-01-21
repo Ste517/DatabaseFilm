@@ -64,24 +64,17 @@ const LanguageSelector = () => {
   return (
     <div 
       ref={dropdownRef} 
-      style={{ position: 'relative', display: 'inline-block' }}
+      className="relative inline-block"
     >
       
       {}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="btn secondary"
-        style={{ 
-          display: 'flex', 
-          alignItems: 'center', 
-          gap: 'var(--space-2)',
-          padding: 'var(--space-2) var(--space-3)',
-          minHeight: '40px'
-        }}
+        className="flex items-center gap-2 px-3 py-2 min-h-[40px] bg-[var(--color-bg-element)] text-[var(--color-text-main)] rounded-md border border-transparent hover:bg-[var(--color-border)] transition-colors"
         aria-label="Select Language"
       >
-        <span style={{ fontSize: '1.2rem', lineHeight: 1 }}>{currentLang.flag}</span>
-        <span style={{ textTransform: 'uppercase', fontSize: '0.9rem' }}>{currentLang.code}</span>
+        <span className="text-xl leading-none">{currentLang.flag}</span>
+        <span className="uppercase text-sm font-medium">{currentLang.code}</span>
         
         {}
         <svg 
@@ -93,10 +86,7 @@ const LanguageSelector = () => {
           strokeWidth="2" 
           strokeLinecap="round" 
           strokeLinejoin="round"
-          style={{ 
-            transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-            transition: 'transform var(--transition-fast)'
-          }}
+          className={`transition-transform duration-200 ${isOpen ? 'rotate-180' : 'rotate-0'}`}
         >
           <path d="M6 9l6 6 6-6"/>
         </svg>
@@ -105,22 +95,9 @@ const LanguageSelector = () => {
       {}
       {isOpen && (
         <div 
-          style={{
-            position: 'absolute',
-            top: '100%',
-            right: 0,
-            marginTop: 'var(--space-2)',
-            backgroundColor: 'var(--color-bg-card)',
-            border: '1px solid var(--color-border)',
-            borderRadius: 'var(--radius-md)',
-            boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
-            zIndex: 100,
-            minWidth: '180px',
-            overflow: 'hidden',
-            animation: 'fadeInPage 0.2s ease-out'
-          }}
+          className="absolute top-full right-0 mt-2 bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-md shadow-lg z-50 min-w-[180px] overflow-hidden animate-fade-in"
         >
-          <div style={{ padding: 'var(--space-1)' }}>
+          <div className="p-1">
             {languages.map((lang) => {
               const isActive = i18n.language === lang.code;
               
@@ -131,33 +108,17 @@ const LanguageSelector = () => {
                     i18n.changeLanguage(lang.code);
                     setIsOpen(false);
                   }}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 'var(--space-3)',
-                    width: '100%',
-                    padding: 'var(--space-2) var(--space-3)',
-                    border: 'none',
-                    background: isActive ? 'var(--color-bg-element)' : 'transparent',
-                    color: isActive ? 'var(--color-primary)' : 'var(--color-text-main)',
-                    textAlign: 'left',
-                    cursor: 'pointer',
-                    fontSize: 'var(--font-size-sm)',
-                    borderRadius: 'var(--radius-sm)',
-                    transition: 'background-color var(--transition-fast)'
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!isActive) e.currentTarget.style.backgroundColor = 'var(--color-bg-element)';
-                  }}
-                  onMouseLeave={(e) => {
-                    if (!isActive) e.currentTarget.style.backgroundColor = 'transparent';
-                  }}
+                  className={`flex items-center gap-3 w-full px-3 py-2 text-left cursor-pointer text-sm rounded-sm transition-colors ${
+                      isActive
+                        ? 'bg-[var(--color-bg-element)] text-[var(--color-primary)]'
+                        : 'bg-transparent text-[var(--color-text-main)] hover:bg-[var(--color-bg-element)]'
+                  }`}
                 >
-                  <span style={{ fontSize: '1.2rem' }}>{lang.flag}</span>
-                  <span style={{ textTransform: 'capitalize' }}>{lang.label}</span>
+                  <span className="text-xl">{lang.flag}</span>
+                  <span className="capitalize">{lang.label}</span>
                   
                   {isActive && (
-                    <span style={{ marginLeft: 'auto', color: 'var(--color-primary)' }}>✓</span>
+                    <span className="ml-auto text-[var(--color-primary)]">✓</span>
                   )}
                 </button>
               );

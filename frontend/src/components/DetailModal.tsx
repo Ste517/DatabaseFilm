@@ -20,15 +20,6 @@ const DetailModal: React.FC<DetailModalProps> = ({ item, type, onClose, onVoteSu
     // Check if user has already voted
     const fetchUserVote = async () => {
         try {
-            // Need a way to filter votes by item. Assuming backend VotoViewSet supports filtering.
-            // If not, we have to fetch all and filter client side (not efficient but works for small app)
-            // or backend endpoint.
-            // Let's assume standard ViewSet allows filtering if configured.
-            // Actually I configured FilterBackends? No, explicit fields only.
-            // Let's assume we can GET /api/v1/voti/ and filter client side for now as safe bet
-            // given I control backend but re-deploying it just for filter is slower than client filter.
-            // Wait, I am the full stack dev. I should ensure backend filtering.
-            // But let's try client side filter of "my votes" since user won't have millions.
             const response = await api.get('voti/');
             const myVotes = response.data.results || response.data;
             const vote = myVotes.find((v: any) =>
@@ -98,56 +89,62 @@ const DetailModal: React.FC<DetailModalProps> = ({ item, type, onClose, onVoteSu
   };
 
   return (
-    <div className="modal-overlay" style={{ display: 'flex' }} onClick={onClose}>
-      <div className="modal-box" onClick={(e) => e.stopPropagation()}>
-        <button className="close-btn" onClick={onClose}>&times;</button>
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/70 animate-fade-in" onClick={onClose}>
+      <div
+        className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto bg-[var(--color-bg-card)] rounded-xl shadow-2xl p-6"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+            className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-[var(--color-bg-element)] text-[var(--color-text-main)] hover:bg-[var(--color-border)] transition-colors text-xl leading-none"
+            onClick={onClose}
+        >
+            &times;
+        </button>
 
-        <h2 style={{ paddingRight: '2rem' }}>{title}</h2>
-        <div className="text-muted" style={{ marginBottom: '1rem' }}>
+        <h2 className="text-2xl font-bold pr-10 mb-1">{title}</h2>
+        <div className="text-[var(--color-text-muted)] mb-4 text-sm md:text-base">
           {subtitle} {isFilm ? '' : `(${musicItem?.anno_uscita})`}
         </div>
 
-        <div className="modal-content-split">
-          <div className="modal-left">
+        <div className="flex flex-col md:flex-row gap-6 mt-4">
+          <div className="md:w-48 flex-shrink-0">
             {image ? (
-              <img src={image} alt={title} />
+              <img src={image} alt={title} className="w-full rounded-md shadow-md object-cover" />
             ) : (
-              <div style={{
-                width: '100%',
-                aspectRatio: isFilm ? '2/3' : '1/1',
-                backgroundColor: 'var(--color-bg-element)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center'
-              }}>
+              <div className="w-full bg-[var(--color-bg-element)] flex items-center justify-center rounded-md text-[var(--color-text-muted)] aspect-[2/3]">
                 No Image
               </div>
             )}
             
           </div>
 
-          <div className="modal-right">
+          <div className="flex-1">
             {description && (
-                <div style={{ marginBottom: '1.5rem', whiteSpace: 'pre-wrap' }}>
-                    <strong>{t('Description')}:</strong><br/>
-                    {description}
+                <div className="mb-6 whitespace-pre-wrap">
+                    <strong className="block mb-1 text-[var(--color-primary)]">{t('Description')}:</strong>
+                    <p className="text-sm md:text-base leading-relaxed">{description}</p>
                 </div>
             )}
 
-            <div style={{ marginBottom: '1rem' }}>
-                <strong>{t('MediaType')}:</strong> {formatMediaType(item.media_type)}
+            <div className="grid grid-cols-2 gap-4 mb-6">
+                <div>
+                    <strong className="block text-xs uppercase text-[var(--color-text-muted)] mb-1">{t('MediaType')}</strong>
+                    <span className="font-medium">{formatMediaType(item.media_type)}</span>
+                </div>
+                <div>
+                    <strong className="block text-xs uppercase text-[var(--color-text-muted)] mb-1">{t('Position')}</strong>
+                    <span className="font-medium">{item.posizione_fisica}</span>
+                </div>
             </div>
 
-            <div style={{ marginBottom: '1rem' }}>
-                <strong>{t('Position')}:</strong> {item.posizione_fisica}
-            </div>
+            <hr className="border-[var(--color-border)] my-6" />
 
-            <hr style={{ borderColor: 'var(--color-border)', margin: '1.5rem 0' }} />
-
-            <h3>{existingVote ? t('UpdatingVote') : t('NewVote')}</h3>
-            <div className="flex gap-2 items-center">
+            <h3 className="text-lg font-bold mb-3">{existingVote ? t('UpdatingVote') : t('NewVote')}</h3>
+            <div className="flex gap-3 items-center">
                 <select
                     value={voteValue}
                     onChange={(e) => setVoteValue(Number(e.target.value))}
-                    style={{ maxWidth: '100px' }}
+                    className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-md px-3 py-2 text-[var(--color-text-main)] focus:outline-none focus:border-[var(--color-primary)] w-24"
                 >
                     <option value="">...</option>
                     {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(v => (
@@ -155,7 +152,7 @@ const DetailModal: React.FC<DetailModalProps> = ({ item, type, onClose, onVoteSu
                     ))}
                 </select>
                 <button
-                    className="btn"
+                    className="bg-[var(--color-primary)] text-white px-4 py-2 rounded-md font-medium hover:bg-[var(--color-primary-hover)] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                     onClick={handleVote}
                     disabled={submitting || voteValue === ''}
                 >

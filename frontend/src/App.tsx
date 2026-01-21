@@ -19,6 +19,7 @@ function App() {
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<string>('-id');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const [films, setFilms] = useState<Film[]>([]);
   const [music, setMusic] = useState<Musica[]>([]);
@@ -115,75 +116,136 @@ function App() {
     return <Login onLoginSuccess={() => setIsAuthenticated(true)} />;
   }
 
-  return (
-    <div className="App">
-      {/* Navbar */}
-      <nav className="navbar">
-        <div className="nav-brand">{t('MovieCatalogue')}</div>
+  const MobileLink = ({ tab, label }: { tab: 'movies' | 'music' | 'profile', label: string }) => (
+    <button
+      className={`w-full text-left py-2 px-4 rounded-md transition-colors ${activeTab === tab ? 'bg-[var(--color-bg-element)] text-[var(--color-primary)] font-bold' : 'text-[var(--color-text-main)] hover:bg-[var(--color-bg-element)]'}`}
+      onClick={() => {
+        setActiveTab(tab);
+        setIsMobileMenuOpen(false);
+      }}
+    >
+      {label}
+    </button>
+  );
 
-        <div className="search-container" style={{ flex: 1, margin: '0 2rem', maxWidth: '400px' }}>
+  return (
+    <div className="App min-h-screen bg-[var(--color-bg-body)] text-[var(--color-text-main)] font-sans">
+      {/* Navbar */}
+      <nav className="navbar sticky top-0 z-50 flex items-center justify-between h-16 px-4 bg-[var(--color-bg-card)] border-b border-[var(--color-border)]">
+
+        {/* Mobile Hamburger */}
+        <button
+          className="md:hidden mr-4 text-[var(--color-text-main)] focus:outline-none"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            {isMobileMenuOpen ? (
+               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            ) : (
+               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            )}
+          </svg>
+        </button>
+
+        <div className="nav-brand font-bold text-lg text-[var(--color-primary)] mr-auto md:mr-0">{t('MovieCatalogue')}</div>
+
+        <div className="search-container flex-1 mx-4 max-w-[400px] hidden md:block">
             <input
                 type="text"
                 placeholder={t('Search')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                style={{ borderRadius: '20px' }}
+                className="w-full px-3 py-2 bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-full text-[var(--color-text-main)] focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)]"
             />
         </div>
 
-        <div className="nav-links">
+        <div className="nav-links hidden md:flex gap-6 items-center">
           <a
             href="#"
-            className={activeTab === 'movies' ? 'active' : ''}
+            className={`font-medium hover:text-[var(--color-primary)] ${activeTab === 'movies' ? 'text-[var(--color-primary)]' : 'text-[var(--color-text-main)]'}`}
             onClick={() => setActiveTab('movies')}
           >
             {t('Movies')}
           </a>
           <a
             href="#"
-            className={activeTab === 'music' ? 'active' : ''}
+            className={`font-medium hover:text-[var(--color-primary)] ${activeTab === 'music' ? 'text-[var(--color-primary)]' : 'text-[var(--color-text-main)]'}`}
             onClick={() => setActiveTab('music')}
           >
             {t('Music')}
           </a>
           <a
             href="#"
-            className={activeTab === 'profile' ? 'active' : ''}
+            className={`font-medium hover:text-[var(--color-primary)] ${activeTab === 'profile' ? 'text-[var(--color-primary)]' : 'text-[var(--color-text-main)]'}`}
             onClick={() => setActiveTab('profile')}
           >
             {t('Profile')}
           </a>
         </div>
 
-        <div className="flex items-center gap-4" style={{ marginLeft: '1rem' }}>
-            <LanguageSelector />
+        <div className="flex items-center gap-2 md:gap-4 ml-auto md:ml-4">
+            <div className="hidden md:block">
+               <LanguageSelector />
+            </div>
 
-            <button className="theme-toggle" onClick={toggleTheme} aria-label={t('Theme')}>
+            <button className="theme-toggle p-2 rounded-full hover:bg-[var(--color-bg-element)] text-[var(--color-text-main)] hover:text-[var(--color-primary)]" onClick={toggleTheme} aria-label={t('Theme')}>
              {theme === 'dark' ? (
                 <svg className="icon-sun" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
              ) : (
                 <svg className="icon-moon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
              )}
             </button>
-            <button className="btn secondary" onClick={handleLogout} style={{ fontSize: '0.8rem', padding: '0.25rem 0.75rem', minHeight: 'auto' }}>
+            <button className="btn secondary text-sm px-3 py-1 min-h-0 bg-[var(--color-bg-element)] text-[var(--color-text-main)] hover:bg-[var(--color-border)] rounded-md hidden md:block" onClick={handleLogout}>
                 {t('Logout')}
             </button>
         </div>
       </nav>
 
+      {/* Mobile Menu */}
+      {isMobileMenuOpen && (
+        <div className="md:hidden fixed top-16 left-0 right-0 bg-[var(--color-bg-card)] border-b border-[var(--color-border)] p-4 z-40 shadow-lg animate-fade-in">
+           <div className="mb-4">
+              <input
+                  type="text"
+                  placeholder={t('Search')}
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full px-3 py-2 bg-[var(--color-bg-body)] border border-[var(--color-border)] rounded-md text-[var(--color-text-main)] focus:outline-none focus:border-[var(--color-primary)]"
+              />
+           </div>
+
+           <div className="flex flex-col gap-2 mb-4">
+              <MobileLink tab="movies" label={t('Movies')} />
+              <MobileLink tab="music" label={t('Music')} />
+              <MobileLink tab="profile" label={t('Profile')} />
+           </div>
+
+           <div className="flex justify-between items-center border-t border-[var(--color-border)] pt-4">
+              <LanguageSelector />
+              <button className="text-[var(--color-danger)] font-medium" onClick={handleLogout}>
+                  {t('Logout')}
+              </button>
+           </div>
+        </div>
+      )}
+
       {/* Main Content */}
-      <main className="container" style={{ marginTop: '2rem' }}>
+      <main className="container mx-auto px-4 mt-8 max-w-[1200px]">
         {activeTab === 'profile' ? (
             <Profile />
         ) : (
         <>
-            <div className="flex justify-between items-center flex-wrap gap-4" style={{ marginBottom: '1rem' }}>
-            <h1>{activeTab === 'movies' ? t('Movies') : t('Music')}</h1>
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
+            <h1 className="text-2xl font-bold mb-0">{activeTab === 'movies' ? t('Movies') : t('Music')}</h1>
 
-            <div className="flex gap-4 items-center flex-wrap">
-                <div className="flex items-center gap-2">
-                    <label>{t('SortBy')}:</label>
-                    <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+            <div className="flex gap-4 items-center flex-wrap w-full md:w-auto">
+                <div className="flex items-center gap-2 flex-1 md:flex-none">
+                    <label className="whitespace-nowrap">{t('SortBy')}:</label>
+                    <select
+                        value={sortBy}
+                        onChange={(e) => setSortBy(e.target.value)}
+                        className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-md px-3 py-2 text-[var(--color-text-main)] focus:outline-none focus:border-[var(--color-primary)] w-full md:w-auto"
+                    >
                         <option value="-id">Default</option>
                         <option value="titolo">{t('Title')} &uarr;</option>
                         <option value="-titolo">{t('Title')} &darr;</option>
@@ -196,13 +258,13 @@ function App() {
 
                 <div className="flex gap-2">
                     <button
-                    className={`btn ${viewMode === 'grid' ? '' : 'secondary'}`}
+                    className={`px-4 py-2 rounded-md font-medium transition-colors ${viewMode === 'grid' ? 'bg-[var(--color-primary)] text-white' : 'bg-[var(--color-bg-element)] text-[var(--color-text-main)] hover:bg-[var(--color-border)]'}`}
                     onClick={() => setViewMode('grid')}
                     >
                     {t('Grid')}
                     </button>
                     <button
-                    className={`btn ${viewMode === 'list' ? '' : 'secondary'}`}
+                    className={`px-4 py-2 rounded-md font-medium transition-colors ${viewMode === 'list' ? 'bg-[var(--color-primary)] text-white' : 'bg-[var(--color-bg-element)] text-[var(--color-text-main)] hover:bg-[var(--color-border)]'}`}
                     onClick={() => setViewMode('list')}
                     >
                     {t('List')}
@@ -212,7 +274,7 @@ function App() {
             </div>
 
             {loading ? (
-            <div className="text-center" style={{ padding: '2rem' }}>Loading...</div>
+            <div className="text-center p-8">Loading...</div>
             ) : (
             <>
                 {activeTab === 'movies' ? (
