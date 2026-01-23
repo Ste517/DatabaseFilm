@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import './App.css';
-import './AppOverrides.css';
+import './App.css'; // Keeping for child components if needed
+import './AppOverrides.css'; // Keeping for now
 import api from './api/axios';
 import type { Film, Musica } from './types';
 import FilmList from './components/FilmList';
@@ -44,9 +44,10 @@ function App() {
     document.documentElement.setAttribute('data-theme', newTheme);
   };
 
-  <LanguageSelector />;
-
-  document.title = t('MovieCatalogue');
+  // Set page title
+  useEffect(() => {
+      document.title = t('MovieCatalogue');
+  }, [t]);
 
   const fetchVotes = async () => {
       try {
@@ -54,7 +55,6 @@ function App() {
           const votesList = response.data.results || response.data;
           const votesMap: Record<string, number> = {};
           votesList.forEach((v: any) => {
-              // Create unique keys for films vs music to avoid collision if IDs overlap
               if (v.film) votesMap[`film_${v.film}`] = v.valore;
               if (v.musica) votesMap[`musica_${v.musica}`] = v.valore;
           });
@@ -66,16 +66,12 @@ function App() {
 
   const fetchData = async () => {
     if (activeTab === 'profile') {
-        // Just refresh votes if we are on profile, though Profile component handles its own fetch usually
-        // But we want to keep app state in sync
         fetchVotes();
         return;
     }
 
     try {
       setLoading(true);
-
-      // Fetch votes in parallel
       fetchVotes();
 
       const endpoint = activeTab === 'movies' ? 'films/' : 'musica/';
@@ -116,103 +112,120 @@ function App() {
   }
 
   return (
-    <div className="App">
+    <div className="min-h-screen bg-zinc-950 text-zinc-50 flex flex-col font-sans">
       {/* Navbar */}
-      <nav className="navbar">
-        <div className="nav-brand">{t('MovieCatalogue')}</div>
+      <nav className="bg-zinc-900 border-b border-zinc-800 sticky top-0 z-50 px-4 py-3 flex flex-wrap items-center justify-between gap-4">
+        <div className="text-xl font-bold text-sky-500 whitespace-nowrap">{t('MovieCatalogue')}</div>
 
-        <div className="search-container" style={{ flex: 1, margin: '0 2rem', maxWidth: '400px' }}>
+        <div className="flex-1 max-w-md mx-auto order-3 md:order-2 w-full md:w-auto">
             <input
                 type="text"
                 placeholder={t('Search')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                style={{ borderRadius: '20px' }}
+                className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-full text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-colors"
             />
         </div>
 
-        <div className="nav-links">
-          <a
-            href="#"
-            className={activeTab === 'movies' ? 'active' : ''}
-            onClick={() => setActiveTab('movies')}
-          >
-            {t('Movies')}
-          </a>
-          <a
-            href="#"
-            className={activeTab === 'music' ? 'active' : ''}
-            onClick={() => setActiveTab('music')}
-          >
-            {t('Music')}
-          </a>
-          <a
-            href="#"
-            className={activeTab === 'profile' ? 'active' : ''}
-            onClick={() => setActiveTab('profile')}
-          >
-            {t('Profile')}
-          </a>
-        </div>
+        <div className="flex items-center gap-6 order-2 md:order-3">
+            <div className="hidden md:flex gap-6">
+              <a
+                href="#"
+                className={`font-medium hover:text-sky-500 transition-colors ${activeTab === 'movies' ? 'text-sky-500' : 'text-zinc-300'}`}
+                onClick={(e) => { e.preventDefault(); setActiveTab('movies'); }}
+              >
+                {t('Movies')}
+              </a>
+              <a
+                href="#"
+                className={`font-medium hover:text-sky-500 transition-colors ${activeTab === 'music' ? 'text-sky-500' : 'text-zinc-300'}`}
+                onClick={(e) => { e.preventDefault(); setActiveTab('music'); }}
+              >
+                {t('Music')}
+              </a>
+              <a
+                href="#"
+                className={`font-medium hover:text-sky-500 transition-colors ${activeTab === 'profile' ? 'text-sky-500' : 'text-zinc-300'}`}
+                onClick={(e) => { e.preventDefault(); setActiveTab('profile'); }}
+              >
+                {t('Profile')}
+              </a>
+            </div>
 
-        <div className="flex items-center gap-4" style={{ marginLeft: '1rem' }}>
-            <LanguageSelector />
+            <div className="flex items-center gap-3 pl-4 border-l border-zinc-800">
+                <LanguageSelector />
 
-            <button className="theme-toggle" onClick={toggleTheme} aria-label={t('Theme')}>
-             {theme === 'dark' ? (
-                <svg className="icon-sun" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
-             ) : (
-                <svg className="icon-moon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-             )}
-            </button>
-            <button className="btn secondary" onClick={handleLogout} style={{ fontSize: '0.8rem', padding: '0.25rem 0.75rem', minHeight: 'auto' }}>
-                {t('Logout')}
-            </button>
+                <button
+                    onClick={toggleTheme}
+                    aria-label={t('Theme')}
+                    className="p-2 rounded-full hover:bg-zinc-800 text-zinc-300 hover:text-sky-500 transition-colors"
+                >
+                 {theme === 'dark' ? (
+                    <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                 ) : (
+                    <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                 )}
+                </button>
+                <button
+                    onClick={handleLogout}
+                    className="px-3 py-1.5 text-sm bg-zinc-800 hover:bg-zinc-700 text-zinc-100 rounded-md transition-colors"
+                >
+                    {t('Logout')}
+                </button>
+            </div>
         </div>
       </nav>
 
       {/* Main Content */}
-      <main className="container" style={{ marginTop: '2rem' }}>
+      <main className="max-w-[1400px] w-full mx-auto px-4 mt-8 flex-grow pb-12">
         {activeTab === 'profile' ? (
             <Profile />
         ) : (
         <>
-            <div className="flex justify-between items-center flex-wrap gap-4" style={{ marginBottom: '1rem' }}>
-            <h1>{activeTab === 'movies' ? t('Movies') : t('Music')}</h1>
+            <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
+                <h1 className="text-3xl font-bold text-zinc-100">
+                    {activeTab === 'movies' ? t('Movies') : t('Music')}
+                </h1>
 
-            <div className="flex gap-4 items-center flex-wrap">
-                <div className="flex items-center gap-2">
-                    <label>{t('SortBy')}:</label>
-                    <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
-                        <option value="-id">Default</option>
-                        <option value="titolo">{t('Title')} &uarr;</option>
-                        <option value="-titolo">{t('Title')} &darr;</option>
-                        <option value="anno_uscita">{t('Year')} &uarr;</option>
-                        <option value="-anno_uscita">{t('Year')} &darr;</option>
-                        <option value="media_rating">{t('Rating')} &uarr;</option>
-                        <option value="-media_rating">{t('Rating')} &darr;</option>
-                    </select>
-                </div>
+                <div className="flex flex-wrap gap-4 items-center">
+                    <div className="flex items-center gap-2 bg-zinc-900 p-1 rounded-lg border border-zinc-800">
+                        <label className="text-sm text-zinc-400 pl-2">{t('SortBy')}:</label>
+                        <select
+                            value={sortBy}
+                            onChange={(e) => setSortBy(e.target.value)}
+                            className="bg-transparent text-zinc-200 text-sm py-1 pr-8 focus:outline-none cursor-pointer"
+                        >
+                            <option value="-id" className="bg-zinc-800">Default</option>
+                            <option value="titolo" className="bg-zinc-800">{t('Title')} &uarr;</option>
+                            <option value="-titolo" className="bg-zinc-800">{t('Title')} &darr;</option>
+                            <option value="anno_uscita" className="bg-zinc-800">{t('Year')} &uarr;</option>
+                            <option value="-anno_uscita" className="bg-zinc-800">{t('Year')} &darr;</option>
+                            <option value="media_rating" className="bg-zinc-800">{t('Rating')} &uarr;</option>
+                            <option value="-media_rating" className="bg-zinc-800">{t('Rating')} &darr;</option>
+                        </select>
+                    </div>
 
-                <div className="flex gap-2">
-                    <button
-                    className={`btn ${viewMode === 'grid' ? '' : 'secondary'}`}
-                    onClick={() => setViewMode('grid')}
-                    >
-                    {t('Grid')}
-                    </button>
-                    <button
-                    className={`btn ${viewMode === 'list' ? '' : 'secondary'}`}
-                    onClick={() => setViewMode('list')}
-                    >
-                    {t('List')}
-                    </button>
+                    <div className="flex bg-zinc-900 rounded-lg p-1 border border-zinc-800">
+                        <button
+                            className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all ${viewMode === 'grid' ? 'bg-zinc-700 text-white shadow-sm' : 'text-zinc-400 hover:text-zinc-200'}`}
+                            onClick={() => setViewMode('grid')}
+                        >
+                        {t('Grid')}
+                        </button>
+                        <button
+                            className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all ${viewMode === 'list' ? 'bg-zinc-700 text-white shadow-sm' : 'text-zinc-400 hover:text-zinc-200'}`}
+                            onClick={() => setViewMode('list')}
+                        >
+                        {t('List')}
+                        </button>
+                    </div>
                 </div>
-            </div>
             </div>
 
             {loading ? (
-            <div className="text-center" style={{ padding: '2rem' }}>Loading...</div>
+            <div className="flex justify-center items-center h-64">
+                <div className="text-zinc-500 animate-pulse">Loading...</div>
+            </div>
             ) : (
             <>
                 {activeTab === 'movies' ? (

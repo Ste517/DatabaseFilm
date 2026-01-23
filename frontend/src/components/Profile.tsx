@@ -84,7 +84,7 @@ const Profile: React.FC = () => {
                                         <div style={{ fontWeight: 'bold', fontSize: '0.9rem', margin: '0.5rem 0 0.2rem' }}>
                                             {details?.title || 'Unknown'}
                                         </div>
-                                        <div style={getVoteBadgeStyle(vote.valore)}>
+                                        <div {...getVoteBadgeStyle(vote.valore)}>
                                             {vote.valore}
                                         </div>
                                     </div>
