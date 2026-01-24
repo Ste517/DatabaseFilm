@@ -62,65 +62,33 @@ const LanguageSelector = () => {
   const currentLang = languages.find(l => l.code === i18n.language) || { flag: '🌍', code: i18n.language, label: i18n.language };
 
   return (
-    <div 
-      ref={dropdownRef} 
-      style={{ position: 'relative', display: 'inline-block' }}
-    >
-      
-      {}
+    <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="btn secondary"
-        style={{ 
-          display: 'flex', 
-          alignItems: 'center', 
-          gap: 'var(--space-2)',
-          padding: 'var(--space-2) var(--space-3)',
-          minHeight: '40px'
-        }}
+        className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-[var(--bg-hover)] text-[var(--text-primary)] transition-colors"
         aria-label="Select Language"
       >
-        <span style={{ fontSize: '1.2rem', lineHeight: 1 }}>{currentLang.flag}</span>
-        <span style={{ textTransform: 'uppercase', fontSize: '0.9rem' }}>{currentLang.code}</span>
+        <span className="text-xl leading-none">{currentLang.flag}</span>
+        <span className="text-sm uppercase font-medium">{currentLang.code}</span>
         
-        {}
         <svg 
-          width="16" 
-          height="16" 
+          className={`w-4 h-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
           viewBox="0 0 24 24" 
           fill="none" 
           stroke="currentColor" 
           strokeWidth="2" 
           strokeLinecap="round" 
           strokeLinejoin="round"
-          style={{ 
-            transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-            transition: 'transform var(--transition-fast)'
-          }}
         >
           <path d="M6 9l6 6 6-6"/>
         </svg>
       </button>
 
-      {}
       {isOpen && (
         <div 
-          style={{
-            position: 'absolute',
-            top: '100%',
-            right: 0,
-            marginTop: 'var(--space-2)',
-            backgroundColor: 'var(--color-bg-card)',
-            border: '1px solid var(--color-border)',
-            borderRadius: 'var(--radius-md)',
-            boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
-            zIndex: 100,
-            minWidth: '180px',
-            overflow: 'hidden',
-            animation: 'fadeInPage 0.2s ease-out'
-          }}
+          className="absolute right-0 mt-2 w-48 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg shadow-lg z-50 overflow-hidden"
         >
-          <div style={{ padding: 'var(--space-1)' }}>
+          <div className="max-h-64 overflow-y-auto py-1">
             {languages.map((lang) => {
               const isActive = i18n.language === lang.code;
               
@@ -131,33 +99,22 @@ const LanguageSelector = () => {
                     i18n.changeLanguage(lang.code);
                     setIsOpen(false);
                   }}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 'var(--space-3)',
-                    width: '100%',
-                    padding: 'var(--space-2) var(--space-3)',
-                    border: 'none',
-                    background: isActive ? 'var(--color-bg-element)' : 'transparent',
-                    color: isActive ? 'var(--color-primary)' : 'var(--color-text-main)',
-                    textAlign: 'left',
-                    cursor: 'pointer',
-                    fontSize: 'var(--font-size-sm)',
-                    borderRadius: 'var(--radius-sm)',
-                    transition: 'background-color var(--transition-fast)'
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!isActive) e.currentTarget.style.backgroundColor = 'var(--color-bg-element)';
-                  }}
-                  onMouseLeave={(e) => {
-                    if (!isActive) e.currentTarget.style.backgroundColor = 'transparent';
-                  }}
+                  className={`flex items-center gap-3 w-full px-4 py-2 text-left text-sm transition-colors
+                    ${isActive
+                      ? 'bg-[var(--bg-hover)] text-[var(--primary-color)]'
+                      : 'text-[var(--text-primary)] hover:bg-[var(--bg-hover)]'
+                    }
+                  `}
                 >
-                  <span style={{ fontSize: '1.2rem' }}>{lang.flag}</span>
-                  <span style={{ textTransform: 'capitalize' }}>{lang.label}</span>
+                  <span className="text-xl leading-none">{lang.flag}</span>
+                  <span className="capitalize">{lang.label}</span>
                   
                   {isActive && (
-                    <span style={{ marginLeft: 'auto', color: 'var(--color-primary)' }}>✓</span>
+                    <span className="ml-auto text-[var(--primary-color)]">
+                      <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                      </svg>
+                    </span>
                   )}
                 </button>
               );

@@ -17,18 +17,8 @@ const DetailModal: React.FC<DetailModalProps> = ({ item, type, onClose, onVoteSu
   const [existingVote, setExistingVote] = useState<any>(null);
 
   React.useEffect(() => {
-    // Check if user has already voted
     const fetchUserVote = async () => {
         try {
-            // Need a way to filter votes by item. Assuming backend VotoViewSet supports filtering.
-            // If not, we have to fetch all and filter client side (not efficient but works for small app)
-            // or backend endpoint.
-            // Let's assume standard ViewSet allows filtering if configured.
-            // Actually I configured FilterBackends? No, explicit fields only.
-            // Let's assume we can GET /api/v1/voti/ and filter client side for now as safe bet
-            // given I control backend but re-deploying it just for filter is slower than client filter.
-            // Wait, I am the full stack dev. I should ensure backend filtering.
-            // But let's try client side filter of "my votes" since user won't have millions.
             const response = await api.get('voti/');
             const myVotes = response.data.results || response.data;
             const vote = myVotes.find((v: any) =>
@@ -98,71 +88,87 @@ const DetailModal: React.FC<DetailModalProps> = ({ item, type, onClose, onVoteSu
   };
 
   return (
-    <div className="modal-overlay" style={{ display: 'flex' }} onClick={onClose}>
-      <div className="modal-box" onClick={(e) => e.stopPropagation()}>
-        <button className="close-btn" onClick={onClose}>&times;</button>
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm" onClick={onClose}>
+      <div
+        className="bg-[var(--bg-card)] text-[var(--text-primary)] rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto relative animate-in fade-in zoom-in-95 duration-200"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          className="absolute top-4 right-4 text-[var(--text-muted)] hover:text-[var(--text-primary)] p-2 rounded-full hover:bg-[var(--bg-hover)] transition-colors"
+          onClick={onClose}
+          aria-label="Close"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
 
-        <h2 style={{ paddingRight: '2rem' }}>{title}</h2>
-        <div className="text-muted" style={{ marginBottom: '1rem' }}>
-          {subtitle} {isFilm ? '' : `(${musicItem?.anno_uscita})`}
-        </div>
+        <div className="p-6 md:p-8">
+            <h2 className="text-2xl md:text-3xl font-bold pr-8 mb-1">{title}</h2>
+            <div className="text-[var(--text-secondary)] text-lg mb-6">
+            {subtitle} {isFilm ? '' : `(${musicItem?.anno_uscita})`}
+            </div>
 
-        <div className="modal-content-split">
-          <div className="modal-left">
-            {image ? (
-              <img src={image} alt={title} />
-            ) : (
-              <div style={{
-                width: '100%',
-                aspectRatio: isFilm ? '2/3' : '1/1',
-                backgroundColor: 'var(--color-bg-element)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center'
-              }}>
-                No Image
-              </div>
-            )}
-            
-          </div>
-
-          <div className="modal-right">
-            {description && (
-                <div style={{ marginBottom: '1.5rem', whiteSpace: 'pre-wrap' }}>
-                    <strong>{t('Description')}:</strong><br/>
-                    {description}
+            <div className="grid md:grid-cols-[1fr_1.5fr] gap-8">
+            {/* Left Column: Image */}
+            <div className="flex justify-center md:justify-start">
+                {image ? (
+                <img
+                    src={image}
+                    alt={title}
+                    className="w-full max-w-sm rounded-lg shadow-lg object-cover aspect-[2/3]"
+                />
+                ) : (
+                <div className="w-full max-w-sm aspect-[2/3] bg-[var(--bg-hover)] rounded-lg flex items-center justify-center text-[var(--text-muted)]">
+                    No Image
                 </div>
-            )}
-
-            <div style={{ marginBottom: '1rem' }}>
-                <strong>{t('MediaType')}:</strong> {formatMediaType(item.media_type)}
+                )}
             </div>
 
-            <div style={{ marginBottom: '1rem' }}>
-                <strong>{t('Position')}:</strong> {item.posizione_fisica}
-            </div>
+            {/* Right Column: Details */}
+            <div className="flex flex-col">
+                {description && (
+                    <div className="mb-6">
+                        <h3 className="font-semibold text-[var(--text-primary)] mb-2">{t('Description')}</h3>
+                        <p className="text-[var(--text-secondary)] leading-relaxed whitespace-pre-wrap">{description}</p>
+                    </div>
+                )}
 
-            <hr style={{ borderColor: 'var(--color-border)', margin: '1.5rem 0' }} />
+                <div className="grid grid-cols-2 gap-4 mb-8 text-sm">
+                    <div className="p-3 bg-[var(--bg-secondary)] rounded-lg">
+                        <span className="block text-[var(--text-muted)] mb-1">{t('MediaType')}</span>
+                        <span className="font-medium text-[var(--text-primary)]">{formatMediaType(item.media_type)}</span>
+                    </div>
+                    <div className="p-3 bg-[var(--bg-secondary)] rounded-lg">
+                        <span className="block text-[var(--text-muted)] mb-1">{t('Position')}</span>
+                        <span className="font-medium text-[var(--text-primary)]">{item.posizione_fisica}</span>
+                    </div>
+                </div>
 
-            <h3>{existingVote ? t('UpdatingVote') : t('NewVote')}</h3>
-            <div className="flex gap-2 items-center">
-                <select
-                    value={voteValue}
-                    onChange={(e) => setVoteValue(Number(e.target.value))}
-                    style={{ maxWidth: '100px' }}
-                >
-                    <option value="">...</option>
-                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(v => (
-                        <option key={v} value={v}>{v}</option>
-                    ))}
-                </select>
-                <button
-                    className="btn"
-                    onClick={handleVote}
-                    disabled={submitting || voteValue === ''}
-                >
-                    {submitting ? '...' : t('Save')}
-                </button>
+                <div className="mt-auto border-t border-[var(--border-color)] pt-6">
+                    <h3 className="font-semibold text-[var(--text-primary)] mb-4">
+                        {existingVote ? t('UpdatingVote') : t('NewVote')}
+                    </h3>
+                    <div className="flex flex-wrap gap-4 items-center">
+                        <select
+                            value={voteValue}
+                            onChange={(e) => setVoteValue(Number(e.target.value))}
+                            className="bg-[var(--bg-secondary)] text-[var(--text-primary)] border border-[var(--border-color)] rounded-lg px-4 py-2 focus:ring-2 focus:ring-[var(--primary-color)] outline-none"
+                        >
+                            <option value="">Vote...</option>
+                            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(v => (
+                                <option key={v} value={v}>{v}</option>
+                            ))}
+                        </select>
+                        <button
+                            className="px-6 py-2 bg-[var(--primary-color)] hover:bg-[var(--primary-hover)] text-white font-medium rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                            onClick={handleVote}
+                            disabled={submitting || voteValue === ''}
+                        >
+                            {submitting ? 'Saving...' : t('Save')}
+                        </button>
+                    </div>
+                </div>
             </div>
-          </div>
+            </div>
         </div>
       </div>
     </div>

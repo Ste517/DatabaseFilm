@@ -9,11 +9,9 @@ const Profile: React.FC = () => {
     const [newPassword, setNewPassword] = useState('');
     const [message, setMessage] = useState('');
 
-    // For votes list, reusing types/components ideally, but simplified here
     const [votes, setVotes] = useState<any[]>([]);
 
     useEffect(() => {
-        // Fetch votes
         const fetchVotes = async () => {
             try {
                 const response = await api.get('voti/');
@@ -42,49 +40,77 @@ const Profile: React.FC = () => {
     };
 
     return (
-        <div className="profile-container">
-            <h1>{t('Profile')}</h1>
+        <div className="w-full">
+            <h1 className="text-3xl font-bold mb-8 text-[var(--text-primary)]">{t('Profile')}</h1>
 
-            <div className="forms-container">
-                <div className="form-box">
-                    <h2>{t('ChangePassword')}</h2>
-                    {message && <div className="message">{message}</div>}
-                    <form onSubmit={handleChangePassword}>
-                        <div style={{ marginBottom: '1rem' }}>
-                            <label>{t('CurrentPassword')}</label>
-                            <input type="password" value={oldPassword} onChange={e => setOldPassword(e.target.value)} required />
+            <div className="grid md:grid-cols-2 gap-8 items-start">
+                {/* Change Password */}
+                <div className="bg-[var(--bg-card)] rounded-xl shadow-sm border border-[var(--border-color)] p-6">
+                    <h2 className="text-xl font-semibold mb-6 text-[var(--text-primary)]">{t('ChangePassword')}</h2>
+
+                    {message && (
+                        <div className={`mb-4 p-3 rounded-lg text-sm ${message.includes('Error') ? 'bg-red-500/10 text-red-500' : 'bg-green-500/10 text-green-500'}`}>
+                            {message}
                         </div>
-                        <div style={{ marginBottom: '1rem' }}>
-                            <label>{t('NewPassword')}</label>
-                            <input type="password" value={newPassword} onChange={e => setNewPassword(e.target.value)} required />
+                    )}
+
+                    <form onSubmit={handleChangePassword} className="space-y-4">
+                        <div>
+                            <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1">{t('CurrentPassword')}</label>
+                            <input
+                                type="password"
+                                value={oldPassword}
+                                onChange={e => setOldPassword(e.target.value)}
+                                required
+                                className="w-full px-4 py-2 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)]"
+                            />
                         </div>
-                        <button type="submit" className="btn">{t('Update')}</button>
+                        <div>
+                            <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1">{t('NewPassword')}</label>
+                            <input
+                                type="password"
+                                value={newPassword}
+                                onChange={e => setNewPassword(e.target.value)}
+                                required
+                                className="w-full px-4 py-2 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)]"
+                            />
+                        </div>
+                        <button
+                            type="submit"
+                            className="w-full py-2 bg-[var(--primary-color)] hover:bg-[var(--primary-hover)] text-white font-medium rounded-lg transition-colors"
+                        >
+                            {t('Update')}
+                        </button>
                     </form>
                 </div>
 
-                <div className="form-box">
-                    <h2>{t('MyVotes')}</h2>
+                {/* My Votes */}
+                <div className="bg-[var(--bg-card)] rounded-xl shadow-sm border border-[var(--border-color)] p-6">
+                    <h2 className="text-xl font-semibold mb-6 text-[var(--text-primary)]">{t('MyVotes')}</h2>
+
                     {votes.length === 0 ? (
-                        <p>{t('NoVotes')}</p>
+                        <p className="text-[var(--text-muted)]">{t('NoVotes')}</p>
                     ) : (
-                        <div className="votes-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))', gap: '1rem' }}>
+                        <div className="grid grid-cols-3 sm:grid-cols-4 gap-4">
                             {votes.map(vote => {
                                 const details = vote.item_details;
                                 return (
-                                    <div key={vote.id} className="vote-card" style={{ textAlign: 'center' }}>
-                                        {details?.image ? (
-                                            <img
-                                                src={details.image}
-                                                alt={details.title}
-                                                style={{ width: '100%', aspectRatio: details.type === 'film' ? '2/3' : '1/1', borderRadius: '8px', objectFit: 'cover' }}
-                                            />
-                                        ) : (
-                                            <div style={{ width: '100%', aspectRatio: '1/1', background: '#333', borderRadius: '8px' }} />
-                                        )}
-                                        <div style={{ fontWeight: 'bold', fontSize: '0.9rem', margin: '0.5rem 0 0.2rem' }}>
+                                    <div key={vote.id} className="flex flex-col items-center text-center">
+                                        <div className="relative w-full aspect-[2/3] mb-2 overflow-hidden rounded-md bg-[var(--bg-secondary)]">
+                                            {details?.image ? (
+                                                <img
+                                                    src={details.image}
+                                                    alt={details.title}
+                                                    className="w-full h-full object-cover"
+                                                />
+                                            ) : (
+                                                <div className="w-full h-full flex items-center justify-center text-[var(--text-muted)] text-xs">No Img</div>
+                                            )}
+                                        </div>
+                                        <div className="text-xs font-medium text-[var(--text-primary)] line-clamp-1 w-full mb-1">
                                             {details?.title || 'Unknown'}
                                         </div>
-                                        <div style={getVoteBadgeStyle(vote.valore)}>
+                                        <div className="text-xs" {...getVoteBadgeStyle(vote.valore)}>
                                             {vote.valore}
                                         </div>
                                     </div>
