@@ -15,28 +15,28 @@ const FilmList: React.FC<FilmListProps> = ({ films, viewMode, userVotes, onItemC
 
   if (viewMode === 'list') {
     return (
-      <div className="w-full overflow-x-auto rounded-lg border border-zinc-700 bg-zinc-900">
+      <div className="w-full overflow-x-auto rounded-lg border border-[var(--border-color)] bg-[var(--bg-card)]">
         <table className="w-full text-left border-collapse">
-          <thead className="bg-zinc-800 text-zinc-300 uppercase text-xs font-semibold">
+          <thead className="bg-[var(--bg-secondary)] text-[var(--text-secondary)] uppercase text-xs font-semibold">
             <tr>
-              <th className="p-3 border-b border-zinc-700">Titolo</th>
-              <th className="p-3 border-b border-zinc-700">Anno</th>
-              <th className="p-3 border-b border-zinc-700">Rating</th>
-              <th className="p-3 border-b border-zinc-700">Posizione</th>
-              <th className="p-3 border-b border-zinc-700">Media</th>
+              <th className="p-3 border-b border-[var(--border-color)]">Titolo</th>
+              <th className="p-3 border-b border-[var(--border-color)]">Anno</th>
+              <th className="p-3 border-b border-[var(--border-color)]">Rating</th>
+              <th className="p-3 border-b border-[var(--border-color)]">Posizione</th>
+              <th className="p-3 border-b border-[var(--border-color)]">Media</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-zinc-700">
+          <tbody className="divide-y divide-[var(--border-color)]">
             {films.map((film) => (
               <tr
                 key={film.id}
                 onClick={() => onItemClick(film)}
-                className="hover:bg-zinc-800/50 cursor-pointer transition-colors text-zinc-100"
+                className="hover:bg-[var(--bg-hover)] cursor-pointer transition-colors text-[var(--text-primary)]"
               >
                 <td className="p-3">
                     {film.titolo}
                     {userVotes[`film_${film.id}`] && (
-                        <span className="ml-2 text-xs text-sky-500">
+                        <span className="ml-2 text-xs text-[var(--primary-color)]">
                             ({t('YourVote')}: {userVotes[`film_${film.id}`]})
                         </span>
                     )}
@@ -64,10 +64,10 @@ const FilmList: React.FC<FilmListProps> = ({ films, viewMode, userVotes, onItemC
       {films.map((film) => (
         <div
             key={film.id}
-            className="group bg-zinc-900 border border-zinc-700 rounded-lg overflow-hidden hover:border-sky-500 hover:shadow-lg transition-all duration-300 cursor-pointer flex flex-col"
+            className="group bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg overflow-hidden hover:border-[var(--primary-color)] hover:shadow-lg transition-all duration-300 cursor-pointer flex flex-col"
             onClick={() => onItemClick(film)}
         >
-          <div className="relative aspect-[2/3] w-full overflow-hidden bg-zinc-800">
+          <div className="relative aspect-[2/3] w-full overflow-hidden bg-[var(--bg-secondary)]">
             {film.poster ? (
                 <img
                     src={film.poster}
@@ -75,24 +75,24 @@ const FilmList: React.FC<FilmListProps> = ({ films, viewMode, userVotes, onItemC
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
             ) : (
-                <div className="flex items-center justify-center h-full text-zinc-500">
+                <div className="flex items-center justify-center h-full text-[var(--text-muted)]">
                     <span>No Poster</span>
                 </div>
             )}
           </div>
 
           <div className="p-3 flex flex-col gap-2 flex-grow">
-            <div className="font-semibold text-zinc-100 truncate" title={film.titolo}>
+            <div className="font-semibold text-[var(--text-primary)] truncate" title={film.titolo}>
                 {film.titolo}
             </div>
 
             {userVotes[`film_${film.id}`] && (
-                <div className="text-xs text-sky-500 mb-1">
+                <div className="text-xs text-[var(--primary-color)] mb-1">
                     {t('YourVote')}: {userVotes[`film_${film.id}`]}
                 </div>
             )}
 
-            <div className="flex justify-between items-center text-sm text-zinc-400 mt-auto">
+            <div className="flex justify-between items-center text-sm text-[var(--text-muted)] mt-auto">
               <span>{film.anno_uscita}</span>
               {film.media_rating && (
                  <span {...getVoteBadgeStyle(film.media_rating)}>

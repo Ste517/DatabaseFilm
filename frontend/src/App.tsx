@@ -1,6 +1,4 @@
 import { useState, useEffect } from 'react';
-import './App.css'; // Keeping for child components if needed
-import './AppOverrides.css'; // Keeping for now
 import api from './api/axios';
 import type { Film, Musica } from './types';
 import FilmList from './components/FilmList';
@@ -112,10 +110,10 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-50 flex flex-col font-sans">
+    <div className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] flex flex-col font-sans transition-colors duration-300">
       {/* Navbar */}
-      <nav className="bg-zinc-900 border-b border-zinc-800 sticky top-0 z-50 px-4 py-3 flex flex-wrap items-center justify-between gap-4">
-        <div className="text-xl font-bold text-sky-500 whitespace-nowrap">{t('MovieCatalogue')}</div>
+      <nav className="bg-[var(--bg-secondary)] border-b border-[var(--border-color)] sticky top-0 z-50 px-4 py-3 flex flex-wrap items-center justify-between gap-4 shadow-sm transition-colors duration-300">
+        <div className="text-xl font-bold text-[var(--primary-color)] whitespace-nowrap">{t('MovieCatalogue')}</div>
 
         <div className="flex-1 max-w-md mx-auto order-3 md:order-2 w-full md:w-auto">
             <input
@@ -123,7 +121,7 @@ function App() {
                 placeholder={t('Search')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-full text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-colors"
+                className="w-full px-4 py-2 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-full text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-[var(--primary-color)] focus:ring-1 focus:ring-[var(--primary-color)] transition-all"
             />
         </div>
 
@@ -131,34 +129,34 @@ function App() {
             <div className="hidden md:flex gap-6">
               <a
                 href="#"
-                className={`font-medium hover:text-sky-500 transition-colors ${activeTab === 'movies' ? 'text-sky-500' : 'text-zinc-300'}`}
+                className={`font-medium hover:text-[var(--primary-color)] transition-colors ${activeTab === 'movies' ? 'text-[var(--primary-color)]' : 'text-[var(--text-secondary)]'}`}
                 onClick={(e) => { e.preventDefault(); setActiveTab('movies'); }}
               >
                 {t('Movies')}
               </a>
               <a
                 href="#"
-                className={`font-medium hover:text-sky-500 transition-colors ${activeTab === 'music' ? 'text-sky-500' : 'text-zinc-300'}`}
+                className={`font-medium hover:text-[var(--primary-color)] transition-colors ${activeTab === 'music' ? 'text-[var(--primary-color)]' : 'text-[var(--text-secondary)]'}`}
                 onClick={(e) => { e.preventDefault(); setActiveTab('music'); }}
               >
                 {t('Music')}
               </a>
               <a
                 href="#"
-                className={`font-medium hover:text-sky-500 transition-colors ${activeTab === 'profile' ? 'text-sky-500' : 'text-zinc-300'}`}
+                className={`font-medium hover:text-[var(--primary-color)] transition-colors ${activeTab === 'profile' ? 'text-[var(--primary-color)]' : 'text-[var(--text-secondary)]'}`}
                 onClick={(e) => { e.preventDefault(); setActiveTab('profile'); }}
               >
                 {t('Profile')}
               </a>
             </div>
 
-            <div className="flex items-center gap-3 pl-4 border-l border-zinc-800">
+            <div className="flex items-center gap-3 pl-4 border-l border-[var(--border-color)]">
                 <LanguageSelector />
 
                 <button
                     onClick={toggleTheme}
                     aria-label={t('Theme')}
-                    className="p-2 rounded-full hover:bg-zinc-800 text-zinc-300 hover:text-sky-500 transition-colors"
+                    className="p-2 rounded-full hover:bg-[var(--bg-hover)] text-[var(--text-secondary)] hover:text-[var(--primary-color)] transition-colors"
                 >
                  {theme === 'dark' ? (
                     <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
@@ -168,7 +166,7 @@ function App() {
                 </button>
                 <button
                     onClick={handleLogout}
-                    className="px-3 py-1.5 text-sm bg-zinc-800 hover:bg-zinc-700 text-zinc-100 rounded-md transition-colors"
+                    className="px-3 py-1.5 text-sm bg-[var(--bg-hover)] hover:bg-[var(--bg-card)] text-[var(--text-primary)] border border-[var(--border-color)] rounded-md transition-colors"
                 >
                     {t('Logout')}
                 </button>
@@ -183,37 +181,37 @@ function App() {
         ) : (
         <>
             <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
-                <h1 className="text-3xl font-bold text-zinc-100">
+                <h1 className="text-3xl font-bold text-[var(--text-primary)]">
                     {activeTab === 'movies' ? t('Movies') : t('Music')}
                 </h1>
 
                 <div className="flex flex-wrap gap-4 items-center">
-                    <div className="flex items-center gap-2 bg-zinc-900 p-1 rounded-lg border border-zinc-800">
-                        <label className="text-sm text-zinc-400 pl-2">{t('SortBy')}:</label>
+                    <div className="flex items-center gap-2 bg-[var(--bg-secondary)] p-1 rounded-lg border border-[var(--border-color)]">
+                        <label className="text-sm text-[var(--text-muted)] pl-2">{t('SortBy')}:</label>
                         <select
                             value={sortBy}
                             onChange={(e) => setSortBy(e.target.value)}
-                            className="bg-transparent text-zinc-200 text-sm py-1 pr-8 focus:outline-none cursor-pointer"
+                            className="bg-transparent text-[var(--text-primary)] text-sm py-1 pr-8 focus:outline-none cursor-pointer"
                         >
-                            <option value="-id" className="bg-zinc-800">Default</option>
-                            <option value="titolo" className="bg-zinc-800">{t('Title')} &uarr;</option>
-                            <option value="-titolo" className="bg-zinc-800">{t('Title')} &darr;</option>
-                            <option value="anno_uscita" className="bg-zinc-800">{t('Year')} &uarr;</option>
-                            <option value="-anno_uscita" className="bg-zinc-800">{t('Year')} &darr;</option>
-                            <option value="media_rating" className="bg-zinc-800">{t('Rating')} &uarr;</option>
-                            <option value="-media_rating" className="bg-zinc-800">{t('Rating')} &darr;</option>
+                            <option value="-id" className="bg-[var(--bg-card)] text-[var(--text-primary)]">Default</option>
+                            <option value="titolo" className="bg-[var(--bg-card)] text-[var(--text-primary)]">{t('Title')} &uarr;</option>
+                            <option value="-titolo" className="bg-[var(--bg-card)] text-[var(--text-primary)]">{t('Title')} &darr;</option>
+                            <option value="anno_uscita" className="bg-[var(--bg-card)] text-[var(--text-primary)]">{t('Year')} &uarr;</option>
+                            <option value="-anno_uscita" className="bg-[var(--bg-card)] text-[var(--text-primary)]">{t('Year')} &darr;</option>
+                            <option value="media_rating" className="bg-[var(--bg-card)] text-[var(--text-primary)]">{t('Rating')} &uarr;</option>
+                            <option value="-media_rating" className="bg-[var(--bg-card)] text-[var(--text-primary)]">{t('Rating')} &darr;</option>
                         </select>
                     </div>
 
-                    <div className="flex bg-zinc-900 rounded-lg p-1 border border-zinc-800">
+                    <div className="flex bg-[var(--bg-secondary)] rounded-lg p-1 border border-[var(--border-color)]">
                         <button
-                            className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all ${viewMode === 'grid' ? 'bg-zinc-700 text-white shadow-sm' : 'text-zinc-400 hover:text-zinc-200'}`}
+                            className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all ${viewMode === 'grid' ? 'bg-[var(--bg-card)] text-[var(--text-primary)] shadow-sm' : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'}`}
                             onClick={() => setViewMode('grid')}
                         >
                         {t('Grid')}
                         </button>
                         <button
-                            className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all ${viewMode === 'list' ? 'bg-zinc-700 text-white shadow-sm' : 'text-zinc-400 hover:text-zinc-200'}`}
+                            className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all ${viewMode === 'list' ? 'bg-[var(--bg-card)] text-[var(--text-primary)] shadow-sm' : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'}`}
                             onClick={() => setViewMode('list')}
                         >
                         {t('List')}
@@ -224,7 +222,7 @@ function App() {
 
             {loading ? (
             <div className="flex justify-center items-center h-64">
-                <div className="text-zinc-500 animate-pulse">Loading...</div>
+                <div className="text-[var(--text-muted)] animate-pulse">Loading...</div>
             </div>
             ) : (
             <>

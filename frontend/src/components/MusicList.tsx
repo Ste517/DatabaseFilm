@@ -15,30 +15,30 @@ const MusicList: React.FC<MusicListProps> = ({ music, viewMode, userVotes, onIte
 
   if (viewMode === 'list') {
     return (
-      <div className="w-full overflow-x-auto rounded-lg border border-zinc-700 bg-zinc-900">
+      <div className="w-full overflow-x-auto rounded-lg border border-[var(--border-color)] bg-[var(--bg-card)]">
         <table className="w-full text-left border-collapse">
-          <thead className="bg-zinc-800 text-zinc-300 uppercase text-xs font-semibold">
+          <thead className="bg-[var(--bg-secondary)] text-[var(--text-secondary)] uppercase text-xs font-semibold">
             <tr>
-              <th className="p-3 border-b border-zinc-700">Artista</th>
-              <th className="p-3 border-b border-zinc-700">Titolo</th>
-              <th className="p-3 border-b border-zinc-700">Anno</th>
-              <th className="p-3 border-b border-zinc-700">Rating</th>
-              <th className="p-3 border-b border-zinc-700">Posizione</th>
-              <th className="p-3 border-b border-zinc-700">Media</th>
+              <th className="p-3 border-b border-[var(--border-color)]">Artista</th>
+              <th className="p-3 border-b border-[var(--border-color)]">Titolo</th>
+              <th className="p-3 border-b border-[var(--border-color)]">Anno</th>
+              <th className="p-3 border-b border-[var(--border-color)]">Rating</th>
+              <th className="p-3 border-b border-[var(--border-color)]">Posizione</th>
+              <th className="p-3 border-b border-[var(--border-color)]">Media</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-zinc-700">
+          <tbody className="divide-y divide-[var(--border-color)]">
             {music.map((item) => (
               <tr
                 key={item.id}
                 onClick={() => onItemClick(item)}
-                className="hover:bg-zinc-800/50 cursor-pointer transition-colors text-zinc-100"
+                className="hover:bg-[var(--bg-hover)] cursor-pointer transition-colors text-[var(--text-primary)]"
               >
                 <td className="p-3 font-medium">{item.artista}</td>
                 <td className="p-3">
                     {item.titolo}
                     {userVotes[`musica_${item.id}`] && (
-                        <span className="ml-2 text-xs text-sky-500">
+                        <span className="ml-2 text-xs text-[var(--primary-color)]">
                             ({t('YourVote')}: {userVotes[`musica_${item.id}`]})
                         </span>
                     )}
@@ -66,10 +66,10 @@ const MusicList: React.FC<MusicListProps> = ({ music, viewMode, userVotes, onIte
       {music.map((item) => (
         <div
             key={item.id}
-            className="group bg-zinc-900 border border-zinc-700 rounded-lg overflow-hidden hover:border-sky-500 hover:shadow-lg transition-all duration-300 cursor-pointer flex flex-col"
+            className="group bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg overflow-hidden hover:border-[var(--primary-color)] hover:shadow-lg transition-all duration-300 cursor-pointer flex flex-col"
             onClick={() => onItemClick(item)}
         >
-          <div className="relative aspect-square w-full overflow-hidden bg-zinc-800">
+          <div className="relative aspect-square w-full overflow-hidden bg-[var(--bg-secondary)]">
             {item.copertina ? (
                 <img
                     src={item.copertina}
@@ -77,27 +77,27 @@ const MusicList: React.FC<MusicListProps> = ({ music, viewMode, userVotes, onIte
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
             ) : (
-                <div className="flex items-center justify-center h-full text-zinc-500">
+                <div className="flex items-center justify-center h-full text-[var(--text-muted)]">
                     <span>No Cover</span>
                 </div>
             )}
           </div>
 
           <div className="p-3 flex flex-col gap-1 flex-grow">
-            <div className="font-semibold text-zinc-100 truncate" title={item.titolo}>
+            <div className="font-semibold text-[var(--text-primary)] truncate" title={item.titolo}>
                 {item.titolo}
             </div>
-            <div className="text-sm text-zinc-400 truncate">
+            <div className="text-sm text-[var(--text-muted)] truncate">
                 {item.artista}
             </div>
 
             {userVotes[`musica_${item.id}`] && (
-                <div className="text-xs text-sky-500 mb-1">
+                <div className="text-xs text-[var(--primary-color)] mb-1">
                     {t('YourVote')}: {userVotes[`musica_${item.id}`]}
                 </div>
             )}
 
-            <div className="flex justify-between items-center text-sm text-zinc-400 mt-auto pt-2">
+            <div className="flex justify-between items-center text-sm text-[var(--text-muted)] mt-auto pt-2">
               <span>{item.anno_uscita}</span>
               {item.media_rating && (
                  <span {...getVoteBadgeStyle(item.media_rating)}>

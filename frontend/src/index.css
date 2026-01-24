@@ -6,9 +6,40 @@ html, body, #root {
   width: 100%;
 }
 
+:root {
+  /* Light Theme Defaults */
+  --bg-primary: theme('colors.zinc.50');
+  --bg-secondary: theme('colors.zinc.100');
+  --bg-card: theme('colors.white');
+  --bg-hover: theme('colors.zinc.200');
+
+  --text-primary: theme('colors.zinc.900');
+  --text-secondary: theme('colors.zinc.600');
+  --text-muted: theme('colors.zinc.400');
+
+  --border-color: theme('colors.zinc.200');
+  --primary-color: theme('colors.sky.600');
+  --primary-hover: theme('colors.sky.700');
+}
+
+[data-theme='dark'] {
+  /* Dark Theme Overrides */
+  --bg-primary: theme('colors.zinc.950');
+  --bg-secondary: theme('colors.zinc.900');
+  --bg-card: theme('colors.zinc.800'); /* Slightly lighter than bg-primary for cards/modals */
+  --bg-hover: theme('colors.zinc.700');
+
+  --text-primary: theme('colors.zinc.50');
+  --text-secondary: theme('colors.zinc.300');
+  --text-muted: theme('colors.zinc.500');
+
+  --border-color: theme('colors.zinc.800');
+  --primary-color: theme('colors.sky.500');
+  --primary-hover: theme('colors.sky.400');
+}
+
 body {
-    /* Set default background to match the dark theme, using a standard Tailwind color close to #121212 */
-    /* Zinc 950 is #09090b, Zinc 900 is #18181b. #121212 is in between. */
-    background-color: var(--color-zinc-950);
-    color: var(--color-zinc-50);
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
